@@ -1,0 +1,36 @@
+Firebase: simple but limited, realtime syncing but don't think that is
+relevant for our application (multiple users probably won't need to sync
+changes from one user)  
+MariaDB (SQL) vs MongoDB (NoSQL)  
+SQL will generally be good for structured data, as well as updating data that is heavily related regularly (since it can be updated in one place as other relations reference it)  
+NoSQL is a document based way of storage that is generally highly scalable and fast for reads, but can be too flexible because you can't assume structure and may replicate data a lot, so updates to replicated data have to be propagated  
+Our use case will probably be storing login, personal info, etc. about
+patients and physicians, as well as the videos from sessions between a patient
+and physician.  Since the number of videos could vary, it'd be nice for us to
+use NoSQL for flexible schema. Fast reads are also important for getting video
+links, and we would likely not replicate too much data so that it must be
+updated in several places. For SQL, generally something we could do is:  
+Patients (pid: Integer)  
+Physician (phid: Integer)  
+Videos (pid: Int, phid: Int, video info etc.)  
+
+We would be replicating pid and phid many times however, and reads could take
+a while to filter for the correct videos.  
+
+NoSQL possible design:  
+Patient Collection with list of physicians 
+Physician Collection has list of videos and patients  
+
+Video information would be located with each document/user, so querying for a
+user's videos would be quick. Replicated data would be of users, but user
+information will likely not change much to impact performance due to updating
+duplicate data several times.
+
+MongoDB is a likely candidate, plus NoSQL db should scale well with number of
+users and videos.  
+
+Docker provides containers that allow us to wrap our app and move it around
+different environments and still work. We're not sure where we would host the
+app, so it's beneficial for an easy solution of porting the app around if
+possible.  Better for development so we know our app works locally and must
+work remotely.
