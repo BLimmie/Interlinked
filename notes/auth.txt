@@ -1,0 +1,11 @@
+OAuth: for providing only necessary functionality / information to services,
+it would be nice if there's some service with patient/ doctor information
+with oauth but unlikely ; used for authorizing users to do certain things   
+OpenID: use an identity provider in order to verify account, means we don't
+have to store and protect passwords, but maybe not a good idea for an
+application with important information / use? For mvp it's probably ok ; used
+to authenticate users  
+Google Sign In: google library for managing oauth2  
+https://blog.runscope.com/posts/understanding-oauth-2-and-openid-connect
+Storing passwords by ourselves, but that means we need to salt and hash
+passwords and manage a way to authorize users during requests  
