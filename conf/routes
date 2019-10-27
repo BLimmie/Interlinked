@@ -8,6 +8,15 @@ module:testrunner
 
 
 GET     /                                       App.Index
+GET     /patient/:id                            App.GetPatient
+GET     /provider/:id                           App.GetProvider
+GET     /session/:id                            App.GetSession
+GET     /metrics/:id                            Metrics.GetSessionMetrics
+GET     /metrics/:id/aggregate                  Metrics.GetSessionMetricsAggregate
+POST    /sentiment/frame                        Sentiment.ProcessFrame
+POST    /sentiment/text                         Sentiment.ProcessText
+POST    /sentiment/frame/:id                    Sentiment.SubmitFrame
+POST    /sentiment/text/:id                     Sentiment.SubmitText
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
