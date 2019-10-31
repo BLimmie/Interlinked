@@ -2,6 +2,7 @@
 
 
 ## Get Patient Info
+
 Gets a json containing a patient's information
 | <b>Method</b> | GET |
 |-|-|
@@ -14,6 +15,7 @@ Parameters
 | password | required| Password for OAuth |
 
 ## Get Session Info
+
 | <b>Method</b> | GET |
 |----------|--------------------|
 | Route | /session/{id} |
@@ -25,6 +27,7 @@ Parameters
 | password | required| Password for OAuth |
 
 ## Get sentiment of frame
+
 | <b>Method</b> | GET |
 |----------|--------------------|
 | Route | /sentiment/frame |
@@ -37,6 +40,7 @@ Parameters
 | image | required| A binary file, base64 data, or a URL for an image |
 
 ## Process frame
+
 Frame is stored in session info along with sentiment
 | <b>Method</b> | POST |
 |----------|--------------------|
@@ -50,6 +54,7 @@ Parameters
 | image | required| A binary file, base64 data, or a URL for an image |
 
 ## Get sentiment of frame
+
 | <b>Method</b> | GET |
 |----------|--------------------|
 | Route | /sentiment/frame |
@@ -62,6 +67,7 @@ Parameters
 | image | required| A binary file, base64 data, or a URL for an image |
 
 ## Process frame
+
 Frame is stored in session info along with sentiment
 | <b>Method</b> | POST |
 |----------|--------------------|
@@ -75,6 +81,7 @@ Parameters
 | image | required| A binary file, base64 data, or a URL for an image |
 
 ## Get sentiment of text
+
 | <b>Method</b> | GET |
 |----------|--------------------|
 | Route | /sentiment/text |
@@ -87,6 +94,7 @@ Parameters
 | text | required| String to analyze sentiment of |
 
 ## Process text
+
 Text is stored in session info along with sentiment
 | <b>Method</b> | POST |
 |----------|--------------------|
@@ -100,6 +108,7 @@ Parameters
 | text | required| String to analyze sentiment of |
 
 ## Get Metrics
+
 Get metrics across time
 | <b>Method</b> | POST |
 |----------|--------------------|
@@ -115,6 +124,7 @@ Parameters
 | end | optional | End timestamp for metrics (defaults to end or current time) |
 
 ## Get Metrics Aggregate
+
 Get metrics summary across time
 | <b>Method</b> | POST |
 |----------|--------------------|
