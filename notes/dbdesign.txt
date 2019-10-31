@@ -1,0 +1,71 @@
+Will include _id attr., not for authentication / insert but for referencing
+doctors / patients as foreign keys  
+Salt will be added later, password will be hashed ofc.
+For now patient schema is: 
+{ "_id" , "name" , "username", "password", "doctors { id, name, username }", "salt" }
+For now doctors schema is: 
+{ "_id" , "name" , "username", "password", "patients { id, name, username }", "salt" }
+Username is unique among all patients and doctors. In the future may reference
+videos.
+For now sessions schema is: 
+{ "_id" , "link" , "patient", "doctor", "exp" }
+link and (patient and doctor) are keys
+Potential videos schema is:
+{ "_id" , "location", "timestamp", "duration", "patient", "doctor" }
+doctors and patients will be a list of ObjectId()
+Sessions will use patient doctor _id in case username not unique.
+In general try to use id for queries, since username / other info can change
+so it's annoying to try to change the data throughout the db if we use other
+info to reference  
+
+We could reference sessions in users documents, but that means when adding /
+removing a session we must update the users. However as is we must search in
+the sessions collection to provide links for users, which could be slow (read
+is slower, write is faster).
+
+We will reference videos in users. This allows other people to access the
+video besides the patient and doctor. But we also have the same issue with
+sessions in that for the main actors of the videos we may want to reference
+them (or not) directly in their documents. It's probably ok since videos
+should not be updated as much as sessions, so write won't be too slow.
+
+For now we will not reference sessions but reference videos (in the future).
+
+To authenticate user on login: 
+`db.doctors.find({username: "Username", password: "Password"})` 
+
+To authenticate/find user:
+`db.doctors.find({_id: ObjectId("sdfsfsdfsdfsd")})` 
+
+To create user:
+`db.doctors.insertOne({"name": x, "username": y, "password": z})`
+
+To modify username:
+`db.patients.update({_id: ObjectId("sdfsfsdfsdfsd")}, {$set: {username: "Username"}})`
+`db.doctors.update({"patients.id": ObjectId("5db63380d635f34ac9e355e3")}, {$set: {"patients.$.username": "username"}})`
+`db.sessions.update({"patient.id": ObjectId("5db63380d635f34ac9e355e3")}, {$set: {"patient.username": "username"}})`
+
+To add user to associated users (should do for both the doctor and patient, only doctor should add):
+`db.patients.update({_id: ObjectId("blahblah")}, {$addToSet: {doctors: {id: ObjectId("sdfsdfsdfsdf"), name: "name", username: "Username"}})`
+`db.doctors.update({_id: ObjectId("sdfsdfsdfsdf")}, {$addToSet: {patients: {id: ObjectId("blahblah"), name: "name", username: "Username"}})`
+
+To remove a patient/doctor of a user:
+`db.doctors.update({username: "Who"}, {$pull: {patients: {id: ObjectId("blahblah")}}})`
+
+To remove all patients/doctors of a user:
+`db.doctors.update({_id: ObjectId("5db62c3cd635f34ac9e355e2")}, {$unset: {patients: ""}})`
+
+To delete a user permanently:
+Delete all references in either patients or doctors so call remove a patient
+for all entities containing the deleted user.
+Then delete all sessions.
+`db.doctors.update({patients: {id: ObjectId("blahblah")}}, {$pull: {patients: {id: ObjectId("blahblah")}}})`
+`db.patients.update({doctors: {id: ObjectId("blahblah")}}, {$pull: {doctors: {id: ObjectId("blahblah")}}})`
+`db.sessions.update({doctor: {id: ObjectId("blahblah")}}, {$pull: {doctor: {id: ObjectId("blahblah")}}})`
+
+To create session (verify valid patient beforehand):
+`db.sessions.insert({"link": x, "patient": {id, username}, "doctor": {id, username}, "exp": time})`
+
+To remove session (query should be scheduled or processed every insert):
+`db.sessions.remove({exp : {$gt : currentTime}})`
+
