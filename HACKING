@@ -21,16 +21,18 @@ modify `package.json`. When that is something not everyone wants (for example,
 some development dependency that only works for you), you should use `npm
 install <package> --no-save` instead.
 
-If you want you editor install things (such as language plugins) for you, check
+If you want you editor to install things (such as language plugins) for you, check
 whether it changes `package.json` and `package-lock.json` before doing a commit
 and push.
 
-Do not blindly do `git add .`. `npm` creates a `target` directory when
+### Version Control
+
+Do not blindly do `git add .`. `npm` creates a `node_modules` directory when
 compiling. Make sure this directory is not added to our git repo. Also, avoid
 adding anything that is not part of the code you created as a human into the
-repo (except for `package-lock.json`). Make sure the `*.js`, `*.jsx` the
+repo (except for `package-lock.json`). Make sure the `*.js`/`*.jsx` files the
 Typescript compiler creates for you do not go into the Git repo. Make sure
-things like `*.ts.d` `npm` kindly creates for you to make the development more
+things like `*.d.ts` `npm` kindly creates for you to make the development more
 smooth are not added. We can discuss what to put in `.gitignore` later.
 
 ### Naming convention
