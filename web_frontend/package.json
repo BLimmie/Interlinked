@@ -1,0 +1,27 @@
+{
+  "name": "interlinked",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "npx react-scripts start"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.11",
+    "javascript-typescript-langserver": "^2.11.3",
+    "react": "*",
+    "react-scripts": "^3.2.0",
+    "typescript": "^3.6.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

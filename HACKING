@@ -1,0 +1,62 @@
+# HACKING
+
+This file contains conventions we should follow when doing
+development and useful patterns that are worth sharing.
+
+# Dependencies
+
+## Web Frontend
+
+### Dependencies
+
+We use `npm` to do package management. `npm` uses `package.json` and
+`package-lock.json`. The former can and should be manually editted, and one
+almost always want to avoid modifying the later. Unlike some more reasonably
+designed tools, `npm` would edit what's inside `package.json` without telling
+you. For some reason, `package-lock.json` is something that should go into the
+version control system.
+
+Whenever you want to install something use `npm`, running `npm install` would
+modify `package.json`. When that is something not everyone wants (for example,
+some development dependency that only works for you), you should use `npm
+install <package> --no-save` instead.
+
+If you want you editor install things (such as language plugins) for you, check
+whether it changes `package.json` and `package-lock.json` before doing a commit
+and push.
+
+Do not blindly do `git add .`. `npm` creates a `target` directory when
+compiling. Make sure this directory is not added to our git repo. Also, avoid
+adding anything that is not part of the code you created as a human into the
+repo (except for `package-lock.json`). Make sure the `*.js`, `*.jsx` the
+Typescript compiler creates for you do not go into the Git repo. Make sure
+things like `*.ts.d` `npm` kindly creates for you to make the development more
+smooth are not added. We can discuss what to put in `.gitignore` later.
+
+### Naming convention
+
+*TBD*
+
+### Tech Used
+
+*TBD*
+
+*formatter to ensure consistent style*
+
+*package for tests*
+
+*...*
+
+### Directory Structure
+
+Before we intergrate our frontend and backend, the frontend root directory will
+be the `web_frontend` directory in the repository root directory.
+
+    *root/*
+    |
+    |--> public/
+    |--> src/
+
+## Backend
+
+*TBD*
