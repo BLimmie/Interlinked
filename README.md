@@ -1,3 +1,4 @@
+# intouch-health-interlinked-2019
 # Welcome to Revel
 
 A high-productivity web framework for the [Go language](http://www.golang.org/).
@@ -42,3 +43,11 @@ The directory structure of a generated Revel application:
 * The [Revel sample apps](http://revel.github.io/examples/index.html).
 * The [API documentation](https://godoc.org/github.com/revel/revel).
 
+
+### Database
+Must start db before saving / restoring db. Be careful of overwriting your data in db/data.  
+`source env.sh`  
+`cd db` 
+`./start_db.sh`  
+`./restore.sh` to restore db from dump.gz
+`./store.sh` to save db
