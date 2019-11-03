@@ -1,16 +1,21 @@
 {
-  "name": "interlinked",
-  "version": "0.0.1",
+  "name": "sinclair",
+  "version": "4.0.0",
   "private": true,
-  "scripts": {
-    "start": "npx react-scripts start"
-  },
   "dependencies": {
-    "@types/react": "^16.9.11",
-    "javascript-typescript-langserver": "^2.11.3",
-    "react": "*",
-    "react-scripts": "^3.2.0",
-    "typescript": "^3.6.4"
+    "@material-ui/core": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-scripts": "latest",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [
