@@ -31,8 +31,7 @@ Do not blindly do `git add .`. `npm` creates a `node_modules` directory when
 compiling. Make sure this directory is not added to our git repo. Also, avoid
 adding anything that is not part of the code you created as a human into the
 repo (except for `package-lock.json`). Make sure the `*.js`/`*.jsx` files the
-Typescript compiler creates for you do not go into the Git repo. We can discuss
-what to put in `.gitignore` later.
+Typescript compiler creates for you do not go into the Git repo.
 
 ### Conventions
 
