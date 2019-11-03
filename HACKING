@@ -31,23 +31,20 @@ Do not blindly do `git add .`. `npm` creates a `node_modules` directory when
 compiling. Make sure this directory is not added to our git repo. Also, avoid
 adding anything that is not part of the code you created as a human into the
 repo (except for `package-lock.json`). Make sure the `*.js`/`*.jsx` files the
-Typescript compiler creates for you do not go into the Git repo. Make sure
-things like `*.d.ts` `npm` kindly creates for you to make the development more
-smooth are not added. We can discuss what to put in `.gitignore` later.
+Typescript compiler creates for you do not go into the Git repo. We can discuss
+what to put in `.gitignore` later.
 
-### Naming convention
+### Conventions
 
-*TBD*
+Style:
 
-### Tech Used
+- https://www.intertech.com/Blog/google-javascript-style-guide-takeaways-for-typescript-developers/
 
-*TBD*
+- https://google.github.io/styleguide/jsguide.html#introduction
 
-*formatter to ensure consistent style*
+Use Jest for testing logic.
 
-*package for tests*
-
-*...*
+Use react testing lib for testing DOM changes.
 
 ### Directory Structure
 
