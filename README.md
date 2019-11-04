@@ -1,47 +1,21 @@
 # intouch-health-interlinked-2019
-# Welcome to Revel
 
-A high-productivity web framework for the [Go language](http://www.golang.org/).
+### Dependencies:
 
-
-### Start the web server:
-
-   go get github.com/BLimmie/intouch-health-capstone-2019
-   revel run github.com/BLimmie/intouch-health-capstone-2019
-
-### Go to http://localhost:9000/ and you'll see:
-
-    "It works"
+    go get -u github.com/gin-gonic/gin
 
 ## Code Layout
 
 The directory structure of a generated Revel application:
 
-    conf/             Configuration directory
-        app.conf      Main app configuration file
-        routes        Routes definition file
+    app/              Application Directory
+        auth.go       Go file for authentication
 
-    app/              App sources
-        init.go       Interceptor registration
-        controllers/  App controllers go here
-        views/        Templates directory
+    db/               Database file Directory
+        start_db.sh   Start database script
 
-    messages/         Message files
-
-    public/           Public static assets
-        css/          CSS files
-        js/           Javascript files
-        images/       Image files
-
-    tests/            Test suites
-
-
-## Help
-
-* The [Getting Started with Revel](http://revel.github.io/tutorial/gettingstarted.html).
-* The [Revel guides](http://revel.github.io/manual/index.html).
-* The [Revel sample apps](http://revel.github.io/examples/index.html).
-* The [API documentation](https://godoc.org/github.com/revel/revel).
+    routes/           Router Directory
+        routes.go     Routes for endpoints in the API
 
 
 ### Database

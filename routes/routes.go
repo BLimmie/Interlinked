@@ -20,6 +20,8 @@ func main() {
 	router.POST("/sentiment/frame/:id", submitSentimentFrame)
 	router.POST("/sentiment/text", getSentimentText)
 	router.POST("/sentiment/text/:id", submitSentimentText)
+	// Authenticate
+	router.POST("/login", login)
 
 	// By default it serves on :8080 unless a
 	// PORT environment variable was defined.
