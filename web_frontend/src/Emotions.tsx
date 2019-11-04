@@ -1,47 +1,37 @@
-//This is just a placeholder and has nothing to do with the actual emotion display
-
-
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import {Doughnut} from 'react-chartjs-2';
 
-// Generate Sales Data
-function createData(time: string, amount: number) {
-  return { time, amount };
+function getRandomInt (min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-];
+const getState = () => ({
+  labels: [
+    'Red',
+    'Green',
+    'Yellow'
+  ],
+  datasets: [{
+    data: [getRandomInt(50, 200), getRandomInt(100, 150), getRandomInt(150, 250)],
+    backgroundColor: [
+    '#CCC',
+    '#36A2EB',
+    '#FFCE56'
+    ],
+    hoverBackgroundColor: [
+    '#FF6384',
+    '#36A2EB',
+    '#FFCE56'
+    ]
+  }]
+});
 
 export default function Emotions() {
-  return (
-    <React.Fragment>
-      <ResponsiveContainer>
-        <LineChart
-          data={data}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
-        >
-          <XAxis dataKey="time" />
-          <YAxis>
-            <Label angle={270} position="left" style={{ textAnchor: 'middle' }}>
-              Sales ($)
-            </Label>
-          </YAxis>
-          <Line type="monotone" dataKey="amount" stroke="#556CD6" dot={false} />
-        </LineChart>
-      </ResponsiveContainer>
-    </React.Fragment>
-  );
+    return (
+      <div>
+        <h2>Dynamicly refreshed Doughnut Example</h2>
+        <Doughnut data={getState} />
+      </div>
+    );
+  
 }
