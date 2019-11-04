@@ -20,8 +20,15 @@ The directory structure of a generated Revel application:
 
 ### Database
 Must start db before saving / restoring db. Be careful of overwriting your data in db/data.  
-`source env.sh`  
-`cd db` 
-`./start_db.sh`  
-`./restore.sh` to restore db from dump.gz
-`./store.sh` to save db
+`notes/dbdesign.txt` contains queries and schema concepts for db  
+`db/main.go` contains queries translated for use in go
+`go get go.mongodb.org/mongo-driver` to connect to mongodb from go   
+```  
+	source env.sh  
+	cd db 
+	./restore.sh 
+	./start_db.sh 
+	./store.sh 
+```  
+restore.sh: restore db from dump.gz  
+store.sh: save db to dump.gz  

@@ -42,15 +42,15 @@ To create user:
 
 To modify username:
 `db.patients.update({_id: ObjectId("sdfsfsdfsdfsd")}, {$set: {username: "Username"}})`
-`db.doctors.update({"patients.id": ObjectId("5db63380d635f34ac9e355e3")}, {$set: {"patients.$.username": "username"}})`
-`db.sessions.update({"patient.id": ObjectId("5db63380d635f34ac9e355e3")}, {$set: {"patient.username": "username"}})`
+`db.doctors.update({"patients._id": ObjectId("5db63380d635f34ac9e355e3")}, {$set: {"patients.$.username": "username"}})`
+`db.sessions.update({"patient._id": ObjectId("5db63380d635f34ac9e355e3")}, {$set: {"patient.username": "username"}})`
 
 To add user to associated users (should do for both the doctor and patient, only doctor should add):
-`db.patients.update({_id: ObjectId("blahblah")}, {$addToSet: {doctors: {id: ObjectId("sdfsdfsdfsdf"), name: "name", username: "Username"}})`
-`db.doctors.update({_id: ObjectId("sdfsdfsdfsdf")}, {$addToSet: {patients: {id: ObjectId("blahblah"), name: "name", username: "Username"}})`
+`db.patients.update({_id: ObjectId("blahblah")}, {$addToSet: {doctors: {_id: ObjectId("sdfsdfsdfsdf"), name: "name", username: "Username"}}})`
+`db.doctors.update({_id: ObjectId("sdfsdfsdfsdf")}, {$addToSet: {patients: {_id: ObjectId("blahblah"), name: "name", username: "Username"}}})`
 
 To remove a patient/doctor of a user:
-`db.doctors.update({username: "Who"}, {$pull: {patients: {id: ObjectId("blahblah")}}})`
+`db.doctors.update({username: "Who"}, {$pull: {patients: {_id: ObjectId("blahblah")}}})`
 
 To remove all patients/doctors of a user:
 `db.doctors.update({_id: ObjectId("5db62c3cd635f34ac9e355e2")}, {$unset: {patients: ""}})`
@@ -59,9 +59,9 @@ To delete a user permanently:
 Delete all references in either patients or doctors so call remove a patient
 for all entities containing the deleted user.
 Then delete all sessions.
-`db.doctors.update({patients: {id: ObjectId("blahblah")}}, {$pull: {patients: {id: ObjectId("blahblah")}}})`
-`db.patients.update({doctors: {id: ObjectId("blahblah")}}, {$pull: {doctors: {id: ObjectId("blahblah")}}})`
-`db.sessions.update({doctor: {id: ObjectId("blahblah")}}, {$pull: {doctor: {id: ObjectId("blahblah")}}})`
+`db.doctors.update({patients: {_id: ObjectId("blahblah")}}, {$pull: {patients: {_id: ObjectId("blahblah")}}})`
+`db.patients.update({doctors: {_id: ObjectId("blahblah")}}, {$pull: {doctors: {_id: ObjectId("blahblah")}}})`
+`db.sessions.update({doctor: {_id: ObjectId("blahblah")}}, {$pull: {doctor: {_id: ObjectId("blahblah")}}})`
 
 To create session (verify valid patient beforehand):
 `db.sessions.insert({"link": x, "patient": {id, username}, "doctor": {id, username}, "exp": time})`
