@@ -49,6 +49,8 @@ func (ic *IntouchClient) updateFieldAll(collection *mongo.Collection, filter bso
 	return err
 }
 
+// deleteEntity deletes docs matching filter from given collection
+// return error, nil if ok
 func (ic *IntouchClient) deleteEntity(collection *mongo.Collection, filter bson.D) error {
 	deleteResult, err := collection.DeleteOne(context.TODO(), filter)
 	if err != nil {
@@ -57,7 +59,6 @@ func (ic *IntouchClient) deleteEntity(collection *mongo.Collection, filter bson.
 	}
 
 	fmt.Printf("Deleted %d documents\n", deleteResult.DeletedCount)
-
 	return err
 }
 
@@ -78,7 +79,7 @@ func (ic *IntouchClient) FindProvider(filter bson.D) (*Provider, error) {
 // returns nil and err if it fails
 func (ic *IntouchClient) FindPatient(filter bson.D) (*Patient, error) {
 	var result Patient
-	err := ic.ProCol.FindOne(context.TODO(), filter).Decode(&result)
+	err := ic.PatCol.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		log.Print(err)
 		return nil, err
@@ -132,6 +133,9 @@ func (ic *IntouchClient) InsertPatient(name string, username string, password st
 	return nil, errors.New("Id type is not ObjectID")
 }
 
+// DeleteProvider deletes given provider, doesn't check if exists
+// will also update patients references to deleted provider
+// returns error, nil if ok
 func (ic *IntouchClient) DeleteProvider(id primitive.ObjectID) error {
 	err := ic.deleteEntity(ic.ProCol, bson.D{{"_id", id}})
 	if err != nil {
@@ -147,6 +151,9 @@ func (ic *IntouchClient) DeleteProvider(id primitive.ObjectID) error {
 	return ic.updateFieldAll(ic.PatCol, filter, update)
 }
 
+// DeletePatient deletes given patient, doesn't check if exists
+// will also update provider references to deleted patient
+// returns error, nil if ok
 func (ic *IntouchClient) DeletePatient(id primitive.ObjectID) error {
 	err := ic.deleteEntity(ic.PatCol, bson.D{{"_id", id}})
 	if err != nil {
@@ -163,7 +170,7 @@ func (ic *IntouchClient) DeletePatient(id primitive.ObjectID) error {
 }
 
 // AuthenticateProvider checks for a provider with given username and password
-// if result found, returns _id else nil
+// if result found, returns _id else nil and error
 func (ic *IntouchClient) AuthenticateProvider(username string, password string) (*primitive.ObjectID, error) {
 	filter := bson.D{{"username", username}, {"password", password}}
 	result, err := ic.FindProvider(filter)
@@ -176,7 +183,7 @@ func (ic *IntouchClient) AuthenticateProvider(username string, password string) 
 }
 
 // AuthenticatePatient checks for a patient with given username and password
-// if result found, returns _id else nil
+// if result found, returns _id else nil and error
 func (ic *IntouchClient) AuthenticatePatient(username string, password string) (*primitive.ObjectID, error) {
 	filter := bson.D{{"username", username}, {"password", password}}
 	result, err := ic.FindPatient(filter)
@@ -188,9 +195,12 @@ func (ic *IntouchClient) AuthenticatePatient(username string, password string) (
 	return &result.ID, nil
 }
 
+// UpdateProviderUsername checks if submitted username is in use, if not then updates provider
+// and patient references to provider username.
+// returns error, nil if ok
 func (ic *IntouchClient) UpdateProviderUsername(id primitive.ObjectID, newusername string) error {
 	if ic.IsUsernameInUse(newusername) {
-		return nil
+		return err["ErrUsernameInvalid"]
 	}
 
 	// update provider with new username
@@ -212,9 +222,12 @@ func (ic *IntouchClient) UpdateProviderUsername(id primitive.ObjectID, newuserna
 	return ic.updateFieldAll(ic.PatCol, filter, update)
 }
 
+// UpdatePatientUsername checks if submitted username is in use, if not then updates patient
+// and provider references to patient username.
+// returns error, nil if ok
 func (ic *IntouchClient) UpdatePatientUsername(id primitive.ObjectID, newusername string) error {
 	if ic.IsUsernameInUse(newusername) {
-		return nil
+		return err["ErrUsernameInvalid"]
 	}
 
 	// update patient with new username
@@ -236,6 +249,9 @@ func (ic *IntouchClient) UpdatePatientUsername(id primitive.ObjectID, newusernam
 	return ic.updateFieldAll(ic.ProCol, filter, update)
 }
 
+// AssociatePatient adds patient to provider's list of patients, as well as provider to
+// target patient's list of providers
+// returns error, nil if ok
 func (ic *IntouchClient) AssociatePatient(proID primitive.ObjectID, patID primitive.ObjectID) error {
 	provider, _ := ic.FindProvider(bson.D{{"_id", proID}})
 	patient, _ := ic.FindPatient(bson.D{{"_id", patID}})
@@ -262,6 +278,8 @@ func (ic *IntouchClient) AssociatePatient(proID primitive.ObjectID, patID primit
 	return ic.updateField(ic.PatCol, filter, update)
 }
 
+// DissociatePatient will remove patient and provider from each other's list
+// returns error, nil if ok
 func (ic *IntouchClient) DissociatePatient(proID primitive.ObjectID, patID primitive.ObjectID) error {
 	filter := bson.D{{"_id", proID}}
 	update := bson.D{{"$pull",
@@ -308,6 +326,7 @@ type Patient struct {
 	Providers []Provider
 }
 
+// OpenConnection opens connection to mongo server and returns client
 func OpenConnection() *mongo.Client {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -320,6 +339,7 @@ func OpenConnection() *mongo.Client {
 	return client
 }
 
+// CreateIntouchClient uses mongo client to create collections for running queries
 func CreateIntouchClient(db string, client *mongo.Client) *IntouchClient {
 	providers := client.Database(db).Collection("providers")
 	patients := client.Database(db).Collection("patients")
@@ -327,7 +347,7 @@ func CreateIntouchClient(db string, client *mongo.Client) *IntouchClient {
 	return &IntouchClient{providers, patients}
 }
 
-func CreateObjID(parm string) primitive.ObjectID {
+func createObjID(parm string) primitive.ObjectID {
 	result, _ := primitive.ObjectIDFromHex(parm)
 	return result
 }

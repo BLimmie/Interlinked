@@ -16,6 +16,7 @@ var client *mongo.Client = nil
 var ic *IntouchClient = nil
 
 var providerA = Provider{primitive.NilObjectID, "Hello World", "HW", "123456", "salt", []Patient{}}
+var patientA = Patient{primitive.NilObjectID, "Diego Perez", "ddog", "okbud", "salt", []Provider{}}
 
 func TestInsertProvider(t *testing.T) {
 	id, err := ic.InsertProvider(providerA.Name, providerA.Username, providerA.Password)
@@ -27,7 +28,6 @@ func TestInsertProvider(t *testing.T) {
 		t.Errorf("No provider with id %s", *id)
 	}
 
-	fmt.Println("Inserted a single document: ", id)
 	ic.DeleteProvider(*id)
 }
 
@@ -58,6 +58,47 @@ func TestDeleteProvider(t *testing.T) {
 
 }
 
+func TestInsertPatient(t *testing.T) {
+	id, err := ic.InsertPatient(patientA.Name, patientA.Username, patientA.Password)
+
+	if err != nil {
+		t.Errorf("Insert failed with %s", err.Error())
+	}
+	if !isExistPatient(bson.D{{"_id", *id}}) {
+		t.Errorf("No patient with id %s", *id)
+	}
+	fmt.Printf("ok")
+
+	ic.DeletePatient(*id)
+}
+
+func TestAuthenticatePatient(t *testing.T) {
+	patientB := Patient{primitive.NilObjectID, "Dead Man", "iamdead", "dogsarecute", "salt", []Provider{}}
+	patID, _ := ic.InsertPatient(patientB.Name, patientB.Username, patientB.Password)
+	id, err := ic.AuthenticatePatient(patientB.Username, patientB.Password)
+
+	if err != nil {
+		t.Errorf("Authentication failed with %s", err.Error())
+	} else if patID != nil && *patID != *id {
+		t.Errorf("Authentication does not match %s, got %s", *patID, *id)
+	}
+
+	ic.DeletePatient(*patID)
+}
+
+func TestDeletePatient(t *testing.T) {
+	id, _ := ic.InsertPatient(patientA.Name, patientA.Username, patientA.Password)
+	err := ic.DeletePatient(*id)
+	if err != nil {
+		t.Errorf("Delete failed with %s", err.Error())
+	}
+
+	if isExistPatient(bson.D{{"_id", *id}}) {
+		t.Errorf("Delete failed to delete %s", *id)
+	}
+
+}
+
 func setup() {
 	client = OpenConnection()
 	ic = CreateIntouchClient("test", client)
@@ -74,6 +115,17 @@ func isExistProvider(filter bson.D) bool {
 		fmt.Printf(err.Error())
 	}
 	if prov != nil {
+		return true
+	}
+	return false
+}
+
+func isExistPatient(filter bson.D) bool {
+	pat, err := ic.FindPatient(filter)
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
+	if pat != nil {
 		return true
 	}
 	return false
