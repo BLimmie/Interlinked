@@ -1,35 +1,62 @@
 import React from 'react';
 import {Doughnut} from 'react-chartjs-2';
 
-function getRandomInt (min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+let positive_level = 0;
+let negative_level = 0;
+
 
 const getState = () => ({
   labels: [
-    'Red',
-    'Green',
-    'Yellow'
+    'Positive',
+    'Negative'
   ],
   datasets: [{
-    data: [getRandomInt(50, 200), getRandomInt(100, 150), getRandomInt(150, 250)],
+    data: [positive_level, negative_level],
     backgroundColor: [
-    '#CCC',
-    '#36A2EB',
-    '#FFCE56'
+    '#ffef61',
+    '#6c61ff',
     ],
     hoverBackgroundColor: [
-    '#FF6384',
-    '#36A2EB',
-    '#FFCE56'
+    '#fae632',
+    '#3e30fc'
     ]
   }]
 });
 
+
+
+function determineEmotionLevels() {
+
+  if (globalThis.phrase_count === 0) {
+    positive_level = 0;
+    negative_level = 0;
+  }
+
+  else {
+    if (globalThis.phrase_count === 1) {
+      positive_level = 0;
+      negative_level = 0;
+    }
+
+    if (sentiment[globalThis.phrase_count - 1] === 1) {
+      positive_level++;
+    }
+    else if (sentiment[globalThis.phrase_count - 1] === 2) {
+      negative_level++;
+    }
+    else {} // Statement is neutral, emotion levels do not change
+  }
+
+  return(0);
+}
+
 export default function Emotions() {
-    return (
+  
+  determineEmotionLevels();
+  
+  return (
       <div>
-        <h2>Dynamicly refreshed Doughnut Example</h2>
+        <h2>Dynamically refreshed Doughnut Example</h2>
         <Doughnut data={getState} />
       </div>
     );

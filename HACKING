@@ -45,6 +45,8 @@ Use Jest for testing logic.
 
 Use react testing lib for testing DOM changes.
 
+Use `react-router-dom` for routing
+
 ### Directory Structure
 
 Before we intergrate our frontend and backend, the frontend root directory will
