@@ -1,11 +1,14 @@
-import React from 'react';
-import { Grid } from '@material-ui/core';
-import { FormControl, Input, InputLabel, Button } from '@material-ui/core';
-
+import React from 'react'
+import { Grid } from '@material-ui/core'
+import { Redirect } from 'react-router-dom'
+import { FormControl, Input, InputLabel, Button } from '@material-ui/core'
+import { Snackbar } from '@material-ui/core'
 
 type LoginState = {
   username: string,
   password: string,
+  loggedIn: boolean,
+  loginOnceFailed: boolean,
 }
 
 export default class Login extends React.Component<{}, LoginState> {
@@ -14,11 +17,19 @@ export default class Login extends React.Component<{}, LoginState> {
     this.state = {
       username: '',
       password: '',
+      loggedIn: false,
+      loginOnceFailed: false,
     }
-    this.submit = this.submit.bind(this);
+    this.submit = this.submit.bind(this)
   }
 
   render() {
+    if (this.state.loggedIn) {
+      return (
+        <Redirect to='/join' />
+      )
+    }
+
     return (
       <Grid
         container
@@ -54,15 +65,18 @@ export default class Login extends React.Component<{}, LoginState> {
           variant='contained'
           onClick={ this.submit }
         >Login</Button>
+        <Snackbar open={this.state.loginOnceFailed}
+          message='invalid credentials' />
       </Grid>
-    );
+    )
   }
 
   submit() {
+    // XXX
     if (this.state.username === 'admin' && this.state.password === 'admin') {
-      alert('passed')
+      this.setState({loggedIn: true})
     } else {
-      alert('invalid cred')
+      this.setState({loginOnceFailed: true})
     }
   }
 }
