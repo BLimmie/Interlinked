@@ -65,9 +65,9 @@ to remove their references. Since we would have to create a complicated filter
 or query to update each reference, for now we will updatemany anyone who
 matches.
 Then delete all sessions.
-`db.providers.update({patients: {_id: ObjectId("blahblah")}}, {$pull: {patients: {_id: ObjectId("blahblah")}}})`
-`db.patients.update({providers: {_id: ObjectId("blahblah")}}, {$pull: {providers: {_id: ObjectId("blahblah")}}})`
-`db.sessions.update({provider: {_id: ObjectId("blahblah")}}, {$pull: {provider: {_id: ObjectId("blahblah")}}})`
+`db.providers.update({patients._id: ObjectId("blahblah")}, {$pull: {patients: {_id: ObjectId("blahblah")}}})`
+`db.patients.update({providers._id: ObjectId("blahblah")}, {$pull: {providers: {_id: ObjectId("blahblah")}}})`
+`db.sessions.update({provider._id: ObjectId("blahblah")}, {$pull: {provider: {_id: ObjectId("blahblah")}}})`
 
 To create session (verify valid patient beforehand):
 `db.sessions.insert({"link": x, "patient": {id, username}, "provider": {id, username}, "exp": time})`

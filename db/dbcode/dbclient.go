@@ -13,7 +13,9 @@ import (
 )
 
 var db = "intouch"
-var err = map[string]error{"ErrUsernameInvalid": errors.New("Username is already in use")}
+var err = map[string]error{"ErrUsernameInvalid": errors.New("Username is already in use"),
+	"ErrPatientNotFound":  errors.New("Patient was not found"),
+	"ErrProviderNotFound": errors.New("Provider was not found")}
 
 // IntouchClient will add methods for easy transactions with db
 type IntouchClient struct {
@@ -75,6 +77,11 @@ func (ic *IntouchClient) FindProvider(filter bson.D) (*Provider, error) {
 	return &result, nil
 }
 
+// FindProviderByID helper for finding provider by id easily
+func (ic *IntouchClient) FindProviderByID(id primitive.ObjectID) (*Provider, error) {
+	return ic.FindProvider(bson.D{{"_id", id}})
+}
+
 // FindPatient uses filter to find a patient matching the filter
 // returns nil and err if it fails
 func (ic *IntouchClient) FindPatient(filter bson.D) (*Patient, error) {
@@ -86,6 +93,11 @@ func (ic *IntouchClient) FindPatient(filter bson.D) (*Patient, error) {
 	}
 
 	return &result, nil
+}
+
+// FindPatientByID helper for finding patient by id easily
+func (ic *IntouchClient) FindPatientByID(id primitive.ObjectID) (*Patient, error) {
+	return ic.FindPatient(bson.D{{"_id", id}})
 }
 
 // IsUsernameInUse checks if username is already assigned to someone
@@ -142,8 +154,7 @@ func (ic *IntouchClient) DeleteProvider(id primitive.ObjectID) error {
 		return err
 	}
 
-	filter := bson.D{{"providers",
-		bson.D{{"_id", id}}}}
+	filter := bson.D{{"providers._id", id}}
 	update := bson.D{{"$pull",
 		bson.D{{"providers",
 			bson.D{{"_id", id}}}}}}
@@ -160,8 +171,7 @@ func (ic *IntouchClient) DeletePatient(id primitive.ObjectID) error {
 		return err
 	}
 
-	filter := bson.D{{"patients",
-		bson.D{{"_id", id}}}}
+	filter := bson.D{{"patients._id", id}}
 	update := bson.D{{"$pull",
 		bson.D{{"patients",
 			bson.D{{"_id", id}}}}}}
@@ -255,6 +265,14 @@ func (ic *IntouchClient) UpdatePatientUsername(id primitive.ObjectID, newusernam
 func (ic *IntouchClient) AssociatePatient(proID primitive.ObjectID, patID primitive.ObjectID) error {
 	provider, _ := ic.FindProvider(bson.D{{"_id", proID}})
 	patient, _ := ic.FindPatient(bson.D{{"_id", patID}})
+
+	if patient == nil {
+		return err["ErrPatientNotFound"]
+	}
+	if provider == nil {
+		return err["ErrProviderNotFound"]
+	}
+
 	filter := bson.D{{"_id", proID}}
 	update := bson.D{{"$addToSet",
 		bson.D{{"patients",
@@ -296,7 +314,7 @@ func (ic *IntouchClient) DissociatePatient(proID primitive.ObjectID, patID primi
 		bson.D{{"providers",
 			bson.D{{"_id", proID}}}}}}
 
-	return ic.updateField(ic.ProCol, filter, update)
+	return ic.updateField(ic.PatCol, filter, update)
 }
 
 // BlankUser for inserting new document with random id rather than our own
