@@ -6,9 +6,11 @@
     "start": "npx react-scripts start"
   },
   "dependencies": {
+    "@material-ui/core": "^4.6.0",
     "@types/react": "^16.9.11",
-    "javascript-typescript-langserver": "^2.11.3",
+    "@types/react-dom": "^16.9.4",
     "react": "*",
+    "react-dom": "^16.11.0",
     "react-scripts": "^3.2.0",
     "typescript": "^3.6.4"
   },

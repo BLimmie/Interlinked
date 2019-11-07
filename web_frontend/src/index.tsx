@@ -1,3 +1,8 @@
-import React from "react";
+import React from 'react';
+import ReactDom from 'react-dom';
+import Login from './Login';
 
-console.log("hello world");
+ReactDom.render(
+  <Login />,
+  document.getElementById('root')
+)
