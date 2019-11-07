@@ -21,7 +21,7 @@ The directory structure of a generated Revel application:
 ### Database
 Must start db before saving / restoring db. Be careful of overwriting your data in db/data.  
 `notes/dbdesign.txt` contains queries and schema concepts for db  
-`db/main.go` contains queries translated for use in go
+`db/dbcode` contains code for interacting with mongo from golang
 `go get go.mongodb.org/mongo-driver` to connect to mongodb from go   
 ```  
 	source env.sh  
