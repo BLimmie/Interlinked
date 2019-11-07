@@ -1,8 +1,11 @@
 import React from 'react'
+import { CreateLocalTrackOptions, createLocalVideoTrack } from 'twilio-video'
 
-import { createLocalVideoTrack, CreateLocalTrackOptions }  from 'twilio-video'
+interface LocalVideoProps  extends React.HTMLAttributes<HTMLElement>{
 
-export default function LocalVideo() {
+}
+export default function LocalVideo(props: LocalVideoProps) {
+	const {className} = props
 	React.useEffect(() => {
 		const options: CreateLocalTrackOptions = {
 			advanced: [{width:480}]
@@ -13,6 +16,6 @@ export default function LocalVideo() {
 		})
 	},[])
 	return (
-		<div id="local-media"></div>
+		<div className={className}id="local-media"></div>
 	)
 }

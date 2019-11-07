@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button} from '@material-ui/core' 
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid, { GridSpacing } from '@material-ui/core/Grid';
@@ -10,6 +9,7 @@ import Emotions from "./Emotions";
 
 import RemoteVideo from './Video/RemoteVideo';
 import LocalVideo from './Video/LocalVideo';
+import VideoControls from './Video/VideoControls';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "22vw",
     },
     settings: {
+      background: '#16001f',
       height: "30vh",
       width: "32vw",
     },
@@ -91,7 +92,7 @@ export default function Interface(props:InterfaceProps)  {
       <Grid item xs = {7} /*Beginning of the upper half*/>
         <Grid container justify = "center" spacing={spacing}>
             <Card>
-              <RemoteVideo token={token}/>
+              <RemoteVideo className={classes.their_video}token={token}/>
             </Card>
         </Grid>
       </Grid>
@@ -113,18 +114,14 @@ export default function Interface(props:InterfaceProps)  {
       <Grid item xs = {3} /*Beginning of the lower half*/ >
         <Grid container justify = "center" spacing = {10}>
           <Card>
-              <LocalVideo />
+              <LocalVideo className={classes.my_video}/>
           </Card>
         </Grid>
       </Grid>
       <Grid item xs = {4}>
         <Grid container justify = "center" spacing = {10}>
           <Card>
-
-              <Button
-                variant="contained"
-                color="secondary"
-              >Exit</Button>
+            <VideoControls className={classes.settings}/>
           </Card>
         </Grid>
       </Grid>

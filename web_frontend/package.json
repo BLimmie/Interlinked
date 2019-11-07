@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "latest",
+    "@material-ui/icons": "^4.5.1",
     "@types/chart.js": "^2.8.10",
     "@types/react": "latest",
     "@types/react-chartjs-2": "^2.5.7",

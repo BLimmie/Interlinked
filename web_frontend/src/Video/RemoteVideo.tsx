@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect, Room, RemoteParticipant}  from 'twilio-video'
 
-interface RemoteVideoProps {
+interface RemoteVideoProps  extends React.HTMLAttributes<HTMLElement>{
 	token: string
   }
 export default function RemoteVideo(props: RemoteVideoProps) {
-	const {token } = props
+	const {token, className } = props
 	const [people, setPeople] = React.useState<string[]>([])
   
 	React.useEffect(() => {
@@ -60,6 +60,6 @@ export default function RemoteVideo(props: RemoteVideoProps) {
 	}
 
 	return (
-		<div id="remote-media"></div>
+		<div className={className}id="remote-media"></div>
 	)
 }
