@@ -1,10 +1,14 @@
 package routes
 
 import (
+	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func main() {
+var registry = app.LoginHandler{CurrentTokens: map[string]primitive.ObjectID{}}
+
+func Routes() {
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	router := gin.Default()

@@ -15,7 +15,7 @@ func Test_GetCredentials(t *testing.T) {
 	}
 	req.SetBasicAuth(user, pass)
 	auth := strings.Split(req.Header.Get("Authorization"), " ")[1]
-	returnUser, returnPass, err := getCredentials(auth)
+	returnUser, returnPass, err := GetCredentials(auth)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
