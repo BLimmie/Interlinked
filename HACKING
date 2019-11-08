@@ -41,6 +41,13 @@ Style:
 
 - https://google.github.io/styleguide/jsguide.html#introduction
 
+Use no trailing semicolons.
+
+Use the trailing comma when we have multi-line comma-separated lists.
+Do not use the comma we the list is only one-line.
+
+For xml boolean attributes, if we want to turn it on, we always simply write its name. If we want turn it off, we always write `={false}`.
+
 Use Jest for testing logic.
 
 Use react testing lib for testing DOM changes.
