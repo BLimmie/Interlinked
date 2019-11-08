@@ -10,6 +10,7 @@ import Emotions from "./Emotions";
 
 import RemoteVideo from './Video/RemoteVideo';
 import LocalVideo from './Video/LocalVideo';
+import Transcript_Tests from './Transcript_Tests';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +55,9 @@ interface InterfaceProps  {
 
 globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
+
+// Tests
+Transcript_Tests();
 
 // This function is what arranges all of the individual elements into the complete UI
 export default function Interface(props:InterfaceProps)  {
