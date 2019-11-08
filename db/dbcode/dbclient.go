@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"context"
@@ -330,7 +330,7 @@ type Provider struct {
 	Name     string
 	Username string
 	Password string
-	Salt     string
+	salt     string
 	Patients []Patient
 }
 
@@ -340,7 +340,7 @@ type Patient struct {
 	Name      string
 	Username  string
 	Password  string
-	Salt      string
+	salt      string
 	Providers []Provider
 }
 

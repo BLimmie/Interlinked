@@ -13,17 +13,17 @@ func login(c *gin.Context) {
 		c.String(400, "Invalid User Type %s", userType)
 		return
 	}
-	user_id, err := app.VerifyLogin(c.Request.Header.Get("Authorization"))
+	userId, err := app.VerifyLogin(c.Request.Header.Get("Authorization"), userType)
 	if err != nil {
-		c.String(500, "Unable to authenticate")
+		c.String(200, err.Error())
 		return
 	}
 
 	//Create token and add to the registry
-	token := app.CreateToken(user_id)
+	token := app.CreateToken(*userId)
 
-	if err := registry.AddLogin(user_id, token); err != nil {
-		c.String(500, "Already Logged in")
+	if err := registry.AddLogin(*userId, token); err != nil {
+		c.String(200, "Already Logged in: %s", err.Error())
 		return
 	}
 	c.JSON(200, gin.H{
