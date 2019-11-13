@@ -6,7 +6,7 @@ export default function LoginPage() {
   return (
     <div>
       <Link to={{
-        pathname:'/CreateRoom'
+        pathname:'/DoctorInterface'
       }}>
         <Button
           variant="contained"
@@ -14,7 +14,7 @@ export default function LoginPage() {
           >Join as Doctor</Button>
       </Link>
       <Link to={{
-        pathname:'/JoinRoom',
+        pathname:'/PatientInterface',
       }}>
         <Button
           variant="contained"

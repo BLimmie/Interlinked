@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, IconButton, Slider} from '@material-ui/core' 
+import { Button, IconButton, Slider, Box} from '@material-ui/core' 
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { Grid  } from '@material-ui/core/'
@@ -10,6 +10,12 @@ const useStyles = makeStyles((theme: Theme) =>
     icon:{
       color: theme.palette.background.default,
       fontSize:80
+    },
+    padding:{
+      paddingLeft: '4px'
+    },
+    widthHundred: {
+      width: '100%'
     }
   })
 )
@@ -30,30 +36,50 @@ export default function VideoControls(props:VideoControlsProps)  {
       <Grid container className={className} >
         <Grid item xs={4} />
         <Grid item xs={4}>
-          <Button
-            color="primary"
-            size="large"
-            variant="outlined"
-          >End Session</Button>
+          <Box
+            border = {8}
+            borderColor = "white"
+            borderRadius = "0%"
+          >
+            <Button
+              className={classes.widthHundred}
+              color="primary"
+              size="large"
+              variant="outlined"
+            >End Session</Button>
+          </Box>
         </Grid>
         <Grid item xs={4} />
         <Grid item xs={2} >
-            <IconButton >
+          <Box
+            border = {8}
+            borderColor = "white"
+            borderRadius = "0%"
+          >
+            <IconButton className={classes.padding}>
               <VideocamOffOutlined className={classes.icon} />
             </IconButton>
+          </Box>
         </Grid>
+        <Grid item xs={1} />
         <Grid item xs={2} >
-          <IconButton>
-            <MicOffOutlined className={classes.icon}/>
-          </IconButton>
+          <Box
+            border = {8}
+            borderColor = "white"
+            borderRadius = "0%"
+          >
+            <IconButton className={classes.padding}>
+              <MicOffOutlined className={classes.icon} />
+            </IconButton>
+          </Box>
         </Grid>
-        <Grid item xs={8} >
+        <Grid item xs={7} >
           <IconButton >
             <VolumeUpOutlined className={classes.icon}/>
           </IconButton>
           <Slider
             value={volume}
-            style={{width:"250px"}}
+            style={{width:"230px"}}
             onChange={onVolumeChange}
           />
         </Grid>
