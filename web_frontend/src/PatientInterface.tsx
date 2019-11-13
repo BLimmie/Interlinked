@@ -45,7 +45,19 @@ interface InterfaceProps  {
 export default function PatientInterface(props:InterfaceProps)  {
 
   const classes = useStyles();
+  const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
+  const patientScreenshots: string[] = []
 
+  if(webcamRef){
+    //every 1 second get screenshot
+    window.setInterval(() => {
+      if(webcamRef.current){
+      const screenShot = webcamRef.current.getScreenshot()
+      //Pushing screenshots into an array but will be later sent to the backend
+      patientScreenshots.push(screenShot as string)
+      }
+    }, 1000)
+  }
   React.useEffect(() => {
     const peer = new Peer('receiver', { host: 'localhost', port: 9000, path: '/' })
     peer.on('call', call => {
@@ -68,7 +80,14 @@ export default function PatientInterface(props:InterfaceProps)  {
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={1} />
       <Grid item justify={"center"} className={classes.their_video} xs = {5} /*Beginning of the upper half*/>
-          <div><video height={"inherit"} id ="remote" autoPlay></video></div>
+          <div>
+            <video
+              height={"inherit"}
+              id ="remote"
+              autoPlay
+            >             
+            </video>
+          </div>
       </Grid>
       <Grid item xs={1} />
       <Grid item xs = {5}>
@@ -82,7 +101,12 @@ export default function PatientInterface(props:InterfaceProps)  {
       
       <Grid item xs = {3} /*Beginning of the lower half*/ >
         <Card>
-          <Webcam id="local" />
+          <Webcam
+            audio={true}
+            id="local" 
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+          />
         </Card>
       </Grid>
       <Grid item xs = {4}>
