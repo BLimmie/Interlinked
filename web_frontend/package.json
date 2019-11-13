@@ -14,6 +14,7 @@
     "react-dom": "latest",
     "react-router-dom": "^5.1.2",
     "react-scripts": "latest",
+    "react-speech-recognition": "^2.0.4",
     "recharts": "^1.8.5",
     "twilio": "^3.36.0",
     "twilio-video": "^2.0.0-beta15",

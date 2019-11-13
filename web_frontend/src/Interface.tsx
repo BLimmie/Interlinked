@@ -5,12 +5,13 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid, { GridSpacing } from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
-import Speech from './Transcription';
 import Emotions from "./Emotions";
+import Transcription from './Transcription';
 
 import RemoteVideo from './Video/RemoteVideo';
 import LocalVideo from './Video/LocalVideo';
-import Transcript_Tests from './Transcript_Tests';
+
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,34 +54,17 @@ interface InterfaceProps  {
   location: StateInterface
 }
 
-globalThis.point_in_transcript = 0;
-globalThis.phrase_count = 0;
-
-// Tests
-Transcript_Tests();
 
 // This function is what arranges all of the individual elements into the complete UI
 export default function Interface(props:InterfaceProps)  {
   //Get Twilio token passed through url location state
   const token = props.location.state
 
-  // The idea is, the entire transcript is stored in some other Map or vector or whatever
-  // Then, the "display_words" structure has a limited amount of transcriptions
-  // so the box isn't overloaded
-  // This "display_words" structure has things added and removed one at a time
-  // Everything in "display_words" is in the display box
+  globalThis.words = new Map();
   globalThis.display_words = Array.from( globalThis.words.keys() );
-  globalThis.sentiment = Array.from( globalThis.words.values() );
-
-  if (globalThis.display_words.length > globalThis.phrase_count) {
-    globalThis.phrase_count = globalThis.display_words.length;
-  }
-
-  // This is only supposed to be called when the program first starts and when a new phrase is added to "words"
-  if (globalThis.point_in_transcript + 3 < globalThis.phrase_count) {
-    globalThis.point_in_transcript++;
-  }
-
+  globalThis.sentiment = Array.from( globalThis.words.values() ); 
+  globalThis.point_in_transcript = 0;
+  globalThis.phrase_count = 0;
 
   const [spacing, setSpacing] = React.useState<GridSpacing>(2);
   const classes = useStyles();
@@ -142,7 +126,7 @@ export default function Interface(props:InterfaceProps)  {
 
             // Inside this box is where the audio transcription is
           >
-            <Speech />
+            <Transcription />
           </Box>
         </Grid>
       </Grid>
