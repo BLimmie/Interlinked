@@ -11,8 +11,6 @@ import Transcription from './Transcription';
 import RemoteVideo from './Video/RemoteVideo';
 import LocalVideo from './Video/LocalVideo';
 
-
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -93,7 +91,7 @@ export default function Interface(props:InterfaceProps)  {
 
             // Inside this box is where the emotion display will be
           >
-            <Emotions />
+            <Emotions current_phrase_count={0} />
           </Box>
         </Grid>
       </Grid>
