@@ -25,8 +25,5 @@ export default function Run() {
   return(0);
 }
 
-// No tests
-//Run();
 
-// Tests
-Transcript_Tests();
+Run();
