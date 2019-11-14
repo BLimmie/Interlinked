@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 
@@ -12,23 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Entity int
 
-const (
-	Pat Entity = 0
-	Pro Entity = 1
-	Ses Entity = 2
-)
-
-var db = "intouch"
-var errs = map[string]error{
-	"ErrUsernameInvalid":  errors.New("Username is already in use"),
-	"ErrPatientNotFound":  errors.New("Patient was not found"),
-	"ErrProviderNotFound": errors.New("Provider was not found"),
-	"ErrInvalidFlag":      errors.New("Flag parameter is wrong"),
-	"ErrNotObjectID":      errors.New("ID is not type ObjectID"),
-	"ErrLinkInvalid":      errors.New("Link is already in use"),
-}
 
 // IntouchClient will add methods for easy transactions with db
 type IntouchClient struct {
@@ -444,67 +427,21 @@ func (ic *IntouchClient) DissociatePatient(proID primitive.ObjectID, patID primi
 	return ic.updateField(filter, update, Pat)
 }
 
-// BlankUser for inserting new document with random id rather than our own
-type BlankUser struct {
-	Name     string
-	Username string
-	Password string
-}
 
-// UserRef for appending user as a reference in a different doc
-// user ToRef of Provider or Patient to create UserRef
-type UserRef struct {
-	ID       primitive.ObjectID `bson:"_id"`
-	Name     string
-	Username string
-}
-
-// Provider if referenced by Patient or Session then Salt, Password, and Patients have no values
-type Provider struct {
-	ID       primitive.ObjectID `bson:"_id"`
-	Name     string
-	Username string
-	Password string
-	salt     string
-	Patients []UserRef
-}
 
 // ToRef converts provider to UserRef
 func (pro *Provider) ToRef() *UserRef {
 	return &UserRef{pro.ID, pro.Name, pro.Username}
 }
 
-// Patient if referenced by Provider or Session then Salt, Password, and Patients have no values
-type Patient struct {
-	ID        primitive.ObjectID `bson:"_id"`
-	Name      string
-	Username  string
-	Password  string
-	salt      string
-	Providers []UserRef
-}
+
 
 // ToRef converts patient to UserRef
 func (pat *Patient) ToRef() *UserRef {
 	return &UserRef{pat.ID, pat.Name, pat.Username}
 }
 
-// Session will reference patient and provider by _id, name and username
-type Session struct {
-	ID          primitive.ObjectID `bson:"_id"`
-	Link        string
-	Patient     UserRef
-	Provider    UserRef `bson:",omitempty"`
-	CreatedTime string
-}
 
-// BlankSession for inserting new document with random id rather than our own
-type BlankSession struct {
-	Link        string
-	CreatedTime string
-	Patient     UserRef
-	Provider    UserRef
-}
 
 // OpenConnection opens connection to mongo server and returns client
 func OpenConnection() *mongo.Client {

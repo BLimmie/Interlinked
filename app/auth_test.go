@@ -24,11 +24,11 @@ func Test_GetCredentials(t *testing.T) {
 }
 
 func Test_XorBytes(t *testing.T) {
-	a1 := []byte{1,0,1,0}
-	a2 := []byte{1,0,1,0}
-	res := xorByteArray(a1,a2)
+	a1 := []byte{1, 0, 1, 0}
+	a2 := []byte{1, 0, 1, 0}
+	res := xorByteArray(a1, a2)
 
-	for _,b := range res{
+	for _, b := range res {
 		if b != byte(0) {
 			t.Fatalf("")
 		}

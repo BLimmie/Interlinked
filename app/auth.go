@@ -5,18 +5,7 @@ import (
 	"strings"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
-
-var client *mongo.Client = nil
-var ic *IntouchClient = nil
-
-var passcode = []byte{0x31, 0x41, 0x59, 0x26, 0x53, 0x58, 0x97, 0x32, 0x38, 0x46, 0x26, 0x43, 0x38, 0x32, 0x79, 0x50, 0x28, 0x84, 0x19, 0x71, 0x69, 0x39, 0x93, 0x75}
-
-func init() {
-	client = OpenConnection()
-	ic = CreateIntouchClient("test", client)
-}
 
 func xorByteArray(a1, a2 []byte) []byte {
 	var result []byte
