@@ -8,7 +8,7 @@ For now providers schema is:
 Username is unique among all patients and providers. In the future may reference
 videos.
 For now sessions schema is: 
-{ "_id" , "link" , "patient", "provider", "exp" }
+{ "_id" , "link" , "patient { _id, name, username } ", "provider { _id, name, username }", "createdtime" }
 link and (patient and provider) are keys
 Potential videos schema is:
 { "_id" , "location", "timestamp", "duration", "patient", "provider" }
