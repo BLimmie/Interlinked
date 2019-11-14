@@ -14,8 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       background: '#16001f'
     },
-    speech: {
-      height: "40vh"
+    transcription: {
+      height: "30vh",
+      width: "38vw",
     },
     control: {
       padding: theme.spacing(2),
@@ -32,8 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "40vh"
     },
     emotions: {
-      height: "55vh"
-    }
+      height: "54vh",
+      width: "38vw",
+    },
   }),
 );
 
@@ -92,6 +94,7 @@ export default function PatientInterface(props:InterfaceProps)  {
       <Grid item xs={1} />
       <Grid item xs = {5}>
         <Box className = {classes.emotions}
+          my = {2}
           border = {8}
           borderColor = "white"
           borderRadius = "0%"
@@ -115,7 +118,7 @@ export default function PatientInterface(props:InterfaceProps)  {
         </Card>
       </Grid>
       <Grid item xs = {5}>
-        <Box className = {classes.speech}
+        <Box className = {classes.transcription}
           border = {8}
           borderColor = "white"
           borderRadius = "0%"
