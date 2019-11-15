@@ -5,6 +5,10 @@ import (
 	"sync"
 )
 
+func NewResultChannel() chan ResultStruct {
+	return make(chan ResultStruct)
+}
+
 func NewWorkerHandler(numWorkers int) *WorkerHandler {
 	return &WorkerHandler{
 		Workers: make(chan bool, numWorkers),

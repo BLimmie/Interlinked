@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"sync"
+	"time"
 )
 
 type Entity int
@@ -36,13 +37,19 @@ func init() {
 	ic = CreateIntouchClient("test", client)
 }
 
+type TimestampMetrics struct {
+	Time time.Duration
+	Sentiment string
+	AU map[string]float32
+}
+
 type LoginHandler struct {
 	CurrentTokens map[string]primitive.ObjectID
 }
 
 type ResultStruct struct {
-	result interface{}
-	err    error
+	Result interface{}
+	Err    error
 }
 
 type WorkerHandler struct {
@@ -53,10 +60,12 @@ type WorkerHandler struct {
 // Session will reference patient and provider by _id, name and username
 type Session struct {
 	ID          primitive.ObjectID `bson:"_id"`
+	NominalID	string
 	Link        string
 	Patient     UserRef
 	Provider    UserRef `bson:",omitempty"`
 	CreatedTime string
+	Metrics		[]TimestampMetrics
 }
 
 // BlankSession for inserting new document with random id rather than our own

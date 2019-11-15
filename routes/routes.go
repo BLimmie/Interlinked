@@ -2,18 +2,18 @@ package routes
 
 import (
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
-	db "github.com/BLimmie/intouch-health-capstone-2019/db/dbcode"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var client *mongo.Client = nil
-var ic *db.IntouchClient = nil
+var ic *app.IntouchClient = nil
+var CPUWorkers *app.WorkerHandler = nil
 
 func init() {
-	client = db.OpenConnection()
-	ic = db.CreateIntouchClient("test", client)
+	client = app.OpenConnection()
+	ic = app.CreateIntouchClient("test", client)
 }
 
 var registry = app.LoginHandler{CurrentTokens: map[string]primitive.ObjectID{}}
@@ -21,11 +21,12 @@ var registry = app.LoginHandler{CurrentTokens: map[string]primitive.ObjectID{}}
 func Routes() {
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
+	CPUWorkers = app.NewWorkerHandler(4)
 	router := gin.Default()
 	// Get Object Data
 	router.GET("/patient/:user", getPatient)
 	router.GET("/provider/:user", getProvider)
-	router.GET("/session/:user", getSession)
+	router.GET("/session/:id", getSession)
 	// Submit New Data
 	router.POST("/patient", addPatient)
 	router.POST("/provider", addProvider)
