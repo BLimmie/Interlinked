@@ -6,7 +6,8 @@ import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card'
 import Peer from 'peerjs'
 import Webcam from 'react-webcam'
-import VideoControls from './Video/VideoControls'
+import VideoControls, { avStateInterface } from './Video/VideoControls'
+import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,13 +42,19 @@ const useStyles = makeStyles((theme: Theme) =>
 interface InterfaceProps  {
 }
 
-
 export default function PatientInterface(props:InterfaceProps)  {
 
   const classes = useStyles();
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
+  const [avState, setAvState] = React.useState<avStateInterface>({
+    audio: true,
+    video: true,
+    volume: 50
+  })
+  const [localStream, setLocalStream] = React.useState<MediaStream>()
+  const [remoteConnected, setRemoteConnected] = React.useState<boolean>(false)
   const patientScreenshots: string[] = []
-
+  const endSession: Function = () => {}
   if(webcamRef){
     //every 1 second get screenshot
     window.setInterval(() => {
@@ -62,32 +69,66 @@ export default function PatientInterface(props:InterfaceProps)  {
     const peer = new Peer('receiver', { host: 'localhost', port: 9000, path: '/' })
     peer.on('call', call => {
       const startChat = async () => {
-        const localStream = await navigator.mediaDevices.getUserMedia({
-          video: true
-        })
-        const localMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#local');
-        (localMediaContainer as HTMLMediaElement).srcObject = localStream
-        call.answer(localStream)
-        call.on('stream', remoteStream => {
-          const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
-          (remoteMediaContainer as HTMLMediaElement).srcObject = remoteStream
-        })
+        if(webcamRef.current){
+          setLocalStream(webcamRef.current.stream)
+          call.answer(localStream)
+          call.on('stream', remoteStream => {
+            setRemoteConnected(true)
+            const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
+            (remoteMediaContainer as HTMLMediaElement).srcObject = remoteStream;
+            (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
+          })
+        }
       }
       startChat()
     })
   }, [])
+
+  React.useEffect(() => {
+    console.log(avState.video)
+    if(localStream){
+      localStream.getVideoTracks()[0].enabled = avState.video
+    }
+  },[avState.video, localStream])
+
+  React.useEffect(() => {
+    console.log(avState.audio)
+    if(localStream){
+      localStream.getAudioTracks()[0].enabled = avState.audio
+    }
+  },[avState.audio, localStream])
+
+  React.useEffect(() => {
+    const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
+    if(remoteMediaContainer) (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
+  },[avState.volume, localStream]);
+
   return (
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={1} />
-      <Grid item justify={"center"} className={classes.their_video} xs = {5} /*Beginning of the upper half*/>
-          <div>
-            <video
-              height={"inherit"}
-              id ="remote"
-              autoPlay
-            >             
-            </video>
-          </div>
+      <Grid item className={classes.their_video} xs = {5} /*Beginning of the upper half*/>
+          {
+            remoteConnected &&
+            <div>
+              <video
+                height={"inherit"}
+                id ="remote"
+                autoPlay
+              >             
+              </video>
+            </div>
+          }
+          {
+            !remoteConnected &&
+            <div>
+              <Typography
+                variant="h1"
+                color="primary"
+              >
+                Waiting for Doctor
+              </Typography>
+            </div>
+          }
       </Grid>
       <Grid item xs={1} />
       <Grid item xs = {5}>
@@ -102,7 +143,7 @@ export default function PatientInterface(props:InterfaceProps)  {
       <Grid item xs = {3} /*Beginning of the lower half*/ >
         <Card>
           <Webcam
-            audio={true}
+            audio={avState.audio}
             id="local" 
             ref={webcamRef}
             screenshotFormat="image/jpeg"
@@ -111,7 +152,12 @@ export default function PatientInterface(props:InterfaceProps)  {
       </Grid>
       <Grid item xs = {4}>
         <Card>
-          <VideoControls className={classes.settings}/>
+          <VideoControls
+            className={classes.settings}
+            avState={avState}
+            setAVState={setAvState}
+            endSession={endSession}
+          />
         </Card>
       </Grid>
       <Grid item xs = {5}>
