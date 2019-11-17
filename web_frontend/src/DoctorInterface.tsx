@@ -7,7 +7,6 @@ import Card from '@material-ui/core/Card'
 import Transcription from './Transcription'
 import Emotions from "./Emotions"
 import Peer from 'peerjs'
-import Webcam from 'react-webcam'
 
 import VideoControls from './Video/VideoControls'
 
@@ -42,22 +41,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export type StateInterface = {
-  state:string
-}
-
 interface InterfaceProps  {
-  location: StateInterface
 }
 
 globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
 
 // This function is what arranges all of the individual elements into the complete UI
-export default function Interface(props:InterfaceProps)  {
-  //Get Twilio token passed through url location state
-  const token = props.location.state
-
+export default function Interface(_:InterfaceProps)  {
   globalThis.words = new Map();
   globalThis.display_words = Array.from( globalThis.words.keys() );
   globalThis.sentiment = Array.from( globalThis.words.values() ); 

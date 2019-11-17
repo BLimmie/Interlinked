@@ -26,7 +26,7 @@ export default class Login extends React.Component<{}, LoginState> {
   render() {
     if (this.state.loggedIn) {
       return (
-        <Redirect to='/join' />
+        <Redirect to='/dashboard' />
       )
     }
 
