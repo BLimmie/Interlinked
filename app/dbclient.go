@@ -4,21 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-
-
-// IntouchClient will add methods for easy transactions with db
-type IntouchClient struct {
-	ProCol *mongo.Collection
-	PatCol *mongo.Collection
-	SesCol *mongo.Collection
-}
 
 func (ic *IntouchClient) getCollection(flag Entity) *mongo.Collection {
 	if flag == Pat {
@@ -243,6 +235,17 @@ func (ic *IntouchClient) InsertSession(link string, created string, patient *Use
 	return ic.insertEntity(BlankSession{link, created, *patient, *provider}, Ses)
 }
 
+// InsertSessionMetric adds a TimeStamp metric to a Session
+// returns error, nil if ok
+func (ic *IntouchClient) InsertSessionMetric(id primitive.ObjectID, metric TimestampMetrics) error {
+
+	// insert metric into session matching id
+	filter := bson.D{{"_id", id}}
+	update := bson.D{{"$addToSet",
+		bson.D{{"metrics", metric}}}}
+	return ic.updateField(filter, update, Ses)
+}
+
 // DeleteEntity deletes given entity with id (patient, provider, session, etc. based on flag),
 // doesn't check if exists
 // will also update references to deleted entity
@@ -293,6 +296,18 @@ func (ic *IntouchClient) DeleteEntity(id primitive.ObjectID, flag Entity) error 
 
 	return ic.updateFieldAll(filterB, updateB, Ses)
 
+}
+
+// DeleteSessionMetric deletes a TimeStamp metric based on sentiment string from Session
+// returns error, nil if ok
+func (ic *IntouchClient) DeleteSessionMetric(id primitive.ObjectID, duration time.Duration) error {
+
+	// delete metric from session matching id
+	filter := bson.D{{"_id", id}}
+	update := bson.D{{"$pull",
+		bson.D{{"metrics",
+			bson.D{{"time", duration}}}}}}
+	return ic.updateField(filter, update, Ses)
 }
 
 // AuthenticateUser checks for a user (specify patient or provider with flag) with given username and password
@@ -427,21 +442,15 @@ func (ic *IntouchClient) DissociatePatient(proID primitive.ObjectID, patID primi
 	return ic.updateField(filter, update, Pat)
 }
 
-
-
 // ToRef converts provider to UserRef
 func (pro *Provider) ToRef() *UserRef {
 	return &UserRef{pro.ID, pro.Name, pro.Username}
 }
 
-
-
 // ToRef converts patient to UserRef
 func (pat *Patient) ToRef() *UserRef {
 	return &UserRef{pat.ID, pat.Name, pat.Username}
 }
-
-
 
 // OpenConnection opens connection to mongo server and returns client
 func OpenConnection() *mongo.Client {

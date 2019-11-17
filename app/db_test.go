@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"go.mongodb.org/mongo-driver/bson"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -446,6 +447,42 @@ func TestInsertSession(t *testing.T) {
 	}
 	session, _ := testic.FindSessionByID(*ses)
 	fmt.Printf("Found a single document: %+v\n", *session)
+
+	testic.DeleteEntity(*idA, Pro)
+	session, _ = testic.FindSessionByID(*ses)
+	fmt.Printf("Found a single document: %+v\n", *session)
+	if session.Provider.ID != primitive.NilObjectID {
+		t.Errorf("Session's provider should be null since it was deleted")
+	}
+	testic.DeleteEntity(*ses, Ses)
+	testic.DeleteEntity(*idB, Pat)
+}
+
+func TestInsertSessionMetric(t *testing.T) {
+	idA, _ := testic.InsertUser(providerA.Name, "blue", providerA.Password, Pro)
+	aa, _ := testic.FindProviderByID(*idA)
+	pro := aa.ToRef()
+	idB, _ := testic.InsertUser(patientA.Name, "red", patientA.Password, Pat)
+	bb, _ := testic.FindPatientByID(*idB)
+	pat := bb.ToRef()
+	ses, err := testic.InsertSession("/yesyesyes", createdTime, pat, pro)
+
+	if err != nil {
+		t.Errorf("Insert failed with %s", err.Error())
+	}
+	if !isExistSession(bson.D{{"_id", *ses}}) {
+		t.Errorf("No session with id %s", *ses)
+	}
+
+	metric := TimestampMetrics{32, map[string]float32{"anger": 32.0}, map[string]float32{"hello": 32.0}}
+	ic.InsertSessionMetric(*ses, metric)
+
+	session, _ := testic.FindSessionByID(*ses)
+	fmt.Printf("Found a single document: %+v\n", *session)
+
+	if !cmp.Equal(session.Metrics[0], metric) {
+		t.Errorf("Metrics %+v does not contain inserted metric %+v", session.Metrics, metric)
+	}
 
 	testic.DeleteEntity(*idA, Pro)
 	session, _ = testic.FindSessionByID(*ses)
