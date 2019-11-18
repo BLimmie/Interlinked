@@ -474,7 +474,7 @@ func TestInsertSessionMetric(t *testing.T) {
 		t.Errorf("No session with id %s", *ses)
 	}
 
-	metric := TimestampMetrics{32, map[string]float32{"anger": 32.0}, map[string]float32{"hello": 32.0}}
+	metric := TimestampMetrics{32, map[string]float64{"anger": 32.0}, map[string]float32{"hello": 32.0}}
 	ic.InsertSessionMetric(*ses, metric)
 
 	session, _ := testic.FindSessionByID(*ses)
