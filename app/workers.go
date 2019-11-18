@@ -32,6 +32,7 @@ func (wh *WorkerHandler) SubmitJob(resultChan chan ResultStruct, f func(idx int)
 		res, err := f(worker_idx)
 		resultChan <- ResultStruct{res, err}
 		<-wh.Workers
+		wh.idx--
 	}()
 	return nil
 }
