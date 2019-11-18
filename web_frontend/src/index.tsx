@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
-import Login from './LoginWrapper'
+import Login from './Login'
 import PrivilegedRoute from './PrivilegedRoute'
-import Dashboard from './DashBoard'
+import Dashboard from './Dashboard'
 import DoctorInterface from './DoctorInterface'
 import PatientInterface from './PatientInterface'
 import CssBaseline from '@material-ui/core/CssBaseline';

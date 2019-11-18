@@ -10,7 +10,6 @@ import Peer from 'peerjs'
 
 import VideoControls, { avStateInterface } from './Video/VideoControls'
 import { Button } from '@material-ui/core'
-import Webcam from 'react-webcam'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

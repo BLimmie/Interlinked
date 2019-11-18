@@ -4,9 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { FormControl, Input, InputLabel, Button } from '@material-ui/core'
 import { Snackbar } from '@material-ui/core'
 
-type LoginProps = {
-  class: any
-}
+type LoginProps = { }
 
 type LoginState = {
   username: string,
@@ -16,11 +14,8 @@ type LoginState = {
 }
 
 export default class Login extends React.Component<LoginProps, LoginState> {
-  private classes: any
-
   constructor(props: LoginProps) {
     super(props);
-    this.classes = props.class
     this.state = {
       username: '',
       password: '',
@@ -39,7 +34,6 @@ export default class Login extends React.Component<LoginProps, LoginState> {
         direction='column'
         alignItems='center'
         justify='center'
-        className={(this.classes).root}
       >
         <Grid item>
           <FormControl required>
