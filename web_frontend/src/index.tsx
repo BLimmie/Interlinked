@@ -6,6 +6,9 @@ import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './Dashboard'
 import DoctorInterface from './DoctorInterface'
 import PatientInterface from './PatientInterface'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/styles';
+import theme from './theme';
 
 // Initializing global variables
 globalThis.words = new Map();
@@ -29,6 +32,10 @@ class Server extends React.Component {
 }
 
 ReactDom.render(
-  <Server />,
-  document.getElementById('root')
+  <ThemeProvider theme={theme}>
+    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+    <CssBaseline />
+    <Server />
+  </ThemeProvider>,
+  document.querySelector('#root'),
 )
