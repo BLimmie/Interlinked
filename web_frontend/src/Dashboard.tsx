@@ -7,23 +7,22 @@ export default class Dashboard extends React.Component {
     return (
       <Grid
         container
-        spacing={5}
+        spacing={3}
+        wrap='nowrap'
         alignItems='center'
         justify='center'
       >
-        <Grid item xs={12}></Grid>
-        <Grid item xs={12}></Grid>
         <Grid item>
           <Link to='/DoctorInterface'>
             <Button variant='contained'>
-              Join
+              Join as Doctor
             </Button>
           </Link>
         </Grid>
         <Grid item>
-          <Link to='/DoctorInterface'>
+          <Link to='/PatientInterface'>
             <Button variant='contained'>
-              Start
+              Join as Patient
             </Button>
           </Link>
         </Grid>
