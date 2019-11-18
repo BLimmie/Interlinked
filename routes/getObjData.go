@@ -10,7 +10,7 @@ import (
 func getPatient(c *gin.Context) {
 	username := c.Param("user")
 	resultChan := app.NewResultChannel()
-	CPUWorkers.SubmitJob(resultChan, func() (interface{}, error) {
+	DBWorkers.SubmitJob(resultChan, func() (interface{}, error) {
 		pat, err := ic.FindPatient(bson.D{{"username", username}})
 		return pat, err
 	})
@@ -34,7 +34,7 @@ func getSession(c *gin.Context) {
 		c.String(400, "Bad format")
 	}
 	resultChan := app.NewResultChannel()
-	CPUWorkers.SubmitJob(resultChan, func() (interface{}, error) {
+	DBWorkers.SubmitJob(resultChan, func() (interface{}, error) {
 		session, err := ic.FindSessionByID(sessionID)
 		return session, err
 	})
@@ -55,7 +55,7 @@ func getSession(c *gin.Context) {
 func getProvider(c *gin.Context) {
 	username := c.Param("user")
 	resultChan := app.NewResultChannel()
-	CPUWorkers.SubmitJob(resultChan, func() (interface{}, error) {
+	DBWorkers.SubmitJob(resultChan, func() (interface{}, error) {
 		pat, err := ic.FindProvider(bson.D{{"username", username}})
 		return pat, err
 	})
