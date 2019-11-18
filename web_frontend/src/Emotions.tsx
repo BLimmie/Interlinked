@@ -58,7 +58,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
     componentDidMount() {
       this.timer = setInterval(() => {
         this.determineEmotionLevels();
-      }, 1000);
+      }, 100);
     }
   
     componentWillUnmount() {

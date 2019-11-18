@@ -11,6 +11,7 @@ import Webcam from 'react-webcam'
 import {Redirect} from 'react-router-dom'
 import VideoControls, { avStateInterface } from './Video/VideoControls'
 import { Button } from '@material-ui/core'
+import Transcript_Tests from './Transcript_Tests'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -158,10 +159,10 @@ export default function Interface()  {
           borderColor = "white"
           borderRadius = "0%"
         >
-          <Transcription />
+          <Transcript_Tests i={0} />
         </Box>
       </Grid>
     </Grid>
-  );
+  ); //Replace "<Transcription />" with "<Transcript_Tests i={0} />" to run the transcription and emotion display tests
 
 }
