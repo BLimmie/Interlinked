@@ -4,6 +4,7 @@ import (
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func getPatient(c *gin.Context) {
@@ -28,10 +29,13 @@ func getPatient(c *gin.Context) {
 }
 
 func getSession(c *gin.Context) {
-	sessionID := c.Param("id")
+	sessionID, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		c.String(400, "Bad format")
+	}
 	resultChan := app.NewResultChannel()
 	CPUWorkers.SubmitJob(resultChan, func() (interface{}, error) {
-		session, err := ic.FindSession(bson.D{{"nominal_id", sessionID}})
+		session, err := ic.FindSessionByID(sessionID)
 		return session, err
 	})
 

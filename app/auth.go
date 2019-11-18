@@ -2,6 +2,8 @@ package app
 
 import (
 	"encoding/base64"
+	"encoding/json"
+	"os"
 	"strings"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -58,4 +60,18 @@ func CreateToken(user primitive.ObjectID) string {
 
 func NewSalt() string {
 	return ""
+}
+
+func NewAPIKeys(config string) APIKeys {
+	r, err := os.Open(config)
+
+	if err != nil {
+		panic(err)
+	}
+	var keys = APIKeys{}
+	d := json.NewDecoder(r)
+	if err := d.Decode(&keys); err != nil {
+		panic(err)
+	}
+	return keys
 }

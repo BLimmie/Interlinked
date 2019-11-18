@@ -109,3 +109,4 @@ venv.bak/
 test-results/
 tmp/
 .idea/
+*config.json

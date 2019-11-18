@@ -9,7 +9,10 @@ import (
 
 var client *mongo.Client = nil
 var ic *app.IntouchClient = nil
-var CPUWorkers *app.WorkerHandler = nil
+var DBWorkers *app.WorkerHandler = nil
+var AlgorithmiaWorkers *app.WorkerHandler = nil
+
+var apiKeys app.APIKeys
 
 func init() {
 	client = app.OpenConnection()
@@ -18,10 +21,11 @@ func init() {
 
 var registry = app.LoginHandler{CurrentTokens: map[string]primitive.ObjectID{}}
 
-func Routes() {
+func Routes(keys app.APIKeys) {
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
-	CPUWorkers = app.NewWorkerHandler(4)
+	DBWorkers = app.NewWorkerHandler(4)
+	AlgorithmiaWorkers = app.NewWorkerHandler(1)
 	router := gin.Default()
 	// Get Object Data
 	router.GET("/patient/:user", getPatient)

@@ -8,7 +8,7 @@ func addSession(c *gin.Context) {
 
 func addProvider(c *gin.Context) {
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
-	_, err := ic.InsertProvider(name, username, password)
+	_, err := ic.InsertUser(name, username, password, 1)
 	if err != nil {
 		c.String(500, err.Error())
 		return
@@ -18,7 +18,7 @@ func addProvider(c *gin.Context) {
 
 func addPatient(c *gin.Context) {
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
-	_, err := ic.InsertPatient(name, username, password)
+	_, err := ic.InsertUser(name, username, password, 0)
 	if err != nil {
 		c.String(500, err.Error())
 		return

@@ -40,7 +40,7 @@ func init() {
 
 type TimestampMetrics struct {
 	Time      time.Duration
-	Sentiment map[string]float32
+	Sentiment map[string]float64
 	AU        map[string]float32
 }
 
