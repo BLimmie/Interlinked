@@ -38,6 +38,10 @@ func init() {
 	ic = CreateIntouchClient("test", client)
 }
 
+type APIKeys struct {
+	Algorithmia string
+}
+
 type TimestampMetrics struct {
 	Time      time.Duration
 	Sentiment map[string]float64
