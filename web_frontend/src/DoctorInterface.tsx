@@ -7,6 +7,7 @@ import Card from '@material-ui/core/Card'
 import Transcription from './Transcription'
 import Emotions from "./Emotions"
 import Peer from 'peerjs'
+import Webcam from 'react-webcam'
 
 import VideoControls, { avStateInterface } from './Video/VideoControls'
 import { Button } from '@material-ui/core'
