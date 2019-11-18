@@ -15,14 +15,14 @@ export default class Dashboard extends React.Component {
         <Grid item>
           <Link to='/DoctorInterface'>
             <Button variant='contained'>
-              Join
+              Join as Doctor
             </Button>
           </Link>
         </Grid>
         <Grid item>
-          <Link to='/DoctorInterface'>
+          <Link to='/PatientInterface'>
             <Button variant='contained'>
-              Start
+              Join as Patient
             </Button>
           </Link>
         </Grid>
