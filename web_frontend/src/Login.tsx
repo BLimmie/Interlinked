@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom'
 import { FormControl, Input, InputLabel, Button } from '@material-ui/core'
 import { Snackbar } from '@material-ui/core'
 
+type LoginProps = { }
+
 type LoginState = {
   username: string,
   password: string,
@@ -11,8 +13,8 @@ type LoginState = {
   loginOnceFailed: boolean,
 }
 
-export default class Login extends React.Component<{}, LoginState> {
-  constructor(props: {}) {
+export default class Login extends React.Component<LoginProps, LoginState> {
+  constructor(props: LoginProps) {
     super(props);
     this.state = {
       username: '',
@@ -20,17 +22,11 @@ export default class Login extends React.Component<{}, LoginState> {
       loggedIn: false,
       loginOnceFailed: false,
     }
-    this.submit = this.submit.bind(this)
+    this.authenticate = this.authenticate.bind(this)
   }
 
   render() {
-    if (this.state.loggedIn) {
-      return (
-        <Redirect to='/dashboard' />
-      )
-    }
-
-    return (
+    return this.state.loggedIn ? (<Redirect to='/dashboard' />) : (
       <Grid
         container
         spacing={3}
@@ -63,7 +59,7 @@ export default class Login extends React.Component<{}, LoginState> {
         <Button
           color='primary'
           variant='contained'
-          onClick={ this.submit }
+          onClick={ this.authenticate }
         >Login</Button>
         <Snackbar open={this.state.loginOnceFailed}
           message='invalid credentials' />
@@ -71,9 +67,10 @@ export default class Login extends React.Component<{}, LoginState> {
     )
   }
 
-  submit() {
+  authenticate() {
     // XXX
     if (this.state.username === 'admin' && this.state.password === 'admin') {
+      sessionStorage.setItem('authenticated', 'yes_you_are_admin')
       this.setState({loggedIn: true})
     } else {
       this.setState({loginOnceFailed: true})

@@ -1,8 +1,9 @@
-import React from 'react';
-import ReactDom from 'react-dom';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
-import Login from './Login';
-import Dashboard from './Dashboard';
+import React from 'react'
+import ReactDom from 'react-dom'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+import Login from './Login'
+import PrivilegedRoute from './PrivilegedRoute'
+import Dashboard from './Dashboard'
 import DoctorInterface from './DoctorInterface'
 import PatientInterface from './PatientInterface'
 
@@ -14,18 +15,14 @@ globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
 
 class Server extends React.Component {
-  checkCred() {
-    // XXX
-    return true
-  }
-
   render() {
     return (
       <Router>
-        <Route exact path='/'><Dashboard /></Route>
-        <Route path='/dashboard'><Dashboard /></Route>
-        <Route path='/DoctorInterface'><DoctorInterface /></Route>
-        <Route path='/PatientInterface'><PatientInterface /></Route>
+        <Route path='/login'><Login /></Route>
+        <PrivilegedRoute exact path='/'><Dashboard /></PrivilegedRoute>
+        <PrivilegedRoute path='/dashboard'><Dashboard /></PrivilegedRoute>
+        <PrivilegedRoute path='/DoctorInterface'><DoctorInterface /></PrivilegedRoute>
+        <PrivilegedRoute path='/PatientInterface'><PatientInterface /></PrivilegedRoute>
       </Router>
     )
   }
