@@ -81,7 +81,7 @@ export default function VideoControls(props:VideoControlsProps)  {
             }}>
               <Button
                 className={classes.widthHundred}
-                color="secondary"
+                color="primary"
                 size="large"
                 variant="outlined"
                 onClick={() => endSession()}

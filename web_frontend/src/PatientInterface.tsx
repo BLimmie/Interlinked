@@ -4,11 +4,10 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card'
-import Peer, { MediaConnection } from 'peerjs'
+import Peer from 'peerjs'
 import Webcam from 'react-webcam'
 import VideoControls, { avStateInterface } from './Video/VideoControls'
 import { Typography } from '@material-ui/core'
-import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,8 +44,7 @@ interface InterfaceProps  {
 }
 
 export default function PatientInterface(props:InterfaceProps)  {
-  const peer = new Peer('receiver', { host: 'localhost', port: 9000, path: '/' })
-  
+
   const classes = useStyles();
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
   const [avState, setAvState] = React.useState<avStateInterface>({
@@ -54,14 +52,10 @@ export default function PatientInterface(props:InterfaceProps)  {
     video: true,
     volume: 50
   })
-  const [connection, setConnection] = React.useState<MediaConnection>()
-  const [endChat, setEndChat] = React.useState<boolean>(false)
   const [localStream, setLocalStream] = React.useState<MediaStream>()
   const [remoteConnected, setRemoteConnected] = React.useState<boolean>(false)
   const patientScreenshots: string[] = []
-  const endSession: Function = () => {
-    (connection as MediaConnection).close()
-  }
+  const endSession: Function = () => {}
   if(webcamRef){
     //every 1 second get screenshot
     window.setInterval(() => {
@@ -73,19 +67,18 @@ export default function PatientInterface(props:InterfaceProps)  {
     }, 1000)
   }
   React.useEffect(() => {
+    const peer = new Peer('receiver', { host: 'localhost', port: 9000, path: '/' })
     peer.on('call', call => {
-      setConnection(call)
       const startChat = async () => {
         if(webcamRef.current){
           setLocalStream(webcamRef.current.stream)
-          call.answer(webcamRef.current.stream)
+          call.answer(localStream)
           call.on('stream', remoteStream => {
             setRemoteConnected(true)
             const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
             (remoteMediaContainer as HTMLMediaElement).srcObject = remoteStream;
             (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
           })
-          call.on('close', () => setEndChat(true))
         }
       }
       startChat()
@@ -110,10 +103,6 @@ export default function PatientInterface(props:InterfaceProps)  {
     const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
     if(remoteMediaContainer) (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
   },[avState.volume, localStream]);
-
-  if(endChat){
-    return <Redirect to='/' />;
-  }
 
   return (
     <Grid container className={classes.root} spacing={2}>

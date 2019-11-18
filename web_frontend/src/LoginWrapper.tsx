@@ -7,6 +7,9 @@ createStyles({
   root: {
     flexGrow: 1,
     background: '#cdddf7'
+  },
+  button: {
+    background: "#ffffff"
   }
 }),
 );

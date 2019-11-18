@@ -6,9 +6,9 @@ import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card'
 import Transcription from './Transcription'
 import Emotions from "./Emotions"
-import Peer, { MediaConnection } from 'peerjs'
+import Peer from 'peerjs'
 import Webcam from 'react-webcam'
-import {Redirect} from 'react-router-dom'
+
 import VideoControls, { avStateInterface } from './Video/VideoControls'
 import { Button } from '@material-ui/core'
 
@@ -44,15 +44,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Interface()  {
-  const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
   const [avState, setAvState] = React.useState<avStateInterface>({
     audio: true,
     video: true,
     volume: 50
   })
-  const [connection, setConnection] = React.useState<MediaConnection>()
   const [startChat, setStartChat] = React.useState<boolean>(false)
-  const [endChat, setEndChat] = React.useState<boolean>(false)
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
   const [localStream, setLocalStream] = React.useState<MediaStream>()
 
@@ -62,32 +59,35 @@ export default function Interface()  {
   globalThis.point_in_transcript = 0;
   globalThis.phrase_count = 0;
   
-  const endSession: Function = () => {
-    (connection as MediaConnection).close()
-  }
+  const endSession: Function = () => {}
 
   const startChatClick = () => {
     setStartChat(true)
+    const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
     if(webcamRef.current){
       setLocalStream(webcamRef.current.stream)
       const call = peer.call('receiver', webcamRef.current.stream)
-      setConnection(call)
-      call.on('stream', remoteStream => {
-        const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
-        (remoteMediaContainer as HTMLMediaElement).srcObject = remoteStream;
-        (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
-      })
-      call.on('close', () => setEndChat(true))
+      if(call){
+        call.on('stream', remoteStream => {
+          const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
+          (remoteMediaContainer as HTMLMediaElement).srcObject = remoteStream;
+          (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
+        })
+      } else {
+        console.log(call)
+      }
     }
   }
 
   React.useEffect(() => {
+    console.log(avState.video)
     if(localStream){
       localStream.getVideoTracks()[0].enabled = avState.video
     }
   },[avState.video, localStream])
 
   React.useEffect(() => {
+    console.log(avState.audio)
     if(localStream){
       localStream.getAudioTracks()[0].enabled = avState.audio
     }
@@ -99,9 +99,6 @@ export default function Interface()  {
   },[avState.volume, localStream])
 
   const classes = useStyles();
-  if(endChat){
-    return <Redirect to='/' />;
-  }
 
   return (
     <Grid container className={classes.root} spacing={2}>
@@ -110,7 +107,7 @@ export default function Interface()  {
           {
             !startChat &&
             <Button
-              color="secondary"
+              color="primary"
               size="large"
               variant="outlined"
               onClick={() => startChatClick()}
