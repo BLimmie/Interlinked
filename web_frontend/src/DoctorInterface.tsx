@@ -110,7 +110,7 @@ export default function Interface()  {
           {
             !startChat &&
             <Button
-              color="secondary"
+              color="primary"
               size="large"
               variant="outlined"
               onClick={() => startChatClick()}
