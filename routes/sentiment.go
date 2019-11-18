@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
 )
@@ -24,11 +25,13 @@ func getSentimentFrame(c *gin.Context) {
 		return
 	}
 	resChan := app.NewResultChannel()
-	AlgorithmiaWorkers.SubmitJob(resChan, func() (interface{}, error){
-		if err := c.SaveUploadedFile(file, "tmp1.jpg"); err != nil {
+
+	AlgorithmiaWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
+		filename := fmt.Sprintf("tmp%d.jpg", idx)
+		if err := c.SaveUploadedFile(file, filename); err != nil {
 			return nil, err
 		}
-		return app.ImageMetrics("tmp1.jpg", apiKeys.Algorithmia)
+		return app.ImageMetrics(filename, apiKeys.Algorithmia)
 	})
 	result := <-resChan
 	res, err := result.Result.(map[string]float64), result.Err

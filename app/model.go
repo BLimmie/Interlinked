@@ -60,6 +60,7 @@ type ResultStruct struct {
 type WorkerHandler struct {
 	Workers chan bool
 	mux     sync.Mutex
+	idx     int
 }
 
 // Session will reference patient and provider by _id, name and username
