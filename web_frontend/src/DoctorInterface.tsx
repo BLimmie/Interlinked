@@ -159,7 +159,7 @@ export default function Interface()  {
           borderColor = "white"
           borderRadius = "0%"
         >
-          <Transcript_Tests i={0} />
+          <Transcription />
         </Box>
       </Grid>
     </Grid>
