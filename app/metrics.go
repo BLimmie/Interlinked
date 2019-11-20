@@ -1,43 +1,64 @@
 package app
 
 import (
-	"fmt"
-	algorithmia "github.com/algorithmiaio/algorithmia-go"
+	language "cloud.google.com/go/language/apiv1"
+	vision "cloud.google.com/go/vision/apiv1"
+	"context"
 	"github.com/pkg/errors"
-	"path"
+	languagepb "google.golang.org/genproto/googleapis/cloud/language/v1"
+	"os"
 )
 
 var apiKey string
 
-func ImageMetrics(imgFilename, apiKey string) (map[string]float64, error) {
-	client := algorithmia.NewClient("simveDj1HZ63nuwD7FaGadqS6n61", "")
-	file := fmt.Sprintf("data://BLimmie/testdir/%s", path.Base(imgFilename))
-	client.File(file).PutFile(imgFilename)
-	fmt.Printf("File has been uploaded %s\n", file)
-	input := map[string]interface{}{
-		"image": file,
-		"numResults": 3,
-	}
-	algo, err := client.Algo("deeplearning/EmotionRecognitionCNNMBP/1.0.1?timeout=300") // timeout is optional
+func ImageMetrics(imgFilename string) (map[string]string, error) {
+	ctx := context.Background()
+	client, err := vision.NewImageAnnotatorClient(ctx)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, err
 	}
-	resp, err := algo.Pipe(input)
+	f, err := os.Open(imgFilename)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, err
 	}
-	response := resp.(*algorithmia.AlgoResponse)
-	tmp_r := response.Result.(map[string]interface{})["results"]
-	tmp_i := tmp_r.([]interface{})[0]
-	tmp_e := tmp_i.(map[string]interface{})["emotions"]
-	emotions := tmp_e.([]interface{})
-	result := make(map[string]float64)
-	for _, tmp := range emotions {
-		// {"confidence":float32, "label":string}
-		emotion := tmp.(map[string]interface{})
-		confidence := emotion["confidence"].(float64)
-		label := emotion["label"].(string)
-		result[label] = confidence
+	defer f.Close()
+	image, err := vision.NewImageFromReader(f)
+	if err != nil {
+		return nil, err
 	}
-	return result, nil
+	annotations, err := client.DetectFaces(ctx, image, nil, 1)
+	if err != nil {
+		return nil, err
+	}
+	if len(annotations) == 0 {
+		return nil, errors.New("no faces found")
+	}
+	annotation := annotations[0]
+	return map[string]string {
+		"anger": annotation.AngerLikelihood.String(),
+		"sorrow": annotation.SorrowLikelihood.String(),
+		"joy": annotation.JoyLikelihood.String(),
+		"surprise": annotation.SurpriseLikelihood.String(),
+	}, nil
+}
+
+func TextSentiment(text string) (float32, error) {
+	ctx := context.Background()
+	client, err := language.NewClient(ctx)
+	if err != nil {
+		return 0, err
+	}
+	sentiment, err := client.AnalyzeSentiment(ctx, &languagepb.AnalyzeSentimentRequest{
+		Document: &languagepb.Document{
+			Source: &languagepb.Document_Content{
+				Content: text,
+			},
+			Type: languagepb.Document_PLAIN_TEXT,
+		},
+		EncodingType: languagepb.EncodingType_UTF8,
+	})
+	if err != nil {
+		return 0, err
+	}
+	return sentiment.DocumentSentiment.Score, nil
 }

@@ -110,3 +110,4 @@ test-results/
 tmp/
 .idea/
 *config.json
+*interlinked*.json

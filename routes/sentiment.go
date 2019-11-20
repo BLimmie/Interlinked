@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 )
 
 func submitSentimentText(c *gin.Context) {
@@ -11,7 +12,20 @@ func submitSentimentText(c *gin.Context) {
 }
 
 func getSentimentText(c *gin.Context) {
-
+	text, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		c.String(400, "Bad Request formatting")
+	}
+	resChan := app.NewResultChannel()
+	GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error){
+		return app.TextSentiment(string(text))
+	})
+	result := <-resChan
+	res, err := result.Result.(float32), result.Err
+	if err != nil {
+		c.String(500, "Internal Server Error")
+	}
+	c.JSON(200, map[string]float32{"sentiment": res})
 }
 
 func submitSentimentFrame(c *gin.Context) {
@@ -26,15 +40,15 @@ func getSentimentFrame(c *gin.Context) {
 	}
 	resChan := app.NewResultChannel()
 
-	AlgorithmiaWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
+	GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
 		filename := fmt.Sprintf("tmp%d.jpg", idx)
 		if err := c.SaveUploadedFile(file, filename); err != nil {
 			return nil, err
 		}
-		return app.ImageMetrics(filename, apiKeys.Algorithmia)
+		return app.ImageMetrics(filename)
 	})
 	result := <-resChan
-	res, err := result.Result.(map[string]float64), result.Err
+	res, err := result.Result.(map[string]string), result.Err
 	if err != nil {
 		c.String(500, err.Error())
 		return
