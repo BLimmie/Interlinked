@@ -3,7 +3,9 @@ package app
 import (
 	"fmt"
 	"github.com/algorithmiaio/algorithmia-go"
+	"os"
 	"path"
+	"path/filepath"
 	"testing"
 )
 
@@ -23,10 +25,27 @@ func TestTest(t *testing.T) {
 }
 
 func TestImageMetrics(t *testing.T) {
-	keys := NewAPIKeys("../config.json")
-	s, err := ImageMetrics("elon_musk.jpg", keys.Algorithmia)
+	googleAPI, err := filepath.Abs("../interlinked-1cd3dab50e3e.json")
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	fmt.Println(s)
+	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", googleAPI)
+	res, err := ImageMetrics("elon_musk.jpg")
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	fmt.Println(res)
+}
+
+func TestTextSentiment(t *testing.T) {
+	googleAPI, err := filepath.Abs("../interlinked-1cd3dab50e3e.json")
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", googleAPI)
+	sentiment, err := TextSentiment("Has Anyone Really Been Far Even as Decided to Use Even Go Want to do Look More Like?")
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	fmt.Println(sentiment)
 }
