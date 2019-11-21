@@ -190,7 +190,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
             'Sorrow',
             'Joy',
           ],
-        })} legend={legendOpts} height={190}/> 
+        })} legend={legendOpts} height={180}/> 
         );
     }
   }
