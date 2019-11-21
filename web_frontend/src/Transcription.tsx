@@ -68,7 +68,7 @@ class Transcription extends React.Component<SpeechProps> {
       else {
         // Add the remaining <= 12 words to their own phrase
         let recent_phrase: string = transcript_split.slice(12 * i).join(" ");
-        httpCall('POST', "localhost:8080/sentiment/text", recent_phrase, interpret_sentiment);
+        httpCall('POST', "http://localhost:8080/sentiment/text", recent_phrase, interpret_sentiment);
 
         let tone: number = 0; // Neutral
         if (sentiment_num > 0) {
