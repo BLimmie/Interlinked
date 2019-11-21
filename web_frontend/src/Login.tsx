@@ -39,7 +39,6 @@ export default class Login extends React.Component<LoginProps, LoginState> {
         direction='column'
         alignItems='center'
         justify='center'
-        className={(this.classes).root}
       >
         <Grid item>
           <FormControl required>
@@ -64,10 +63,10 @@ export default class Login extends React.Component<LoginProps, LoginState> {
           </FormControl>
         </Grid>
         <Button
-          color='primary'
+          className={(this.classes).button}
           variant='contained'
           onClick={ this.authenticate }
-        >Login</Button>
+        >Log In</Button>
         <Snackbar open={this.state.loginOnceFailed}
           message='invalid credentials' />
       </Grid>
