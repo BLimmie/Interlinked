@@ -2,6 +2,24 @@ import React, { Component } from "react";
 import SpeechRecognition from "react-speech-recognition";
 import Speech from './Speech';
 
+let sentiment_num: number = 0;
+
+function interpret_sentiment(sentiment: string) {
+  sentiment_num = parseFloat(sentiment);
+  return null;
+}
+
+function httpCall(method: string, url:string, data:any, callback:(result:any)=>any) {
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+  if (callback) xhr.onload = function() { callback(this['responseText']); };
+  if (data != null) {
+      xhr.setRequestHeader('Content-Type', 'text/plain');
+      xhr.send(data);
+  }
+  else xhr.send();
+}
+
 interface SpeechProps {
   // Props injected by SpeechRecognition
   transcript: string,
@@ -49,7 +67,18 @@ class Transcription extends React.Component<SpeechProps> {
       }
       else {
         // Add the remaining <= 12 words to their own phrase
-        globalThis.words.set(transcript_split.slice(12 * i).join(" "), limit % 3);
+        let recent_phrase: string = transcript_split.slice(12 * i).join(" ");
+        httpCall('POST', "localhost:8080/sentiment/text", recent_phrase, interpret_sentiment);
+
+        let tone: number = 0; // Neutral
+        if (sentiment_num > 0) {
+          tone = 1; // Positive
+        }
+        else if (sentiment_num < 0) {
+          tone = 2; // Negative
+        }
+
+        globalThis.words.set(recent_phrase, tone);
       }
     }
 
