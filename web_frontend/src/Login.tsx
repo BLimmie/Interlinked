@@ -73,13 +73,29 @@ export default class Login extends React.Component<LoginProps, LoginState> {
     )
   }
 
-  authenticate() {
+  async authenticate() {
     // XXX
-    if (this.state.username === 'admin' && this.state.password === 'admin') {
-      sessionStorage.setItem('authenticated', 'yes_you_are_admin')
-      this.setState({loggedIn: true})
-    } else {
+    fetch('http://localhost:8080/patient/' + this.state.username, {
+      method:'GET',
+      headers: {
+        'Authorization': 'Basic ' + btoa(this.state.username + ':' +
+                                         this.state.password),
+      },
+    }).then((auth_res) => {
+      console.log(auth_res.ok)
+      console.log(auth_res.status)
+      auth_res.text().then((t) => console.log(t))
+      if (auth_res.ok) {
+        console.log("loggedin")
+        sessionStorage.setItem('authenticated', 'yes_you_are_admin')
+        this.setState({loggedIn: true})
+      } else {
+        console.log("not loggedin")
+        this.setState({loginOnceFailed: true})
+      }
+    }).catch((_) => {
+      console.log("not loggedin")
       this.setState({loginOnceFailed: true})
-    }
+    })
   }
 }
