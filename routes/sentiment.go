@@ -24,6 +24,7 @@ func getSentimentText(c *gin.Context) {
 	res, err := result.Result.(float32), result.Err
 	if err != nil {
 		c.String(500, "Internal Server Error")
+		return
 	}
 	c.JSON(200, map[string]float32{"sentiment": res})
 }

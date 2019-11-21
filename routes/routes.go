@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 var client *mongo.Client = nil
@@ -27,6 +28,8 @@ func Routes() {
 	AlgorithmiaWorkers = app.NewWorkerHandler(1)
 	GCPWorkers = app.NewWorkerHandler(4)
 	router := gin.Default()
+	//Allow all origin headers
+	router.Use(cors.Default())
 	// Get Object Data
 	router.GET("/patient/:user", getPatient)
 	router.GET("/provider/:user", getProvider)
@@ -42,7 +45,7 @@ func Routes() {
 	// Get Sentiment
 	router.POST("/sentiment/frame", getSentimentFrame)
 	router.POST("/sentiment/frame/:id", submitSentimentFrame)
-	router.POST("/sentiment/text", getSentimentText)
+	router.POST("/sentiment/text", getSentimentText)	
 	router.POST("/sentiment/text/:id", submitSentimentText)
 	// Authenticate
 	router.POST("/login", login)
