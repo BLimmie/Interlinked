@@ -79,7 +79,6 @@ class Transcription extends React.Component<SpeechProps> {
           tone = 2; // Negative
         }
 
-        // Replace test with "recent_phrase" when done testing
         globalThis.words.set(recent_phrase, tone);
       }
     }
