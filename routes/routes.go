@@ -31,17 +31,17 @@ func Routes() {
 	//Allow all origin headers
 	router.Use(cors.Default())
 	// Get Object Data
-	router.GET("/patient/:user", getPatient)
-	router.GET("/provider/:user", getProvider)
-	router.GET("/session/:id", getSession)
+	router.POST("/patient/:user", getPatient)
+	router.POST("/provider/:user", getProvider)
+	router.POST("/session/:id", getSession)
 	// Submit New Data
 	router.POST("/patient", addPatient)
 	router.POST("/provider", addProvider)
 	router.POST("/session", addSession)
 
 	// Get Session Metrics
-	router.GET("/metrics/:id", getSessionMetrics)
-	router.GET("/metrics/:id/aggregate", getSessionMetricsAggregate)
+	router.POST("/metrics/:id", getSessionMetrics)
+	router.POST("/metrics/:id/aggregate", getSessionMetricsAggregate)
 	// Get Sentiment
 	router.POST("/sentiment/frame", getSentimentFrame)
 	router.POST("/sentiment/frame/:id", submitSentimentFrame)
