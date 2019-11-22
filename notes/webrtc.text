@@ -1,0 +1,25 @@
+Clients will run WebRTC code.
+Clients request their external ip and port from STUN servers.
+Client sends their ip and port to the signalling server to the other client.
+Client sends back and connection is established.
+
+We need to have JS code on client browsers and set up a signalling server to
+establish p2p connections. The JS code will be dealing with WebRTC, our
+signalling server will communicate via whatever protocol we choose. 
+
+1st peers will exchange candidate information so that they can communicate
+through NAT or stuff.
+
+2nd a peer will create an offer that the other peer will answer. They will
+send information through SDP (Session Description Protocol). The info is
+related to browser information / video and audio details like resolution and
+codec.
+	1st peer will set local description and send to 2nd. 2nd will set remote
+	description then create answer and set local description then send ans to
+	1st. 1st will then set remote desc.
+
+Likely when a client joins a session with an existing client, the client will
+know to establish a connection. It will know it must send candidates to its
+peer, then create an offer / get answer etc. to finally stream video. 
+
+onnegotiationneeded will run when tracks are added to the connection.
