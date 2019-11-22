@@ -3,10 +3,12 @@ package routes
 import "github.com/gin-gonic/gin"
 
 func addSession(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.String(501, "Not Implemented")
 }
 
 func addProvider(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
 	_, err := ic.InsertUser(name, username, password, 1)
 	if err != nil {
@@ -17,6 +19,7 @@ func addProvider(c *gin.Context) {
 }
 
 func addPatient(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
 	_, err := ic.InsertUser(name, username, password, 0)
 	if err != nil {

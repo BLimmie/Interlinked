@@ -8,6 +8,7 @@ import (
 )
 
 func getPatient(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	username := c.Param("user")
 	resultChan := app.NewResultChannel()
 	DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
@@ -29,6 +30,7 @@ func getPatient(c *gin.Context) {
 }
 
 func getSession(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	sessionID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
 		c.String(400, "Bad format")
@@ -53,6 +55,7 @@ func getSession(c *gin.Context) {
 }
 
 func getProvider(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	username := c.Param("user")
 	resultChan := app.NewResultChannel()
 	DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {

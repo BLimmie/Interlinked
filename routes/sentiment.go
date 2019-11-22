@@ -12,6 +12,7 @@ func submitSentimentText(c *gin.Context) {
 }
 
 func getSentimentText(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	text, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		c.String(400, "Bad Request formatting")
@@ -34,6 +35,7 @@ func submitSentimentFrame(c *gin.Context) {
 }
 
 func getSentimentFrame(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	file, err := c.FormFile("file")
 	if err != nil {
 		c.String(500, "Internal Server Error")
@@ -54,7 +56,6 @@ func getSentimentFrame(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(200, res)
 
 }
