@@ -5,7 +5,8 @@ import Speech from './Speech';
 let sentiment_num: number = 0;
 
 function interpret_sentiment(sentiment: string) {
-  sentiment_num = parseFloat(sentiment);
+  var temp_s = sentiment.substring(13, sentiment.length - 2)
+  sentiment_num = parseFloat(temp_s);
   return null;
 }
 
@@ -78,6 +79,7 @@ class Transcription extends React.Component<SpeechProps> {
           tone = 2; // Negative
         }
 
+        // Replace test with "recent_phrase" when done testing
         globalThis.words.set(recent_phrase, tone);
       }
     }
