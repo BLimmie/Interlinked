@@ -63,12 +63,11 @@ class Transcription extends React.Component<SpeechProps> {
       limit++;
     }
     for (var i = 0; i < limit; i++) {
-      if (i !== limit - 1) {
+      if (i !== limit - 1 && i !== limit - 2) {
         globalThis.words.set(transcript_split.slice(12 * i, 12 * (i + 1)).join(" "), temp[i]);
       }
-      else {
-        // Add the remaining <= 12 words to their own phrase
-        let recent_phrase: string = transcript_split.slice(12 * i).join(" ");
+      else if (i === limit - 2 && transcript_split.length % 12 < 3) {
+        let recent_phrase: string = transcript_split.slice(12 * i, 12 * (i + 1)).join(" ");
         httpCall('POST', "http://localhost:8080/sentiment/text", recent_phrase, interpret_sentiment);
 
         let tone: number = 0; // Neutral
@@ -80,6 +79,12 @@ class Transcription extends React.Component<SpeechProps> {
         }
 
         globalThis.words.set(recent_phrase, tone);
+      }
+      else if (i === limit - 1) {
+        globalThis.words.set(transcript_split.slice(12 * i).join(" "), 0);
+      }
+      else {
+        globalThis.words.set(transcript_split.slice(12 * i, 12 * (i + 1)).join(" "), temp[i]);
       }
     }
 
