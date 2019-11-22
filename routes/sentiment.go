@@ -54,5 +54,7 @@ func getSentimentFrame(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(200, res)
+
 }
