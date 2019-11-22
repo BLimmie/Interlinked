@@ -76,11 +76,14 @@ export default class Login extends React.Component<LoginProps, LoginState> {
   async authenticate() {
     // XXX
     fetch('http://localhost:8080/patient/' + this.state.username, {
-      method:'GET',
+      method:'POST',
+      /*
       headers: {
         'Authorization': 'Basic ' + btoa(this.state.username + ':' +
                                          this.state.password),
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
+       */
     }).then((auth_res) => {
       console.log(auth_res.ok)
       console.log(auth_res.status)
