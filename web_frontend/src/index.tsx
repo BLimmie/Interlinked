@@ -3,7 +3,7 @@ import ReactDom from 'react-dom'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 import Login from './LoginWrapper'
 import PrivilegedRoute from './PrivilegedRoute'
-import Dashboard from './Dashboard'
+import Dashboard from './DashboardWrapper'
 import DoctorInterface from './DoctorInterface'
 import PatientInterface from './PatientInterface'
 import CssBaseline from '@material-ui/core/CssBaseline';

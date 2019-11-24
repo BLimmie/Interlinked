@@ -40,6 +40,14 @@ export default class Login extends React.Component<LoginProps, LoginState> {
         alignItems='center'
         justify='center'
       >
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
         <Grid item>
           <FormControl required>
             <InputLabel>Username</InputLabel>
@@ -58,7 +66,6 @@ export default class Login extends React.Component<LoginProps, LoginState> {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 this.setState({password: e.target.value})}
               id='password'
-              type='password'
               placeholder='password'/>
           </FormControl>
         </Grid>
@@ -73,32 +80,13 @@ export default class Login extends React.Component<LoginProps, LoginState> {
     )
   }
 
-  async authenticate() {
+  authenticate() {
     // XXX
-    fetch('http://localhost:8080/patient/' + this.state.username, {
-      method:'POST',
-      /*
-      headers: {
-        'Authorization': 'Basic ' + btoa(this.state.username + ':' +
-                                         this.state.password),
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-       */
-    }).then((auth_res) => {
-      console.log(auth_res.ok)
-      console.log(auth_res.status)
-      auth_res.text().then((t) => console.log(t))
-      if (auth_res.ok) {
-        console.log("loggedin")
-        sessionStorage.setItem('authenticated', 'yes_you_are_admin')
-        this.setState({loggedIn: true})
-      } else {
-        console.log("not loggedin")
-        this.setState({loginOnceFailed: true})
-      }
-    }).catch((_) => {
-      console.log("not loggedin")
+    if (this.state.username === 'admin' && this.state.password === 'admin') {
+      sessionStorage.setItem('authenticated', 'yes_you_are_admin')
+      this.setState({loggedIn: true})
+    } else {
       this.setState({loginOnceFailed: true})
-    })
+    }
   }
 }

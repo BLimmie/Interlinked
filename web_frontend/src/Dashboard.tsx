@@ -8,9 +8,14 @@ export default class Dashboard extends React.Component {
       <Grid
         container
         spacing={5}
+        direction='column'
         alignItems='center'
         justify='center'
       >
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
         <Grid item xs={12}></Grid>
         <Grid item xs={12}></Grid>
         <Grid item>
