@@ -111,3 +111,4 @@ tmp/
 .idea/
 *config.json
 *interlinked*.json
+*.jpg

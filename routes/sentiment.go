@@ -1,10 +1,14 @@
 package routes
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
+	"image"
+	"image/jpeg"
 	"io/ioutil"
+	"os"
 )
 
 func submitSentimentText(c *gin.Context) {
@@ -24,7 +28,7 @@ func getSentimentText(c *gin.Context) {
 	result := <-resChan
 	res, err := result.Result.(float32), result.Err
 	if err != nil {
-		c.String(500, "Internal Server Error")
+		c.String(500, err.Error())
 		return
 	}
 	c.JSON(200, map[string]float32{"sentiment": res})
@@ -36,7 +40,10 @@ func submitSentimentFrame(c *gin.Context) {
 
 func getSentimentFrame(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	file, err := c.FormFile("file")
+	text := c.Request.Body
+	reader := base64.NewDecoder(base64.StdEncoding, text)
+	m, _, err := image.Decode(reader)
+
 	if err != nil {
 		c.String(500, "Internal Server Error")
 		return
@@ -45,9 +52,13 @@ func getSentimentFrame(c *gin.Context) {
 
 	GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
 		filename := fmt.Sprintf("tmp%d.jpg", idx)
-		if err := c.SaveUploadedFile(file, filename); err != nil {
+		f, err := os.Create(filename)
+		if err != nil {
 			return nil, err
 		}
+		defer f.Close()
+		jpeg.Encode(f, m, nil)
+
 		return app.ImageMetrics(filename)
 	})
 	result := <-resChan
