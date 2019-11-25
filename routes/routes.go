@@ -26,7 +26,7 @@ func Routes() {
 	// logger and recovery (crash-free) middleware
 	DBWorkers = app.NewWorkerHandler(4)
 	AlgorithmiaWorkers = app.NewWorkerHandler(1)
-	GCPWorkers = app.NewWorkerHandler(4)
+	GCPWorkers = app.NewWorkerHandler(6)
 	router := gin.Default()
 	//Allow all origin headers
 	router.Use(cors.Default())
