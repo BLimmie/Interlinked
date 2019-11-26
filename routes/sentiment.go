@@ -9,6 +9,7 @@ import (
 	"image/jpeg"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func submitSentimentText(c *gin.Context) {
@@ -40,12 +41,12 @@ func submitSentimentFrame(c *gin.Context) {
 
 func getSentimentFrame(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	text := c.Request.Body
-	reader := base64.NewDecoder(base64.StdEncoding, text)
+	text, err := ioutil.ReadAll(c.Request.Body)
+	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(string(text)))
 	m, _, err := image.Decode(reader)
 
 	if err != nil {
-		c.String(500, "Internal Server Error")
+		c.String(500, err.Error())
 		return
 	}
 	resChan := app.NewResultChannel()
