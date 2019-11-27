@@ -1,7 +1,9 @@
 package routes
 
-import "github.com/gin-gonic/gin"
-import "github.com/BLimmie/intouch-health-capstone-2019/app"
+import (
+	"github.com/BLimmie/intouch-health-capstone-2019/app"
+	"github.com/gin-gonic/gin"
+)
 
 func inRegistry(token string) bool {
 	return registry.Exists(token)

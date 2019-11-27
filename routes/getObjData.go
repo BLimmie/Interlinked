@@ -41,7 +41,7 @@ func getSession(c *gin.Context) {
 		return session, err
 	})
 
-	result := <- resultChan
+	result := <-resultChan
 	session, err := result.Result.(*app.Session), result.Err
 
 	if err != nil {
