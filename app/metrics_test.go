@@ -49,3 +49,11 @@ func TestTextSentiment(t *testing.T) {
 	}
 	fmt.Println(sentiment)
 }
+
+func TestImageAU(t *testing.T) {
+	res, err := ImageAU("test.jpg", path.Join("..", "of_output"))
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	fmt.Println(res)
+}
