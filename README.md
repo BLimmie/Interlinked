@@ -36,3 +36,10 @@ store.sh: save db to dump.gz
 ### Testing
 `go get -u github.com/google/go-cmp/cmp` before testing  
 `go test` to run all test files 
+
+# OpenFace
+Download this
+https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_v2.2.0_win_x64.zip  
+Unzip into easily accessible directory  
+Set Environment Variable "OPENFACE_DIR" to location of that folder  
+Go to that folder, right click on download_models.ps1, Run with PowerShell
