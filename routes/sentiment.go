@@ -86,6 +86,6 @@ func getSentimentFrame(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	output["au"] = res2
+	output["AU"] = res2
 	c.JSON(200, output)
 }

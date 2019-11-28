@@ -33,6 +33,26 @@ var errs = map[string]error{
 	"ErrLinkInvalid":      errors.New("Link is already in use"),
 }
 
+var auLabels = map[string]string {
+	"AU01_r": "Inner Brow Raiser",
+	"AU02_r": "Outer Brow Raiser",
+	"AU04_r": "Brow Lowerer",
+	"AU05_r": "Upper Lid Raiser",
+	"AU06_r": "Cheek Raiser",
+	"AU07_r": "Lid Tightener",
+	"AU09_r": "Nose Wrinkler",
+	"AU10_r": "Upper Lip Raiser",
+	"AU12_r": "Lip Corner Puller",
+	"AU14_r": "Dimpler",
+	"AU15_r": "Lip Corner Depressor",
+	"AU17_r": "Chin Raiser",
+	"AU20_r": "Lip Stretcher",
+	"AU23_r": "Lip Tightener",
+	"AU25_r": "Lips Part",
+	"AU26_r": "Jaw Drop",
+	"AU45_r": "Blink",
+}
+
 func init() {
 	client = OpenConnection()
 	ic = CreateIntouchClient("test", client)
