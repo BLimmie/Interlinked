@@ -15,81 +15,40 @@ function rand(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
-// Just hardcodes random sentiment for now
-function get_sentiment() {
+// For demo purposes
+function random_server_output() {
 
-  let j: string = "VERY_UNLIKELY";
-  let so: string = "VERY_UNLIKELY";
-  let a: string = "VERY_UNLIKELY";
-  let su: string = "VERY_UNLIKELY";
+  var tmp = rand(1, 5);
 
-  var test = rand(1, 10);
+  if (tmp === 1) {
+    globalThis.emotions_AUs = '{"AU":{"Blink":0,"Brow Lowerer":0,"Cheek Raiser":3.62,"Chin Raiser":0,"Dimpler":1.46,"Inner Brow Raiser":0,"Jaw Drop":1.9,"Lid Tightener":2.91,"Lip Corner Depressor":0.24,"Lip Corner Puller":3.44,"Lip Stretcher":0,"Lip Tightener":0,"Lips Part":2.65,"Nose Wrinkler":1.46,"Outer Brow Raiser":0,"Upper Lid Raiser":0,"Upper Lip Raiser":2.87},"Emotion":{"anger":"VERY_UNLIKELY","joy":"VERY_LIKELY","sorrow":"VERY_UNLIKELY","surprise":"VERY_UNLIKELY"}}'
+  }
 
-  var test2 = rand(1, 4);
-  if (test2 === 1) {
-    j = "VERY_LIKELY";
+  else if (tmp === 2) {
+    globalThis.emotions_AUs = '{"AU":{"Blink":1,"Brow Lowerer":2.333,"Cheek Raiser":0,"Chin Raiser":0.2,"Dimpler":0,"Inner Brow Raiser":1.99,"Jaw Drop":0,"Lid Tightener":0,"Lip Corner Depressor":0,"Lip Corner Puller":1.44,"Lip Stretcher":1.2,"Lip Tightener":1.77,"Lips Part":0,"Nose Wrinkler":0,"Outer Brow Raiser":2.34,"Upper Lid Raiser":1.7,"Upper Lip Raiser":0},"Emotion":{"anger":"POSSIBLE","joy":"VERY_UNLIKELY","sorrow":"VERY_LIKELY","surprise":"VERY_UNLIKELY"}}'
   }
-  else if (test2 === 2) {
-    so = "VERY_LIKELY";
+
+  else if (tmp === 3) {
+    globalThis.emotions_AUs = '{"AU":{"Blink":0,"Brow Lowerer":0,"Cheek Raiser":0,"Chin Raiser":0,"Dimpler":0,"Inner Brow Raiser":0,"Jaw Drop":0,"Lid Tightener":0,"Lip Corner Depressor":0,"Lip Corner Puller":1.44,"Lip Stretcher":1.2,"Lip Tightener":1.77,"Lips Part":0.8,"Nose Wrinkler":4,"Outer Brow Raiser":2.34,"Upper Lid Raiser":1.7,"Upper Lip Raiser":1.111},"Emotion":{"anger":"POSSIBLE","joy":"POSSIBLE","sorrow":"VERY_UNLIKELY","surprise":"VERY_LIKELY"}}'
   }
-  else if (test2 === 3) {
-    a = "VERY_LIKELY";
+
+  else if (tmp === 4) {
+    globalThis.emotions_AUs = '{"AU":{"Blink":2.3,"Brow Lowerer":1.3,"Cheek Raiser":0.8,"Chin Raiser":0.1,"Dimpler":2.3,"Inner Brow Raiser":1.99,"Jaw Drop":1.23,"Lid Tightener":4.4,"Lip Corner Depressor":0.99,"Lip Corner Puller":0,"Lip Stretcher":0,"Lip Tightener":0,"Lips Part":0,"Nose Wrinkler":0,"Outer Brow Raiser":0,"Upper Lid Raiser":0,"Upper Lip Raiser":0},"Emotion":{"anger":"VERY_LIKELY","joy":"VERY_UNLIKELY","sorrow":"VERY_UNLIKELY","surprise":"VERY_UNLIKELY"}}'
   }
+
   else {
-    su = "VERY_LIKELY";
+    globalThis.emotions_AUs = '{"AU":{"Blink":0,"Brow Lowerer":4.5,"Cheek Raiser":0,"Chin Raiser":0,"Dimpler":0,"Inner Brow Raiser":0,"Jaw Drop":0,"Lid Tightener":0.4,"Lip Corner Depressor":0,"Lip Corner Puller":1.44,"Lip Stretcher":0,"Lip Tightener":1.9,"Lips Part":12.7,"Nose Wrinkler":8.8,"Outer Brow Raiser":1,"Upper Lid Raiser":0,"Upper Lip Raiser":0},"Emotion":{"anger":"VERY_UNLIKELY","joy":"VERY_UNLIKELY","sorrow":"VERY_LIKELY","surprise":"POSSIBLE"}}'
   }
-
-  if (test > 5) {
-    var test3 = rand(1,4);
-    while (test2 === test3) {
-      test3 = rand(1,4);
-    }
-
-    if (test3 === 1) {
-      j = "POSSIBLE";
-    }
-    else if (test3 === 2) {
-      so = "POSSIBLE";
-    }
-    else if (test3 === 3) {
-      a = "POSSIBLE";
-    }
-    else {
-      su = "POSSIBLE";
-    }
-  }
-
-  if (test > 8) {
-    var test3 = rand(1,4);
-    while (test2 === test3) {
-      test3 = rand(1,4);
-    }
-
-    if (test3 === 1) {
-      j = "POSSIBLE";
-    }
-    else if (test3 === 2) {
-      so = "POSSIBLE";
-    }
-    else if (test3 === 3) {
-      a = "POSSIBLE";
-    }
-    else {
-      su = "POSSIBLE";
-    }
-  }
-
-  return JSON.parse('{ "joy":"' + j + 
-                '", "sorrow":"' + so + 
-                 '", "anger":"' + a + 
-              '", "surprise":"' + su + '" }');
 }
+setInterval(random_server_output, 1000);
 
-// Just hardcodes AUs for now
+
 function get_AUs() {
-  let temp: string[] = ["eyebrows raised", "eyebrows lowered", "cheeks scrunched", "cheeks flushed", "cheeks raised",
-                        "one eye closed", "both eyes closed", "both eyes open", "mouth curved up", "mouth curved down",
-                        "eyes averted", "eye contact", "lips pursed", "one eyebrow raised", "both eyebrows raised"]
+  let temp: string[] = []
+
+  for (var AU in JSON.parse(globalThis.emotions_AUs).AU) {
+    temp.push(AU + ": " + JSON.parse(globalThis.emotions_AUs).AU[AU])
+  }
 
   return temp;
 }
@@ -117,37 +76,35 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
         this.anger_level = 0;
         this.surprise_level = 0;
 
-        var emotions = get_sentiment();
-
-        if (emotions.joy === "VERY_LIKELY") {
+        if (JSON.parse(globalThis.emotions_AUs).Emotion["joy"] === "VERY_LIKELY") {
           this.joy_level = 100;
         }
 
-        else if (emotions.joy === "POSSIBLE") {
+        else if (JSON.parse(globalThis.emotions_AUs).Emotion["joy"] === "POSSIBLE") {
           this.joy_level = rand(35, 65);
         }
 
-        if (emotions.sorrow === "VERY_LIKELY") {
+        if (JSON.parse(globalThis.emotions_AUs).Emotion["sorrow"] === "VERY_LIKELY") {
           this.sorrow_level = 100;
         }
 
-        else if (emotions.sorrow === "POSSIBLE") {
+        else if (JSON.parse(globalThis.emotions_AUs).Emotion["sorrow"] === "POSSIBLE") {
           this.sorrow_level = rand(35, 65);
         }
 
-        if (emotions.anger === "VERY_LIKELY") {
+        if (JSON.parse(globalThis.emotions_AUs).Emotion["anger"] === "VERY_LIKELY") {
           this.anger_level = 100;
         }
 
-        else if (emotions.anger === "POSSIBLE") {
+        else if (JSON.parse(globalThis.emotions_AUs).Emotion["anger"] === "POSSIBLE") {
           this.anger_level = rand(35, 65);
         }
 
-        if (emotions.surprise === "VERY_LIKELY") {
+        if (JSON.parse(globalThis.emotions_AUs).Emotion["surprise"] === "VERY_LIKELY") {
           this.surprise_level = 100;
         }
 
-        else if (emotions.surprise === "POSSIBLE") {
+        else if (JSON.parse(globalThis.emotions_AUs).Emotion["surprise"] === "POSSIBLE") {
           this.surprise_level = rand(35, 65);
         }
 
@@ -238,7 +195,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
             'Sorrow',
             'Joy',
           ],
-          })} legend={legendOpts} height={160}/>
+          })} legend={legendOpts} height={149}/>
           <Box
             my = {2}
             border = {3}
@@ -289,7 +246,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
             'Sorrow',
             'Joy',
           ],
-          })} legend={legendOpts} height={190} />
+          })} legend={legendOpts} height={170} />
           </Grid>
           <Typography variant="body2" color="primary" align='center'>
             {this.AUs[0] + " | " + this.AUs[1] + " | " + this.AUs[2]} <br/>
