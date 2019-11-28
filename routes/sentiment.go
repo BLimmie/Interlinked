@@ -49,8 +49,18 @@ func getSentimentFrame(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
+	openfaceResChan := app.NewResultChannel()
 	resChan := app.NewResultChannel()
-
+	OFWorkers.SubmitJob(openfaceResChan, func(idx int) (interface{}, error) {
+		filename := fmt.Sprintf("tmpof%d.jpg", idx)
+		f, err := os.Create(filename)
+		if err != nil {
+			return nil, err
+		}
+		defer f.Close()
+		jpeg.Encode(f, m, nil)
+		return app.ImageAU(filename, "of_output")
+	})
 	GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
 		filename := fmt.Sprintf("tmp%d.jpg", idx)
 		f, err := os.Create(filename)
@@ -62,12 +72,20 @@ func getSentimentFrame(c *gin.Context) {
 
 		return app.ImageMetrics(filename)
 	})
+	output := make(map[string]interface{})
 	result := <-resChan
 	res, err := result.Result.(map[string]string), result.Err
 	if err != nil {
 		c.String(500, err.Error())
 		return
 	}
-	c.JSON(200, res)
-
+	output["Emotion"] = res
+	result = <-openfaceResChan
+	res2, err := result.Result.(map[string]float32), result.Err
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	output["au"] = res2
+	c.JSON(200, output)
 }

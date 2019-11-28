@@ -11,7 +11,7 @@ import (
 var client *mongo.Client = nil
 var ic *app.IntouchClient = nil
 var DBWorkers *app.WorkerHandler = nil
-var AlgorithmiaWorkers *app.WorkerHandler = nil
+var OFWorkers *app.WorkerHandler = nil
 var GCPWorkers *app.WorkerHandler = nil
 
 func init() {
@@ -25,8 +25,8 @@ func Routes() {
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	DBWorkers = app.NewWorkerHandler(4)
-	AlgorithmiaWorkers = app.NewWorkerHandler(1)
-	GCPWorkers = app.NewWorkerHandler(6)
+	OFWorkers = app.NewWorkerHandler(4)
+	GCPWorkers = app.NewWorkerHandler(4)
 	router := gin.Default()
 	//Allow all origin headers
 	router.Use(cors.Default())
@@ -45,7 +45,7 @@ func Routes() {
 	// Get Sentiment
 	router.POST("/sentiment/frame", getSentimentFrame)
 	router.POST("/sentiment/frame/:id", submitSentimentFrame)
-	router.POST("/sentiment/text", getSentimentText)	
+	router.POST("/sentiment/text", getSentimentText)
 	router.POST("/sentiment/text/:id", submitSentimentText)
 	// Authenticate
 	router.POST("/login", login)

@@ -1,6 +1,8 @@
 *~
 db/data/
+of_output/
 db/dump_*
+*processed/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
