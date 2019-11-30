@@ -151,6 +151,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
           this.surprise_level = rand(35, 65);
         }
 
+		var globalThis = window;
         // This exists to trick React into updating the graph
         this.setState({
             current_phrase_count: globalThis.phrase_count

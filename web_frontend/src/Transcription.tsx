@@ -20,14 +20,14 @@ async function interpret_sentiment(sentiment: string, i: number) {
 }
 
 function httpCall(method: string, url:string, data:any, callback:(result:any, r:any)=>any, i: number) {
-  var xhr = new XMLHttpRequest();
-  xhr.open(method, url, true);
-  if (callback) xhr.onload = function() { callback(this['responseText'], i); };
-  if (data != null) {
-      xhr.setRequestHeader('Content-Type', 'text/plain');
-      xhr.send(data);
-  }
-  else xhr.send();
+  /* var xhr = new XMLHttpRequest(); */
+  /* xhr.open(method, url, true); */
+  /* if (callback) xhr.onload = function() { callback(this['responseText'], i); }; */
+  /* if (data != null) { */
+  /*     xhr.setRequestHeader('Content-Type', 'text/plain'); */
+  /*     xhr.send(data); */
+  /* } */
+  /* else xhr.send(); */
 }
 
 interface SpeechProps {
@@ -52,6 +52,7 @@ class Transcription extends React.Component<SpeechProps> {
       }
 
     // Dynamically updating transcript
+	var globalThis = window;
     const transcript_split = the_props.transcript.split(' ');
     let temp = Array.from( globalThis.words.values() );
 
