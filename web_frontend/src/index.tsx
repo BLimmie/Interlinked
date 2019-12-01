@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
-import Login from './LoginWrapper'
+import Login from './Login'
 import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './DashboardWrapper'
 import DoctorInterface from './DoctorInterface'
