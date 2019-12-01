@@ -17,7 +17,6 @@ globalThis.display_words = Array.from( globalThis.words.keys() );
 globalThis.sentiment = Array.from( globalThis.words.values() ); 
 globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
-globalThis.socket = io();
 
 class Server extends React.Component {
   render() {

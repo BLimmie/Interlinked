@@ -45,8 +45,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+var globalThis = window
+var localPC: RTCPeerConnection;
+globalThis.socket = io('http://localhost:8080');
+var isOfferer = false
+var inNegotiation = false
+var gotAnswer = false
 export default function Interface()  {
-  const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
+  // const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
   const [avState, setAvState] = React.useState<avStateInterface>({
     audio: true,
     video: true,
@@ -58,32 +64,46 @@ export default function Interface()  {
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
   const [localStream, setLocalStream] = React.useState<MediaStream>()
 
-  var globalThis = window;
+  // var globalThis = window;
   globalThis.words = new Map();
   globalThis.display_words = Array.from( globalThis.words.keys() );
   globalThis.sentiment = Array.from( globalThis.words.values() ); 
   globalThis.point_in_transcript = 0;
   globalThis.phrase_count = 0;
-  globalThis.socket = io();
+  // globalThis.socket = io('http://127.0.0.1:8080', { transports : ['websocket']});
+  // globalThis.socket = io('http://localhost:8080');
 
-  globalThis.socket.on("close", closeCall);
-  globalThis.socket.on("candidate", handleNewICECandidateMsg);
-  globalThis.socket.on("offer", handleOfferMsg);
-  globalThis.socket.on("answer", handleAnswerMsg);
+  // globalThis.socket.on("close", closeCall);
+  // globalThis.socket.on("candidate", handleNewICECandidateMsg);
+  // globalThis.socket.on("offer", handleOfferMsg);
+  // globalThis.socket.on("answer", handleAnswerMsg);
   
-  var localPC: RTCPeerConnection;
-  function sendSignal(type: String, msg) {
+  // function createSocket() {
+  //   globalThis.socket = io('http://localhost:8080');
+
+    globalThis.socket.on("close", closeCall);
+    globalThis.socket.on("candidate", handleNewICECandidateMsg);
+    globalThis.socket.on("offer", handleOfferMsg);
+    globalThis.socket.on("answer", handleAnswerMsg);
+
+  // }
+  function sendSignal(type: String, msg: any) {
     var msgJSON = JSON.stringify(msg);
-    globalThis.socket.emit(type, msg)
+    console.log("send type: " + type + " msg: " + msgJSON)
+    globalThis.socket.emit(type, msgJSON)
   }
-  function handleSignalingStateChangeEvent(event) {
+  function handleSignalingStateChangeEvent(event: any) {
+    console.log("handle signal state change")
+    inNegotiation = (localPC.signalingState !== "stable");
+    console.log(inNegotiation)
     switch(localPC.signalingState) {
       case "closed":
         closeCall();
         break;
     }
   }
-  function handleICEConnectionStateChangeEvent(event) {
+  function handleICEConnectionStateChangeEvent(event: any) {
+    console.log("handle connection state change")
     switch(localPC.iceConnectionState) {
       case "closed":
       case "failed":
@@ -96,9 +116,11 @@ export default function Interface()  {
     if (localPC) {
       localPC.close();
       const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
-      ((remoteMediaContainer as HTMLMediaElement).srcObject as MediaStream).getTracks().forEach(track => track.stop());
-      (remoteMediaContainer as HTMLMediaElement).removeAttribute("src");
-      (remoteMediaContainer as HTMLMediaElement).removeAttribute("srcObject");
+      if (remoteMediaContainer) {
+        ((remoteMediaContainer as HTMLMediaElement).srcObject as MediaStream).getTracks().forEach(track => track.stop());
+        (remoteMediaContainer as HTMLMediaElement).removeAttribute("src");
+        (remoteMediaContainer as HTMLMediaElement).removeAttribute("srcObject");
+      }
     }
 
   }
@@ -109,52 +131,89 @@ export default function Interface()  {
       dest: "fzhao2",
     });
   }
-  function handleTrackEvent(event) {
+  function handleTrackEvent(event: any) {
+    console.log("handle received track")
     const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
-    (remoteMediaContainer as HTMLMediaElement).srcObject = event.Streams[0];
-    (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
-  }
-  function handleNewICECandidateMsg(msg) {
-    if (localPC) {
-      localPC.addIceCandidate(new RTCIceCandidate(msg.candidate));
+    if (remoteMediaContainer) {
+      console.log("remote available");
+      (remoteMediaContainer as HTMLMediaElement).srcObject = event.streams[0];
+      (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
     }
   }
-  function handleICECandidateEvent(event) {
+  async function handleNewICECandidateMsg(msg: any) {
+    var obj = JSON.parse(msg)
+    if (obj.dest === isOfferer) {
+      console.log("handle new candidate")
+      if (localPC) {
+        try {
+          await localPC.addIceCandidate(new RTCIceCandidate(obj.candidate));
+          console.log("NEW CANDIDATE: " + msg)
+        } catch(err) {}
+      }
+
+    }
+  }
+  function handleICECandidateEvent(event: any) {
     if (event.candidate) {
+      console.log("handle candidate")
       sendSignal("candidate", {
-        dest: "fzhao2",
+        dest: !isOfferer,
         candidate: event.candidate
       });
     }
   }
-  function handleOfferMsg(msg) {
-    createPC();
-    localPC.setRemoteDescription(new RTCSessionDescription(msg.sdp)).then(function () {
-      if (webcamRef.current) {
-        setLocalStream(webcamRef.current.stream);
-      }
-      return localStream;
-    }).then(function(stream) {
-      if (stream) {
-        stream.getTracks().forEach(track => localPC.addTrack(track, stream));
-      }
-    }).then(function() {
-      return localPC.createAnswer();
-    }).then(function(answer) {
-      return localPC.setLocalDescription(answer);
-    }).then(function() {
-      sendSignal("answer", {
-        src: "fzhao1",
-        dest: msg.dest,
-        sdp: localPC.localDescription
+  async function handleOfferMsg(msg: any) {
+    var obj = JSON.parse(msg)
+    if (!isOfferer) {
+      setStartChat(true)
+      console.log("handle offer")
+      createPC();
+      await localPC.setRemoteDescription(new RTCSessionDescription(obj.sdp)).then(function () {
+        if (webcamRef.current) {
+          setLocalStream(webcamRef.current.stream);
+          return webcamRef.current.stream;
+        }
+        return localStream
+      }).then(function(stream) {
+        if (stream) {
+          try {
+            stream.getTracks().forEach(track => localPC.addTrack(track, stream))
+          } catch(err) {}
+        }
+      }).then(function() {
+        return localPC.createAnswer();
+      }).then(function(answer) {
+        return localPC.setLocalDescription(answer);
+      }).then(function() {
+        sendSignal("answer", {
+          src: "fzhao1",
+          dest: obj.dest,
+          sdp: localPC.localDescription
+        });
       });
-    });
+    }
   }
-  function handleAnswerMsg(msg) {
-    localPC.setRemoteDescription(new RTCSessionDescription(msg.sdp))
+  async function handleAnswerMsg(msg: any) {
+    var obj = JSON.parse(msg)
+    if (isOfferer) {
+      console.log("handle answer")
+      if (gotAnswer) {
+        console.log("SKIP handle answer")
+        return
+      }
+      gotAnswer = true
+      await localPC.setRemoteDescription(new RTCSessionDescription(obj.sdp))
+    }
   }
   function handleNegotiationNeededEvent() {
+    console.log("handle negotiation")
     // catch err here
+    if (inNegotiation) {
+      console.log("SKIP negotiation")
+      return
+    }
+    inNegotiation = true
+    gotAnswer = false
     localPC.createOffer().then(function(offer) {
       return localPC.setLocalDescription(offer);
     }).then(function() {
@@ -165,7 +224,8 @@ export default function Interface()  {
       });
     })
   }
-  const createPC: Function = () => {
+  function createPC() {
+    console.log("create rtc peer connection")
     localPC = new RTCPeerConnection({
       iceServers: [
         {
@@ -181,18 +241,29 @@ export default function Interface()  {
   }
 
   const endSession: Function = () => {
-    (connection as MediaConnection).close()
+    // (connection as MediaConnection).close()
+    console.log("end session")
+    closeCall();
   }
 
+  // createSocket()
   const startChatClick = () => {
     setStartChat(true)
+    // createSocket()
     if(webcamRef.current){
+      console.log("started chat")
+      isOfferer = true
       setLocalStream(webcamRef.current.stream)
-      // catch err here
-      if (localStream) {
-        localStream.getTracks().forEach(track => localPC.addTrack(track, localStream));
-      }
       createPC();
+      // catch err here
+      if (webcamRef.current.stream) {
+        console.log("add tracks")
+        webcamRef.current.stream.getTracks().forEach(track => {
+          if (webcamRef.current && webcamRef.current.stream) {
+            localPC.addTrack(track, webcamRef.current.stream);
+          }
+        })
+      }
       // const call = peer.call('receiver', webcamRef.current.stream)
       // setConnection(call)
       // call.on('stream', remoteStream => {

@@ -82,9 +82,8 @@ export default class Login extends React.Component<LoginProps, LoginState> {
 
   authenticate() {
     // XXX
-    if (this.state.username === 'admin' && this.state.password === 'admin' || true) {
+    if (this.state.username === 'admin' && this.state.password === 'admin') {
 		
-	  socket.emit('username', {username: this.state.username});
       sessionStorage.setItem('authenticated', 'yes_you_are_admin')
       this.setState({loggedIn: true})
     } else {

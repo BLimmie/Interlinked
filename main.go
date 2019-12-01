@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/BLimmie/intouch-health-capstone-2019/routes"
+	// "github.com/BLimmie/intouch-health-capstone-2019/tree/testrtc/routes"
+	"./routes"
 	"os"
 	"path/filepath"
 )
