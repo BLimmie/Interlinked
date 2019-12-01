@@ -171,6 +171,14 @@ func (ic *IntouchClient) FindSessionByLink(link string) (*Session, error) {
 	return ic.FindSession(bson.D{{"link", link}})
 }
 
+func (ic *IntouchClient) FindSessionByHexString(hexString string) (*Session, error) {
+	s, err := primitive.ObjectIDFromHex(hexString)
+	if err != nil {
+		return nil, err
+	}
+	return ic.FindSessionByID(s)
+}
+
 // FindSessionByUserID helper for finding session by user id easily
 func (ic *IntouchClient) FindSessionByUserID(id primitive.ObjectID, flag Entity) (*Session, error) {
 	var filter bson.D = nil
@@ -227,22 +235,38 @@ func (ic *IntouchClient) InsertUser(name string, username string, password strin
 
 // InsertSession inserts a session with link, created time, patient, and provider
 // returns nil id and error if problems arise, else id and nil
-func (ic *IntouchClient) InsertSession(link string, created string, patient *UserRef, provider *UserRef) (*primitive.ObjectID, error) {
-	if ic.IsLinkInUse(link) {
-		return nil, errs["ErrLinkInvalid"]
-	}
+func (ic *IntouchClient) InsertSession(created string, patient *UserRef, provider *UserRef) (*primitive.ObjectID, error) {
+	return ic.insertEntity(BlankSession{created, *patient, *provider}, Ses)
+}
 
-	return ic.insertEntity(BlankSession{link, created, *patient, *provider}, Ses)
+func (ic *IntouchClient) AddLink(id primitive.ObjectID, link string) error {
+	if ic.IsLinkInUse(link) {
+		return errs["ErrLinkInvalid"]
+	}
+	filter := bson.D{{"_id", id}}
+	update := bson.D{{"$set",bson.D{{"link", link}}}}
+	return ic.updateField(filter, update, Ses)
 }
 
 // InsertSessionMetric adds a TimeStamp metric to a Session
 // returns error, nil if ok
-func (ic *IntouchClient) InsertSessionMetric(id primitive.ObjectID, metric TimestampMetrics) error {
+func (ic *IntouchClient) InsertTextMetric(id primitive.ObjectID, metric TextMetrics) error {
 
 	// insert metric into session matching id
 	filter := bson.D{{"_id", id}}
 	update := bson.D{{"$addToSet",
-		bson.D{{"metrics", metric}}}}
+		bson.D{{"text_metrics", metric}}}}
+	return ic.updateField(filter, update, Ses)
+}
+
+// InsertSessionMetric adds a TimeStamp metric to a Session
+// returns error, nil if ok
+func (ic *IntouchClient) InsertFrameMetric(id primitive.ObjectID, metric FrameMetrics) error {
+
+	// insert metric into session matching id
+	filter := bson.D{{"_id", id}}
+	update := bson.D{{"$addToSet",
+		bson.D{{"frame_metrics", metric}}}}
 	return ic.updateField(filter, update, Ses)
 }
 

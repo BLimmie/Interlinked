@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -70,12 +71,14 @@ func TextSentiment(text string) (float32, error) {
 
 func ImageAU(imgFilename string, outputDirectory string) (map[string]float32, error){
 	cmd := exec.Command(path.Join(os.Getenv("OPENFACE_DIR"),"FaceLandmarkImg.exe"), "-f", imgFilename, "-out_dir", outputDirectory, "-aus")
+
 	err := RunCommand(*cmd)
 	if err != nil {
 		return nil, err
 	}
-	fn := filenameWithoutExtension(imgFilename)
-	csvFilePath := path.Join(outputDirectory, fn+".csv")
+	fn := filenameWithoutExtension(filepath.Base(imgFilename))
+	csvFilePath := filepath.Join(outputDirectory, fn+".csv")
+
 	f, err := os.Open(csvFilePath)
 	if err != nil {
 		return nil, err

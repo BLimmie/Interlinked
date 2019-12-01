@@ -2,11 +2,9 @@ package app
 
 import (
 	"errors"
-	"sync"
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"sync"
 )
 
 type Entity int
@@ -63,11 +61,25 @@ type APIKeys struct {
 }
 
 type TimestampMetrics struct {
-	Time      time.Duration
-	Sentiment map[string]float64
-	AU        map[string]float32
+	Time          string
+	Text          string
+	Sentiment     float32
+	ImageFilename string
+	Emotion       map[string]string
+	AU            map[string]float32
 }
 
+type TextMetrics struct {
+	Time      string
+	Text      string
+	Sentiment float32
+}
+type FrameMetrics struct {
+	Time          string
+	ImageFilename string
+	Emotion       map[string]string
+	AU            map[string]float32
+}
 type LoginHandler struct {
 	CurrentTokens map[string]primitive.ObjectID
 }
@@ -85,17 +97,17 @@ type WorkerHandler struct {
 
 // Session will reference patient and provider by _id, name and username
 type Session struct {
-	ID          primitive.ObjectID `bson:"_id"`
-	Link        string
-	CreatedTime string
-	Patient     UserRef
-	Provider    UserRef
-	Metrics     []TimestampMetrics
+	ID           primitive.ObjectID `bson:"_id"`
+	Link         string
+	CreatedTime  string
+	Patient      UserRef
+	Provider     UserRef
+	TextMetrics  []TextMetrics
+	ImageMetrics []FrameMetrics
 }
 
 // BlankSession for inserting new document with random id rather than our own
 type BlankSession struct {
-	Link        string
 	CreatedTime string
 	Patient     UserRef
 	Provider    UserRef
