@@ -47,6 +47,8 @@ func Routes() {
 	router.POST("/sentiment/frame/:id", submitSentimentFrame)
 	router.POST("/sentiment/text", getSentimentText)
 	router.POST("/sentiment/text/:id", submitSentimentText)
+	// Get Twilio Token
+	router.POST("/twilio/getToken", getToken)
 	// Authenticate
 	router.POST("/login", login)
 
