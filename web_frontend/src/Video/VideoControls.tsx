@@ -69,8 +69,20 @@ export default function VideoControls(props:VideoControlsProps)  {
 
   return (
       <Grid container className={className} >
-        <Grid item xs={4} />
-        <Grid item xs={4}>
+        <Grid item xs={3} >
+          { avState.audio &&
+            <IconButton className={classes.padding} onClick={() => setMic(false)} >
+              <MicOffOutlined className={classes.icon}/>
+            </IconButton>
+          }
+          { avState.audio === false &&
+            <IconButton className={classes.padding} onClick={() => setMic(true)} >
+              <MicOutlined className={classes.icon}/>
+            </IconButton>
+          }
+        </Grid>
+        <Grid item xs={3} />
+        <Grid item xs={5}>
           <Box
             border = {8}
             borderColor = "white"
@@ -89,13 +101,8 @@ export default function VideoControls(props:VideoControlsProps)  {
             </Link>
           </Box>
         </Grid>
-        <Grid item xs={4} />
-        <Grid item xs={2} >
-          <Box
-            border = {8}
-            borderColor = "white"
-            borderRadius = "0%"
-          >
+        <Grid item xs={1} />
+        <Grid item xs={3} >
             { avState.video &&
             <IconButton
               className={classes.padding}
@@ -112,28 +119,8 @@ export default function VideoControls(props:VideoControlsProps)  {
                 <VideocamOutlined className={classes.icon}/>
               </IconButton>
             }
-          </Box>
         </Grid>
-        <Grid item xs={1} />
         <Grid item xs={2} >
-          <Box
-            border = {8}
-            borderColor = "white"
-            borderRadius = "0%"
-          >
-          { avState.audio &&
-            <IconButton className={classes.padding} onClick={() => setMic(false)} >
-              <MicOffOutlined className={classes.icon}/>
-            </IconButton>
-          }
-          { avState.audio === false &&
-            <IconButton className={classes.padding} onClick={() => setMic(true)} >
-              <MicOutlined className={classes.icon}/>
-            </IconButton>
-          }
-          </Box>
-        </Grid>
-        <Grid item xs={7} >
           { avState.volume > 0 &&
             <IconButton onClick={() => setVolume(0)} >
               <VolumeUpOutlined className={classes.icon}/>
@@ -144,6 +131,9 @@ export default function VideoControls(props:VideoControlsProps)  {
               <VolumeOffOutlined className={classes.icon}/>
             </IconButton>
           }
+        </Grid>
+        <Grid item xs={1} />
+        <Grid item xs={5}>
           <Slider
             value={avState.volume}
             style={{width:"230px"}}

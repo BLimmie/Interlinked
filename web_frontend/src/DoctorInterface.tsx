@@ -3,15 +3,15 @@ import React from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import Transcription from './Transcription'
 import Emotions from "./Emotions"
-import Peer, { MediaConnection } from 'peerjs'
 import Webcam from 'react-webcam'
 import {Redirect} from 'react-router-dom'
 import VideoControls, { avStateInterface } from './Video/VideoControls'
-import { Button } from '@material-ui/core'
-import Transcript_Tests from './Transcript_Tests'
+
+import { getToken } from './Video/Twilio'
+import { RoomTextField } from './Video/RoomTextField'
+import { WebcamWithControls } from './Video/WebcamWithControls'
+import { connect, Room } from 'twilio-video'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,15 +23,21 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "30vh",
       width: "38vw",
     },
-    control: {
-      padding: theme.spacing(2),
-    },
     their_video: {
       height: "55vh",
-      background: '#16001f'
+      background: '#16001f',
+      width: '100%',
+      '& video' : {
+        width: '100%',
+        height: "55vh"
+      }
     },
     my_video: {
-      height: "27vh"
+      height: "41vh",
+      background: '#16001f',
+      '& video' : {
+        width: '85%'
+      }
     },
     settings: {
       background: '#16001f',
@@ -45,17 +51,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Interface()  {
-  const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
+  const classes = useStyles();
+
   const [avState, setAvState] = React.useState<avStateInterface>({
     audio: true,
     video: true,
     volume: 50
   })
-  const [connection, setConnection] = React.useState<MediaConnection>()
-  const [startChat, setStartChat] = React.useState<boolean>(false)
+
+  const [roomName, setRoomName] = React.useState<string>('')
+  const [roomSubmitted, setRoomSubmitted] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
-  const [localStream, setLocalStream] = React.useState<MediaStream>()
 
   globalThis.words = new Map();
   globalThis.display_words = Array.from( globalThis.words.keys() );
@@ -63,43 +70,57 @@ export default function Interface()  {
   globalThis.point_in_transcript = 0;
   globalThis.phrase_count = 0;
   
-  const endSession: Function = () => {
-    (connection as MediaConnection).close()
-  }
+  const submitRoom = () => {
+    getToken("Doctor", roomName)
+      .then((value: any) => {
+        if(value){
+          connect(value,{
+            name: roomName,
+            tracks: (webcamRef.current as Webcam ).stream.getTracks()
+          }).then((room: Room) => {
+            setRoomSubmitted(room)
+            const localParticipant = room.localParticipant
+            console.log(`Connected to the Room as LocalParticipant "${localParticipant.identity}"`);
 
-  const startChatClick = () => {
-    setStartChat(true)
-    if(webcamRef.current){
-      setLocalStream(webcamRef.current.stream)
-      const call = peer.call('receiver', webcamRef.current.stream)
-      setConnection(call)
-      call.on('stream', remoteStream => {
-        const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
-        (remoteMediaContainer as HTMLMediaElement).srcObject = remoteStream;
-        (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100
+
+            room.on('participantConnected', (participant: any) => {
+              console.log(`Participant "${participant.identity}" connected`);
+            
+              participant.tracks.forEach((publication: any) => {
+                if (publication.isSubscribed) {
+                  const track = publication.track;
+                  const remoteMediaContainer: (HTMLElement | null)
+                  = document.getElementById('remote');
+                  (remoteMediaContainer as HTMLElement).appendChild(track.attach());
+                }
+              })
+            
+              participant.on('trackSubscribed', (track: any) => {
+                const remoteMediaContainer: (HTMLElement | null)
+                  = document.getElementById('remote');
+                (remoteMediaContainer as HTMLElement).appendChild(track.attach());
+              })
+            })
+
+            room.once('participantDisconnected', (participant: any) => {
+              console.log(`Participant disconnected: ${participant.identity}`);
+              room.disconnect()
+              setEndChat(true)
+            }) 
+          })
+        } else {
+          //Dialog to try again
+        }
       })
-      call.on('close', () => setEndChat(true))
+  }
+
+  const endSession: Function = () => {
+    if(roomSubmitted){
+      roomSubmitted.disconnect()
+      setEndChat(true)
     }
   }
 
-  React.useEffect(() => {
-    if(localStream){
-      localStream.getVideoTracks()[0].enabled = avState.video
-    }
-  },[avState.video, localStream])
-
-  React.useEffect(() => {
-    if(localStream){
-      localStream.getAudioTracks()[0].enabled = avState.audio
-    }
-  },[avState.audio, localStream])
-
-  React.useEffect(() => {
-    const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('video#remote');
-    if(remoteMediaContainer) (remoteMediaContainer as HTMLMediaElement).volume = avState.volume/100;
-  },[avState.volume, localStream])
-
-  const classes = useStyles();
   if(endChat){
     return <Redirect to='/' />;
   }
@@ -107,21 +128,21 @@ export default function Interface()  {
   return (
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={1} />
-      <Grid item className={classes.their_video} xs = {5} /*Beginning of the upper half*/>
-          {
-            !startChat &&
-            <Button
-              color="primary"
-              size="large"
-              variant="outlined"
-              onClick={() => startChatClick()}
-            >Start Chat</Button>
-          }
-          {
-            startChat &&
-            <div><video height={"inherit"} id ="remote" autoPlay></video></div>
-          }
-      </Grid>
+      {
+        !roomSubmitted &&
+        <Grid item className={classes.their_video} xs = {5} >
+          <RoomTextField
+            inputLabel="Type a room name to create a chat"
+            setRoomName={setRoomName}
+            roomName={roomName}
+            submitRoom={submitRoom}
+          />
+        </Grid>
+      }
+      {
+        roomSubmitted &&
+        <Grid item className={classes.their_video}  id="remote" xs = {5} />
+      } 
       <Grid item xs={1} />
       <Grid item xs = {5}>
         <Box className = {classes.emotions}
@@ -134,32 +155,26 @@ export default function Interface()  {
           </Box>
       </Grid>
       
-      <Grid item xs = {3} /*Beginning of the lower half*/ >
-        <Card>
-        <Webcam
-            audio={true}
-            id="local" 
-            ref={webcamRef}
-          />
-        </Card>
+      <Grid item className={classes.my_video} xs={3} /*Beginning of the lower half*/ >
+        <WebcamWithControls
+          webcamRef={webcamRef}
+          avState={avState}
+        />
       </Grid>
-      <Grid item xs = {4}>
-        <Card>
-          <VideoControls
-            className={classes.settings}
-            endSession={() => endSession()}
-            avState={avState}
-            setAVState={setAvState}
-          />
-        </Card>
+      <Grid item xs={4} className={classes.settings}> 
+        <VideoControls
+          className={classes.settings}
+          endSession={() => endSession()}
+          avState={avState}
+          setAVState={setAvState}
+        />
       </Grid>
-      <Grid item xs = {5}>
+      <Grid item xs={5} className={classes.my_video}>
         <Box className = {classes.transcription}
           border = {8}
           borderColor = "white"
           borderRadius = "0%"
         >
-          <Transcription />
         </Box>
       </Grid>
     </Grid>
