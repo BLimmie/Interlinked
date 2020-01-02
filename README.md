@@ -1,44 +1,45 @@
-# Welcome to Revel
+# intouch-health-interlinked-2019
 
-A high-productivity web framework for the [Go language](http://www.golang.org/).
+### Dependencies:
 
-
-### Start the web server:
-
-   go get github.com/BLimmie/intouch-health-capstone-2019
-   revel run github.com/BLimmie/intouch-health-capstone-2019
-
-### Go to http://localhost:9000/ and you'll see:
-
-    "It works"
+    go get -u github.com/gin-gonic/gin
 
 ## Code Layout
 
 The directory structure of a generated Revel application:
 
-    conf/             Configuration directory
-        app.conf      Main app configuration file
-        routes        Routes definition file
+    app/              Application Directory
+        auth.go       Go file for authentication
 
-    app/              App sources
-        init.go       Interceptor registration
-        controllers/  App controllers go here
-        views/        Templates directory
+    db/               Database file Directory
+        start_db.sh   Start database script
 
-    messages/         Message files
-
-    public/           Public static assets
-        css/          CSS files
-        js/           Javascript files
-        images/       Image files
-
-    tests/            Test suites
+    routes/           Router Directory
+        routes.go     Routes for endpoints in the API
 
 
-## Help
+### Database
+Must start db before saving / restoring db. Be careful of overwriting your data in db/data.  
+`notes/dbdesign.txt` contains queries and schema concepts for db  
+`db/dbcode` contains code for interacting with mongo from golang  
+`go get go.mongodb.org/mongo-driver` to connect to mongodb from go   
+```  
+	source env.sh  
+	cd db 
+	./restore.sh 
+	./start_db.sh 
+	./store.sh 
+```  
+restore.sh: restore db from dump.gz  
+store.sh: save db to dump.gz  
 
-* The [Getting Started with Revel](http://revel.github.io/tutorial/gettingstarted.html).
-* The [Revel guides](http://revel.github.io/manual/index.html).
-* The [Revel sample apps](http://revel.github.io/examples/index.html).
-* The [API documentation](https://godoc.org/github.com/revel/revel).
+### Testing
+`go get -u github.com/google/go-cmp/cmp` before testing  
+`go test` to run all test files 
 
+# OpenFace
+Download this
+https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_v2.2.0_win_x64.zip  
+Unzip into easily accessible directory  
+Set Environment Variable "OPENFACE_DIR" to location of that folder  
+Go to that folder, right click on download_models.ps1, Run with PowerShell
