@@ -22,6 +22,8 @@ const (
 
 var db = "intouch"
 
+var timeLayout = "2006-01-02 15:04:05.999999999 -0700 MST"
+
 var errs = map[string]error{
 	"ErrUsernameInvalid":  errors.New("Username is already in use"),
 	"ErrPatientNotFound":  errors.New("Patient was not found"),
@@ -153,4 +155,9 @@ type IntouchClient struct {
 	ProCol *mongo.Collection
 	PatCol *mongo.Collection
 	SesCol *mongo.Collection
+}
+
+type Aggregator struct {
+	session *Session
+	conclusions map[string]func(session *Session) (interface{}, error)
 }
