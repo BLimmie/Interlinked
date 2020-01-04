@@ -25,6 +25,13 @@ export interface avStateInterface {
   video: boolean,
   volume: number
 }
+
+export const defaultAVState: avStateInterface = {
+  audio: true,
+  video: true,
+  volume: 50
+}
+
 interface VideoControlsProps extends React.HTMLAttributes<HTMLElement>  {
   endSession: Function,
   avState: avStateInterface,
