@@ -51,7 +51,10 @@ func Routes() {
 	router.POST("/twilio/getToken", getToken)
 	// Authenticate
 	router.POST("/login", login)
+
 	router.StaticFile("/", "./routes/js/index.html")
+	router.StaticFile("/index.jsx", "./routes/js/index.jsx")
+	router.StaticFile("/favicon.ico", "./routes/js/favicon.ico")
 
 	// By default it serves on :8080 unless a
 	// PORT environment variable was defined.
