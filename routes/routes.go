@@ -52,9 +52,7 @@ func Routes() {
 	// Authenticate
 	router.POST("/login", login)
 
-	router.StaticFile("/", "./routes/js/index.html")
-	router.StaticFile("/index.jsx", "./routes/js/index.jsx")
-	router.StaticFile("/favicon.ico", "./routes/js/favicon.ico")
+	router.Static("/", "./routes/js/build")
 
 	// By default it serves on :8080 unless a
 	// PORT environment variable was defined.
