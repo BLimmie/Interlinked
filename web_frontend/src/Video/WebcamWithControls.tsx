@@ -36,25 +36,30 @@ export const WebcamWithControls: React.SFC<WebcamWithControlsProps> = (props) =>
   },[webcamRef])
 
   React.useEffect(() => {
-    if(currentWebcam && room){
-      console.log(avState)
+    if(currentWebcam){
       //Enable or disable local video or audio
       if(avState.audio === false)
-        room.localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
+        room?.localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
           audioTrack.track.disable()
         })
       if(avState.audio === true)
-        room.localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
+        room?.localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
           audioTrack.track.enable()
         })
-      if(avState.video === false)
-        room.localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
+      if(avState.video === false){
+        room?.localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
           videoTrack.track.disable()
-        })
-      if(avState.video === true)
-        room.localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
+        });
+        const stream = currentWebcam.stream
+        if(stream) stream.getVideoTracks()[0].enabled = false
+      }
+      if(avState.video === true){
+        room?.localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
           videoTrack.track.enable()
-        })
+        });
+        const stream = currentWebcam.stream
+        if(stream) stream.getVideoTracks()[0].enabled = true
+      }
     }
     // Change remote video's volume
     const remoteMediaContainer:(HTMLMediaElement | null) = document.querySelector('audio');
