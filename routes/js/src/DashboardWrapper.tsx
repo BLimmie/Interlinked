@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Dashboard from './Dashboard';
-import Image from './Images/test.png';
+import Image from './Images/background_login_16-9.png'
 import { Box } from '@material-ui/core';
 
 
@@ -10,6 +10,7 @@ createStyles({
   background: {
     height: "100vh",
     width: "100vw",
+    backgroundSize: 'cover'
   },
 }),
 );
