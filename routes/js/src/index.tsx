@@ -32,10 +32,6 @@ class Server extends React.Component {
 }
 
 ReactDom.render(
-  <ThemeProvider theme={theme}>
-    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-    <CssBaseline />
-    <Server />
-  </ThemeProvider>,
+  <Server />,
   document.querySelector('#root'),
 )
