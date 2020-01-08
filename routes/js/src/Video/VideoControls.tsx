@@ -79,12 +79,18 @@ export default function VideoControls(props:VideoControlsProps)  {
         <Grid item xs={3} >
           { avState.audio &&
             <IconButton className={classes.padding} onClick={() => setMic(false)} >
-              <MicOffOutlined className={classes.icon}/>
+              <MicOffOutlined
+                data-testid={"mic-off-icon"}
+                className={classes.icon}
+              />
             </IconButton>
           }
           { avState.audio === false &&
             <IconButton className={classes.padding} onClick={() => setMic(true)} >
-              <MicOutlined className={classes.icon}/>
+              <MicOutlined
+                data-testid={"mic-on-icon"}
+                className={classes.icon}
+              />
             </IconButton>
           }
         </Grid>
@@ -111,31 +117,43 @@ export default function VideoControls(props:VideoControlsProps)  {
         <Grid item xs={1} />
         <Grid item xs={3} >
             { avState.video &&
-            <IconButton
-              className={classes.padding}
-              onClick={() => setVidFeed(false)}
-            >
-              <VideocamOffOutlined className={classes.icon} />
-            </IconButton>
+              <IconButton
+                className={classes.padding}
+                onClick={() => setVidFeed(false)}
+              >
+                <VideocamOffOutlined
+                  data-testid={"videocam-off-icon"}
+                  className={classes.icon}
+                />
+              </IconButton>
             }
             { avState.video === false &&
               <IconButton
                 className={classes.padding}
                 onClick={() => setVidFeed(true)}
               >
-                <VideocamOutlined className={classes.icon}/>
+                <VideocamOutlined
+                  data-testid={"videocam-on-icon"}
+                  className={classes.icon}
+                />
               </IconButton>
             }
         </Grid>
         <Grid item xs={2} >
           { avState.volume > 0 &&
             <IconButton onClick={() => setVolume(0)} >
-              <VolumeUpOutlined className={classes.icon}/>
+              <VolumeUpOutlined
+                data-testid={"volume-up-icon"}
+                className={classes.icon}
+              />
             </IconButton>
           }
           { avState.volume === 0 &&
             <IconButton onClick={() => setVolume(30)} >
-              <VolumeOffOutlined className={classes.icon}/>
+              <VolumeOffOutlined
+                data-testid={"volume-off-icon"}
+                className={classes.icon}
+              />
             </IconButton>
           }
         </Grid>
@@ -145,6 +163,7 @@ export default function VideoControls(props:VideoControlsProps)  {
             value={avState.volume}
             style={{width:"230px"}}
             onChange={onVolumeChange}
+            data-testid={"volume-slider"}
           />
         </Grid>
       </Grid>

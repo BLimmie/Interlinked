@@ -114,3 +114,6 @@ tmp/
 *config.json
 *interlinked*.json
 *.jpg
+
+# node
+node_modules/
