@@ -6,6 +6,8 @@ import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './DashboardWrapper'
 import DoctorInterface from './DoctorInterface'
 import PatientInterface from './PatientInterface'
+import PatientMainPage from './PatientMainPage'
+import PatientProfile from './PatientProfile'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
@@ -26,6 +28,8 @@ class Server extends React.Component {
         <PrivilegedRoute path='/dashboard'><Dashboard /></PrivilegedRoute>
         <PrivilegedRoute path='/DoctorInterface'><DoctorInterface /></PrivilegedRoute>
         <PrivilegedRoute path='/PatientInterface'><PatientInterface /></PrivilegedRoute>
+        <PrivilegedRoute path='/PatientMainPage'><PatientMainPage /></PrivilegedRoute>
+        <PrivilegedRoute path='/PatientProfile'><PatientProfile /></PrivilegedRoute>
       </Router>
     )
   }
