@@ -119,6 +119,7 @@ export default function DoctorInterface()  {
             border = {8}
             borderColor = "white"
             borderRadius = "0%"
+            bgcolor="#c7c6ce"
           >
             <Transcription />
           </Box>
