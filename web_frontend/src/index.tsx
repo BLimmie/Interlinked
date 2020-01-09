@@ -8,9 +8,12 @@ import DoctorInterface from './DoctorInterface'
 import PatientInterface from './PatientInterface'
 import PatientMainPage from './PatientMainPage'
 import PatientProfile from './PatientProfile'
+import PatientMyDoctor from './PatientMyDoctor'
+import PatientFindDoctor from './PatientFindDoctor'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
+
 
 // Initializing global variables
 globalThis.words = new Map();
@@ -30,6 +33,8 @@ class Server extends React.Component {
         <PrivilegedRoute path='/PatientInterface'><PatientInterface /></PrivilegedRoute>
         <PrivilegedRoute path='/PatientMainPage'><PatientMainPage /></PrivilegedRoute>
         <PrivilegedRoute path='/PatientProfile'><PatientProfile /></PrivilegedRoute>
+        <PrivilegedRoute path='/PatientMyDoctor'><PatientMyDoctor /></PrivilegedRoute>
+        <PrivilegedRoute path='/PatientFindDoctor'><PatientFindDoctor current_selection={0}/></PrivilegedRoute>
       </Router>
     )
   }
