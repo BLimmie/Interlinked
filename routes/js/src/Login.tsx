@@ -1,7 +1,5 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
-import { Theme } from '@material-ui/core/styles'
 import { Redirect } from 'react-router-dom'
 import { FormControl, Input, InputLabel, Button } from '@material-ui/core'
 import { Snackbar } from '@material-ui/core'
@@ -9,22 +7,7 @@ import { Box } from '@material-ui/core'
 
 import Image from './Images/background_login_16-9.png'
 
-const styles = (_: Theme) => createStyles({
-  root: {
-    flexGrow: 1,
-    background: '#cdddf7'
-  },
-  button: {
-    background: "#ffffff"
-  },
-  background: {
-    height: "100vh",
-    width: "100vw",
-    backgroundSize: 'cover'
-  },
-})
-
-interface LoginProps extends WithStyles<typeof styles> { }
+type LoginProps = { }
 
 type LoginState = {
   username: string,
@@ -33,12 +16,9 @@ type LoginState = {
   loginOnceFailed: boolean,
 }
 
-class Login extends React.Component<LoginProps, LoginState> {
-  props: LoginProps
-
+export default class Login extends React.Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
     super(props);
-    this.props = props
     this.state = {
       username: '',
       password: '',
@@ -51,8 +31,12 @@ class Login extends React.Component<LoginProps, LoginState> {
   render() {
     return this.state.loggedIn ? (<Redirect to='/dashboard' />) : (
       <Box justifyContent="center"
-           className={this.props.classes.background}
-           style={{backgroundImage: `url(${Image})` }}>
+        style={{
+          backgroundImage: `url(${Image})`,
+          height: "100vh",
+          width: "100vw",
+          backgroundSize: 'cover'
+        }}>
         <Grid
           container
           spacing={3}
@@ -91,9 +75,9 @@ class Login extends React.Component<LoginProps, LoginState> {
             </FormControl>
           </Grid>
           <Button
-            className={this.props.classes.button}
             variant='contained'
             onClick={ this.authenticate }
+            style = {{ background: "#ffffff" }}
           >Log In</Button>
           <Snackbar open={this.state.loginOnceFailed}
             message='invalid credentials' />
@@ -112,5 +96,3 @@ class Login extends React.Component<LoginProps, LoginState> {
     }
   }
 }
-
-export default withStyles(styles, { withTheme: true })(Login)
