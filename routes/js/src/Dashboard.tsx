@@ -1,20 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { Box, Grid, Button } from '@material-ui/core'
-import { Theme } from '@material-ui/core/styles'
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
 
-const styles = (_: Theme) => createStyles({
-  background: {
-    height: "100vh",
-    width: "100vw",
-    backgroundSize: 'cover'
-  },
-})
+type DashboardProps = { }
 
-interface DashboardProps extends WithStyles<typeof styles> { }
-
-export class Dashboard extends React.Component<DashboardProps> {
+export default class Dashboard extends React.Component<DashboardProps> {
   props: DashboardProps
 
   constructor(props: DashboardProps) {
@@ -25,8 +15,12 @@ export class Dashboard extends React.Component<DashboardProps> {
   render() {
     return (
       <Box justifyContent="center"
-           className={this.props.classes.background}
-           style={{backgroundImage: `url(${Image})` }}>
+        style={{
+          backgroundImage: `url(${Image})`,
+          height: "100vh",
+          width: "100vw",
+          backgroundSize: 'cover',
+        }}>
         <Grid
           container
           spacing={5}
@@ -59,5 +53,3 @@ export class Dashboard extends React.Component<DashboardProps> {
     )
   }
 }
-
-export default withStyles(styles, { withTheme: true })(Dashboard)
