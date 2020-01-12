@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/hex"
 	"fmt"
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
@@ -53,7 +54,11 @@ func addSession(c *gin.Context) {
 func addProvider(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
-	_, err := ic.InsertUser(name, username, password, 1)
+	_, err := hex.DecodeString(username)
+	if err != nil {
+		c.String(400, "Username not allowed")
+	}
+	_, err = ic.InsertUser(name, username, password, 1)
 	if err != nil {
 		c.String(500, err.Error())
 		return
@@ -64,7 +69,11 @@ func addProvider(c *gin.Context) {
 func addPatient(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
-	_, err := ic.InsertUser(name, username, password, 0)
+	_, err := hex.DecodeString(username)
+	if err != nil {
+		c.String(400, "Username not allowed")
+	}
+	_, err = ic.InsertUser(name, username, password, 0)
 	if err != nil {
 		c.String(500, err.Error())
 		return
