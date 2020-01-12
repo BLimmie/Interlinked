@@ -16,6 +16,8 @@ import PatientSummary from './PatientSummary'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-oldschool-dark'
 
 
 
@@ -49,11 +51,20 @@ class Server extends React.Component {
   }
 }
 
+const options = {
+  position: positions.BOTTOM_CENTER,
+  timeout: 5000,
+  offset: '30px',
+  transition: transitions.SCALE
+}
+
 ReactDom.render(
   <ThemeProvider theme={theme}>
-    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-    <CssBaseline />
-    <Server />
+    <AlertProvider template={AlertTemplate} {...options}>
+      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+      <CssBaseline />
+      <Server />
+    </AlertProvider>
   </ThemeProvider>,
   document.querySelector('#root'),
 )

@@ -3,9 +3,10 @@ import React from 'react'
 import { avStateInterface } from './VideoControls'
 
 import Webcam from 'react-webcam'
-import { httpCall } from './Twilio'
+import { sendFrame } from './Twilio'
 import { makeStyles, createStyles, Theme } from '@material-ui/core'
 import { LocalAudioTrackPublication, Room, LocalVideoTrackPublication } from 'twilio-video'
+import { useAlert } from 'react-alert'
 
 
 interface WebcamWithControlsProps{
@@ -26,11 +27,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const WebcamWithControls: React.SFC<WebcamWithControlsProps> = (props) => {
   const classes = useStyles();
+  const alert = useAlert()
 
   const {webcamRef, avState, sendScreenshots, room} = props
 
   const [currentWebcam, setCurrentWebcam] = React.useState<Webcam>()
-
+  const [startedInterval, setStartedInterval] = React.useState<boolean>(false)
+  
   React.useEffect(()=> {
     webcamRef && setCurrentWebcam((webcamRef.current as Webcam))
   },[webcamRef])
@@ -39,22 +42,22 @@ export const WebcamWithControls: React.SFC<WebcamWithControlsProps> = (props) =>
     if(currentWebcam){
       //Enable or disable local video or audio
       if(avState.audio === false)
-        room?.localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
+        room && (room as Room).localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
           audioTrack.track.disable()
         })
       if(avState.audio === true)
-        room?.localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
+        room && (room as Room).localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
           audioTrack.track.enable()
         })
       if(avState.video === false){
-        room?.localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
+        room && (room as Room).localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
           videoTrack.track.disable()
         });
         const stream = currentWebcam.stream
         if(stream) stream.getVideoTracks()[0].enabled = false
       }
       if(avState.video === true){
-        room?.localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
+        room && (room as Room).localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
           videoTrack.track.enable()
         });
         const stream = currentWebcam.stream
@@ -68,20 +71,26 @@ export const WebcamWithControls: React.SFC<WebcamWithControlsProps> = (props) =>
     }
   },[avState])
 
-  if(webcamRef && sendScreenshots){
-    //every 1 second get screenshot
-    window.setInterval(() => {
-      if(webcamRef.current){
-      const screenShot = webcamRef.current.getScreenshot()
-      screenShot && 
-        httpCall(
-          'POST',
-          "http://localhost:8080/sentiment/frame",
-          screenShot.split(",")[1],
-          (result) => {console.log(result)}
-        )
+  const handleFaceResult = (result: string) => {
+    if(result) {
+      if (result === "no faces found"){
+        alert.error("Face not Visible")
       }
-    }, 1000)
+      // TODO: Handle successful result
+    }
+  }
+
+  if(sendScreenshots && !startedInterval){
+    if(webcamRef && webcamRef.current){
+      setInterval(() => {
+        const screenShot = webcamRef && webcamRef.current && 
+          webcamRef.current.getScreenshot()
+        if(screenShot){
+          setStartedInterval(true)
+          sendFrame(screenShot, (result: any) => { handleFaceResult(result)})
+        }
+      }, 5000)
+    }
   }
 
   return (
