@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"go.mongodb.org/mongo-driver/bson"
@@ -414,7 +415,7 @@ func TestIsLinkInUse(t *testing.T) {
 	idB, _ := testic.InsertUser(patientA.Name, "fdsa", patientA.Password, Pat)
 	bb, _ := testic.FindPatientByID(*idB)
 	pat := bb.ToRef()
-	ses, err := testic.InsertSession("/1234589", createdTime, pat, pro)
+	ses, err := testic.InsertSession(createdTime, pat, pro)
 
 	if err != nil {
 		t.Errorf("Insert failed with %s", err.Error())
@@ -422,7 +423,7 @@ func TestIsLinkInUse(t *testing.T) {
 	if !isExistSession(bson.D{{"_id", *ses}}) {
 		t.Errorf("No session with id %s", *ses)
 	}
-	_, err = testic.InsertSession("/1234589", createdTime, pat, pro)
+	_, err = testic.InsertSession(createdTime, pat, pro)
 	if err != errs["ErrLinkInvalid"] {
 		t.Errorf("Duplicate links should have caused an error")
 	}
@@ -437,7 +438,7 @@ func TestInsertSession(t *testing.T) {
 	idB, _ := testic.InsertUser(patientA.Name, "bb", patientA.Password, Pat)
 	bb, _ := testic.FindPatientByID(*idB)
 	pat := bb.ToRef()
-	ses, err := testic.InsertSession("/1234589", createdTime, pat, pro)
+	ses, err := testic.InsertSession(createdTime, pat, pro)
 
 	if err != nil {
 		t.Errorf("Insert failed with %s", err.Error())
@@ -465,7 +466,7 @@ func TestInsertSessionMetric(t *testing.T) {
 	idB, _ := testic.InsertUser(patientA.Name, "red", patientA.Password, Pat)
 	bb, _ := testic.FindPatientByID(*idB)
 	pat := bb.ToRef()
-	ses, err := testic.InsertSession("/yesyesyes", createdTime, pat, pro)
+	ses, err := testic.InsertSession(createdTime, pat, pro)
 
 	if err != nil {
 		t.Errorf("Insert failed with %s", err.Error())
@@ -474,14 +475,14 @@ func TestInsertSessionMetric(t *testing.T) {
 		t.Errorf("No session with id %s", *ses)
 	}
 
-	metric := TimestampMetrics{32, map[string]float64{"anger": 32.0}, map[string]float32{"hello": 32.0}}
-	ic.InsertSessionMetric(*ses, metric)
+	metric := TextMetrics{time.Now().String(), "yadda", 0}
+	ic.InsertTextMetric(*ses, metric)
 
 	session, _ := testic.FindSessionByID(*ses)
 	fmt.Printf("Found a single document: %+v\n", *session)
 
-	if !cmp.Equal(session.Metrics[0], metric) {
-		t.Errorf("Metrics %+v does not contain inserted metric %+v", session.Metrics, metric)
+	if !cmp.Equal(session.TextMetrics[0], metric) {
+		t.Errorf("Metrics %+v does not contain inserted metric %+v", session.TextMetrics, metric)
 	}
 
 	testic.DeleteEntity(*idA, Pro)

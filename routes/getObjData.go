@@ -23,6 +23,25 @@ func getPatient(c *gin.Context) {
 	patient, err := result.Result.(*app.Patient), result.Err
 
 	if err != nil {
+		//Treat as if username is id
+		err2 := DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+			id, err := primitive.ObjectIDFromHex(username)
+			if err != nil {
+				return nil, err
+			}
+			pat, err := ic.FindPatientByID(id)
+			return pat, err
+		})
+		if err2 != nil {
+			c.String(500, "All workers busy")
+			return
+		}
+		result = <-resultChan
+		patient, err = result.Result.(*app.Patient), result.Err
+	}
+
+	if err != nil {
+		// if err is still nil after checking id
 		c.String(500, "Unable to get patient")
 		return
 	}
@@ -71,7 +90,26 @@ func getProvider(c *gin.Context) {
 	provider, err := result.Result.(*app.Provider), result.Err
 
 	if err != nil {
-		c.String(500, err.Error())
+		//Treat as if username is id
+		err2 := DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+			id, err := primitive.ObjectIDFromHex(username)
+			if err != nil {
+				return nil, err
+			}
+			pat, err := ic.FindProviderByID(id)
+			return pat, err
+		})
+		if err2 != nil {
+			c.String(500, "All workers busy")
+			return
+		}
+		result = <-resultChan
+		provider, err = result.Result.(*app.Provider), result.Err
+	}
+
+	if err != nil {
+		// if err is still nil after checking id
+		c.String(500, "Unable to get provider")
 		return
 	}
 
