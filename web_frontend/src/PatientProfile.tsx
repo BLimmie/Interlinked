@@ -79,8 +79,8 @@ export default function PatientProfile() {
                 </Grid>
 
                 <Grid item>
-                <Link to='/PatientProfile'>
-                    <Button className={classes.top_button} disabled>
+                <Link to='/PatientMainPage'>
+                    <Button className={classes.top_button}>
                     
                     </Button>
                 </Link>

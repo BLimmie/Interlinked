@@ -95,8 +95,8 @@ export default function PatientMyDoctor() {
                 </Grid>
 
                 <Grid item>
-                <Link to='/PatientMyDoctor'>
-                    <Button className={classes.top_button} disabled>
+                <Link to='/PatientMainPage'>
+                    <Button className={classes.top_button}>
                     
                     </Button>
                 </Link>

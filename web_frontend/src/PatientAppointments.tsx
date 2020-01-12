@@ -1,8 +1,7 @@
 import React from 'react';
 import { withStyles, createStyles, Theme } from '@material-ui/core/styles'
-import Image from './Images/background_patientFindDoctor_16-9.png'
-import DefaultImage from './Images/default.png'
-import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
+import Image from './Images/background_patientAppointments_16-9.png'
+import { Box, Typography, WithStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
@@ -37,72 +36,69 @@ const styles = (_: Theme) => createStyles({
     min_width: 5,
     width: 5
   },
-  doctor_list: {
+  appt_list: {
     width: '100%',
-    height: 478,
+    height: 540,
     maxWidth: 449,
     backgroundColor: "#b5b3bc",
   },
-  pic: {
-    width: 220,
-    height: 230
-  },
-  make_appt: {
-    min_width: 570,
-    width: 570,
+  view_profile: {
+    min_width: 920,
+    width: 920,
     min_height: 40,
     height: 40
   },
-  profile_contents: {
-    height: 210,
-    width: 920
-  },
-  add_doc: {
+  start_appt: {
     min_width: 920,
     width: 920,
     min_height: 50,
     height: 50
   },
+  line: {
+    height: 3,
+    width: 920
+  },
+  line2: {
+    height: 2,
+    width: 920
+  }
 })
 
-// Person class to fill out info in list
-class Person {
-    name: string =  "";
-    pic: string = "";
-    profile: string = "";
+// Appointment class to fill out info in list
+class Appointment {
+    name: string = "";
+    date: string = "";
 
-    constructor(name: string, pic: string, profile: string) {
+    constructor(name: string, date: string) {
         this.name = name;
-        this.pic = pic;
-        this.profile = profile;
+        this.date = date;
     }
 }
 
 
-class PatientFindDoctor extends React.Component<PageProps, PageState> {
-    private people: Person[] = [];
-    private profile_contents: string = "";
-    private picture: string = "";
-    private search_term: string = '';
+class PatientAppointments extends React.Component<PageProps, PageState> {
+    private appointments: Appointment[] = [];
+    private doc_name: string = "";
+    private date: string = "";
   
     constructor(props: PageProps) {
         super(props);
-        // A hardcoded batch of people
-        this.people.push(new Person("Doctor Wu", "./Images/default.png", "Has never failed."));
-        this.people.push(new Person("Head Doctor", "./Images/default.png", "89 years old"));
-        this.people.push(new Person("Poor Tom", "./Images/default.png", "Popular with the ladies."));
-        this.people.push(new Person("Urban Guerilla", "./Images/default.png", "A doctor?"));
-        this.people.push(new Person("Doremifasolati Do", "./Images/default.png", "profile profile profile"));
-        this.people.push(new Person("Naval Doctor Kira", "./Images/default.png", "Dislikes people who can't choose between the land and the sea."));
-        this.people.push(new Person("Holly Kira", "./Images/default.png", "WILL forget your name."));
-        this.people.push(new Person("Dr. Ferdinand", "./Images/default.png", "Worthy of respect."));
-        this.people.push(new Person("Beverly Crusher", "./Images/default.png", "Has military experience."));
-        this.people.push(new Person("Julian Bashir", "./Images/default.png", "Custom made."));
-        this.people.push(new Person("Dr. Nishikino", "./Images/default.png", "profile profile profile"));
+        // A hardcoded batch of appointments
+        this.appointments.push(new Appointment("Doctor Wu", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Poor Tom", "02/12/20_0800"));
+        this.appointments.push(new Appointment("Head Doctor", "06/15/20_2100"));
+        this.appointments.push(new Appointment("Urban Guerilla", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Doremifasolati Do", "02/12/20_0800"));
+        this.appointments.push(new Appointment("Naval Doctor Kira", "06/15/20_2100"));
+        this.appointments.push(new Appointment("Holly Kira", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Dr. Ferdinand", "02/12/20_0800"));
+        this.appointments.push(new Appointment("Beverly Crusher", "06/15/20_2100"));
+        this.appointments.push(new Appointment("Julian Bashir", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Dr. Nishikino", "02/12/20_0800"));
+        this.format_dates()
 
-
-        this.profile_contents = this.people[0].profile;
-        this.picture = this.people[0].pic;
+        this.doc_name = this.appointments[0].name;
+        this.date = this.appointments[0].date;
 
         // If you're having problems with callbacks and "this is undefined", then use these types of lines
         this.page_alter = this.page_alter.bind(this);
@@ -114,8 +110,8 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
     }
 
     page_alter(index: any) {
-        this.profile_contents = this.people[index].profile
-        this.picture = this.people[index].pic
+        this.doc_name = this.appointments[index].name;
+        this.date = this.appointments[index].date;
         this.setState({
             current_selection: index
         });
@@ -126,17 +122,39 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
     render_row(props: ListChildComponentProps) {
         const { index, style } = props;
 
-        var temp_people = this.people
+        var temp_appts = this.appointments;
       
         return (
           <ListItem button style={style} key={index} onClick={() => this.page_alter(index)}>
-            <ListItemText primary={temp_people[index].name} />
+            <ListItemText primary={temp_appts[index].date} />
           </ListItem>
         );
     }
 
-    render() {
+    format_dates() {
+        for (let appt of this.appointments) {
+            var temp = appt.date.split("_");
+            var M = "AM";
+            if (+temp[1] >= 1200) {
+                M = "PM";
+                if (+temp[1] >= 1300) {
+                    var temp2 = +temp[1] - 1200;
+                    if (temp2 < 1000) {
+                        temp[1] = "0" + temp2.toString();
+                    }
+                    else {
+                        temp[1] = temp2.toString();
+                    }
+                }
+            }
 
+
+
+            appt.date = temp[0] + ", at " + temp[1][0] + temp[1][1] + ":" + temp[1][2] + temp[1][3] + " " + M;
+        }
+    }    
+
+    render() {
 
 
         return (
@@ -197,7 +215,7 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
 
                     <Grid item className={this.props.classes.small_padding}></Grid>
                     <Grid item>
-                    <Link to='/PatientMainPage'>
+                    <Link to='/PatientFindDoctor'>
                         <Button className={this.props.classes.top_button}>
                         
                         </Button>
@@ -216,7 +234,7 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
                     </Grid>
 
                     <Grid item>
-                    <Link to='/PatientAppointments'>
+                    <Link to='/PatientMainPage'>
                         <Button className={this.props.classes.top_button}>
                         
                         </Button>
@@ -287,21 +305,9 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
                         alignItems='flex-start'
                         justify='flex-start'
                     >
-                        <Input
-                            id='search'
-                            placeholder='Search'
-                            fullWidth
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.search_term = e.target.value}}
-                        />
-
                         <Grid item>
-                            <Button className={this.props.classes.small_padding} disabled>
-                            </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <div className={this.props.classes.doctor_list}>
-                                <FixedSizeList height={478} width={449} itemSize={50} itemCount={this.people.length}>
+                            <div className={this.props.classes.appt_list}>
+                                <FixedSizeList height={540} width={449} itemSize={50} itemCount={this.appointments.length}>
                                     {this.render_row}
                                 </FixedSizeList>
                             </div>
@@ -321,62 +327,23 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
                         alignItems='flex-start'
                         justify='flex-start'
                     >
-                        <Grid
-                            container
-                            spacing={0} 
-                            direction='row'
-                            alignItems='flex-start'
-                            justify='flex-start'
-                        >
-                            <Grid item>
-                            <Button className={this.props.classes.small_padding} disabled>
-                            </Button>
-                            </Grid>
-
-                            <Grid item>
-                                <CardMedia
-                                    className={this.props.classes.pic}
-                                    image={DefaultImage}
-                                />
-                            </Grid>
-
-                            <Grid item>
-                            <Button className={this.props.classes.small_padding} disabled>
-                            </Button>
-                            </Grid>
-
-                            <Grid
-                                item
-                                spacing={0}
-                                direction='column'
-                                alignItems='flex-start'
-                                justify='flex-start'
-                            >
-                                <Grid item>
-                                <Button className={this.props.classes.small_padding} disabled>
-                                </Button>
-                                </Grid>
-
-                                <Grid item>
-                                    <Button className={this.props.classes.make_appt} >
-                                    
-                                    </Button>
-                                </Grid>
-
-                                <Grid item>
-                                <Button className={this.props.classes.small_padding} disabled>
-                                </Button>
-                                </Grid>
-
-                                <Grid item>
-                                    <Button className={this.props.classes.make_appt} >
-                                    
-                                    </Button>
-                                </Grid>
-
-                            </Grid>
+                        <Grid item>
+                            <Box
+                                className={this.props.classes.line}
+                                bgcolor="#6e6b7a"
+                            />
                         </Grid>
-
+                        <Grid item>
+                            <Typography variant="h6" color="primary">
+                                    {"Appointment Date and Time: " + this.date}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Box
+                                className={this.props.classes.line2}
+                                bgcolor="#6e6b7a"
+                            />
+                        </Grid>
                         
                         <Grid item>
                             <Button className={this.props.classes.small_padding} disabled>
@@ -385,12 +352,20 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
 
                         <Grid item>
                             <Box
-                                className={this.props.classes.profile_contents}
-                                bgcolor="#b5b3bc">
-                                <Typography variant="body1" color="primary">
-                                    {this.profile_contents}
-                                </Typography>
-                            </Box>
+                                className={this.props.classes.line}
+                                bgcolor="#6e6b7a"
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h6" color="primary">
+                                    {"Doctor Name: " + this.doc_name}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Box
+                                className={this.props.classes.line2}
+                                bgcolor="#6e6b7a"
+                            />
                         </Grid>
 
                         <Grid item>
@@ -399,7 +374,42 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
                         </Grid>
 
                         <Grid item>
-                            <Button className={this.props.classes.add_doc} >
+                            <Button className={this.props.classes.view_profile} >
+                            
+                            </Button>
+                        </Grid>
+
+                        <Grid item>
+                            <Button className={this.props.classes.small_padding} disabled>
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button className={this.props.classes.small_padding} disabled>
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button className={this.props.classes.small_padding} disabled>
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button className={this.props.classes.small_padding} disabled>
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button className={this.props.classes.small_padding} disabled>
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button className={this.props.classes.small_padding} disabled>
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button className={this.props.classes.small_padding} disabled>
+                            </Button>
+                        </Grid>
+
+                        <Grid item>
+                            <Button className={this.props.classes.start_appt} >
                             
                             </Button>
                         </Grid>
@@ -412,4 +422,4 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(PatientFindDoctor)
+export default withStyles(styles, { withTheme: true })(PatientAppointments)
