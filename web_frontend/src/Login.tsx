@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom'
 import { FormControl, Input, InputLabel, Button } from '@material-ui/core'
 import { Snackbar } from '@material-ui/core'
 import { Box } from '@material-ui/core'
+import { httpCall } from './CreateAccount'
 
 import Image from './Images/test.png'
 
@@ -30,6 +31,7 @@ type LoginState = {
   password: string,
   loggedIn: boolean,
   loginOnceFailed: boolean,
+  createAccount: boolean,
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
@@ -43,18 +45,19 @@ class Login extends React.Component<LoginProps, LoginState> {
       password: '',
       loggedIn: false,
       loginOnceFailed: false,
+      createAccount: false,
     }
     this.authenticate = this.authenticate.bind(this)
   }
 
   render() {
-    return this.state.loggedIn ? (<Redirect to='/dashboard' />) : (
+    return this.state.loggedIn ? (<Redirect to='/dashboard' />) : (this.state.createAccount ? (<Redirect to='/createAccount' />) : (
       <Box justifyContent="center"
            className={this.props.classes.background}
            style={{backgroundImage: `url(${Image})` }}>
         <Grid
           container
-          spacing={3}
+          spacing={4}
           wrap='nowrap'
           direction='column'
           alignItems='center'
@@ -94,21 +97,44 @@ class Login extends React.Component<LoginProps, LoginState> {
             variant='contained'
             onClick={ this.authenticate }
           >Log In</Button>
+          <Grid item xs={12}></Grid>
+          <Button
+            className={this.props.classes.button}
+            variant='contained'
+            onClick={ () => this.createAccount(this) }
+          >Create Account</Button>
           <Snackbar open={this.state.loginOnceFailed}
             message='invalid credentials' />
         </Grid>
       </Box>
-    )
+    ))
   }
 
   authenticate() {
     // XXX
-    if (this.state.username === 'admin' && this.state.password === 'admin') {
-      sessionStorage.setItem('authenticated', 'yes_you_are_admin')
-      this.setState({loggedIn: true})
-    } else {
-      this.setState({loginOnceFailed: true})
+    if (this.state.username !== '' && this.state.password !== '') {
+      let cb = (result:any, rr:number) => {
+        if (rr === 200) {
+          sessionStorage.setItem('authenticated', 'yes_you_are_admin')
+          sessionStorage.setItem('id', JSON.parse(result).ID)
+          sessionStorage.setItem('username', JSON.parse(result).Username)
+          let userType = "patient"
+          if ('Patients' in JSON.parse(result)) {
+            userType = "provider"
+          }
+          sessionStorage.setItem('userType', userType)
+          this.setState({loggedIn: true})
+        } else {
+          this.setState({loginOnceFailed: true})
+        }
+      }
+      httpCall('POST', "http://localhost:8080/patient/" + this.state.username, [], null, cb)
+      httpCall('POST', "http://localhost:8080/provider/" + this.state.username, [], null, cb)
     }
+  }
+
+  createAccount(context: Login) {
+    context.setState({createAccount: true})
   }
 }
 

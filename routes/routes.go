@@ -3,9 +3,9 @@ package routes
 import (
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	cors "github.com/rs/cors/wrapper/gin"
 )
 
 var client *mongo.Client = nil
@@ -29,7 +29,17 @@ func Routes() {
 	GCPWorkers = app.NewWorkerHandler(4)
 	router := gin.Default()
 	//Allow all origin headers
-	router.Use(cors.Default())
+	// router.Use(cors.Default())
+	corsOps := cors.New(cors.Options{
+		AllowOriginFunc: func(origin string) bool { return true },
+		// AllowedOrigins:   []string{"http://localhost:3000", "*"},
+		AllowedMethods:   []string{"PUT", "GET", "POST", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Origin", "Content-Type", "X-Auth-Token", "Name", "Username", "Password", "Providerid", "Patientusername"},
+		AllowCredentials: true,
+		Debug:            true,
+	})
+	// corsOps := cors.Default
+	router.Use(corsOps)
 	// Get Object Data
 	router.POST("/patient/:user", getPatient)
 	router.POST("/provider/:user", getProvider)
@@ -38,6 +48,7 @@ func Routes() {
 	router.POST("/patient", addPatient)
 	router.POST("/provider", addProvider)
 	router.POST("/session", addSession)
+	router.POST("/associateUser", associateUser)
 
 	// Get Session Metrics
 	router.POST("/metrics/:id", getSessionMetrics)

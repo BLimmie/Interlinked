@@ -1,17 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import Emotions from "./Emotions"
 import Webcam from 'react-webcam'
-import {Redirect} from 'react-router-dom'
+import {Redirect, RouteComponentProps} from 'react-router-dom'
 import VideoControls, { avStateInterface } from './Video/VideoControls'
 
 import { getToken } from './Video/Twilio'
 import { RoomTextField } from './Video/RoomTextField'
 import { WebcamWithControls } from './Video/WebcamWithControls'
 import { connect, Room } from 'twilio-video'
+import SelectInput from '@material-ui/core/Select/SelectInput'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,7 +51,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function Interface()  {
+type LinkParams = {link: string}
+export default function Interface({ match }: RouteComponentProps<LinkParams>)  {
   const classes = useStyles();
 
   const [avState, setAvState] = React.useState<avStateInterface>({
@@ -59,7 +61,7 @@ export default function Interface()  {
     volume: 50
   })
 
-  const [roomName, setRoomName] = React.useState<string>('')
+  const [roomName, setRoomName] = React.useState<string>(match.params.link)
   const [roomSubmitted, setRoomSubmitted] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
@@ -70,13 +72,20 @@ export default function Interface()  {
   globalThis.point_in_transcript = 0;
   globalThis.phrase_count = 0;
   
+  // while (!webcamRef || !(webcamRef.current)) {}
   const submitRoom = () => {
+    console.log(roomName)
+    if (!roomSubmitted) {
     getToken("Doctor", roomName)
       .then((value: any) => {
+        console.log(value)
         if(value){
+          if (navigator.mediaDevices.getUserMedia && !roomSubmitted) { 
+            navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => 
           connect(value,{
             name: roomName,
-            tracks: (webcamRef.current as Webcam ).stream.getTracks()
+            // tracks: (webcamRef.current as Webcam ).stream.getTracks()
+            tracks: stream.getTracks()
           }).then((room: Room) => {
             setRoomSubmitted(room)
             const localParticipant = room.localParticipant
@@ -107,12 +116,16 @@ export default function Interface()  {
               room.disconnect()
               setEndChat(true)
             }) 
-          })
+          })).catch(console.log)
+        }
         } else {
           //Dialog to try again
         }
       })
+    }
   }
+
+  submitRoom()
 
   const endSession: Function = () => {
     if(roomSubmitted){
@@ -131,12 +144,6 @@ export default function Interface()  {
       {
         !roomSubmitted &&
         <Grid item className={classes.their_video} xs = {5} >
-          <RoomTextField
-            inputLabel="Type a room name to create a chat"
-            setRoomName={setRoomName}
-            roomName={roomName}
-            submitRoom={submitRoom}
-          />
         </Grid>
       }
       {

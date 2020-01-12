@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import Webcam from 'react-webcam'
 import VideoControls, { avStateInterface } from './Video/VideoControls'
-import { Redirect } from 'react-router-dom'
+import {Redirect, RouteComponentProps} from 'react-router-dom'
 
 import { httpCall, getToken } from './Video/Twilio'
 import { connect, Room } from 'twilio-video'
@@ -49,10 +49,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface InterfaceProps  {
-}
-
-export default function PatientInterface(props:InterfaceProps)  {
+type LinkParams = {link: string}
+export default function PatientInterface({ match }: RouteComponentProps<LinkParams>)  {
   
   const classes = useStyles();
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
@@ -62,9 +60,10 @@ export default function PatientInterface(props:InterfaceProps)  {
     volume: 50
   })
   
-  const [roomName, setRoomName] = React.useState<string>('')
+  const [roomName, setRoomName] = React.useState<string>(match.params.link)
   const [roomSubmitted, setRoomSubmitted] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
+
   
   if(webcamRef){
     //every 1 second get screenshot
@@ -82,14 +81,19 @@ export default function PatientInterface(props:InterfaceProps)  {
     }, 1000)
   }
 
+  // while (!webcamRef || !(webcamRef.current)) {}
   const submitRoom = () => {
+    console.log(roomName)
+    if (!roomSubmitted) {
     getToken("Patient", roomName)
       .then((value) => {
         if(value){
           //Connect to room with roomName and token
+          if (navigator.mediaDevices.getUserMedia && !roomSubmitted) { 
+            navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => 
           connect(value,{
             name: roomName,
-            tracks: (webcamRef.current as Webcam ).stream.getTracks()
+            tracks: stream.getTracks()
           }).then((room: Room) => {
             setRoomSubmitted(room)
             const localParticipant = room.localParticipant
@@ -118,12 +122,15 @@ export default function PatientInterface(props:InterfaceProps)  {
               room.disconnect()
               setEndChat(true)
             }) 
-          })
+          })).catch(console.log)
+        }
         } else {
           //Dialog to try again
         }
       })
+    }
   }
+  submitRoom()
 
   const endSession: Function = () => {
     if(roomSubmitted){
@@ -142,12 +149,6 @@ export default function PatientInterface(props:InterfaceProps)  {
       {
         !roomSubmitted &&
         <Grid item className={classes.their_video} xs = {5} >
-          <RoomTextField
-            inputLabel="Type a room name to join a chat"
-            setRoomName={setRoomName}
-            roomName={roomName}
-            submitRoom={submitRoom}
-          />
         </Grid>
       }
       {

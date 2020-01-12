@@ -143,6 +143,39 @@ func (ic *IntouchClient) FindPatient(filter bson.D) (*Patient, error) {
 	return &result, nil
 }
 
+// FindPatients uses filter to find a patient matching the filter
+// returns nil and err if it fails
+func (ic *IntouchClient) FindPatients(filter bson.D) ([]Patient, error) {
+	cursor, err := ic.PatCol.Find(context.TODO(), filter)
+	ret := []Patient{}
+
+	if err != nil {
+		log.Print(err)
+		defer cursor.Close(context.TODO())
+		return nil, err
+
+		// If the API call was a success
+	} else {
+		// iterate over docs using Next()
+		for cursor.Next(context.TODO()) {
+
+			// declare a result BSON object
+			var result Patient
+			err := cursor.Decode(&result)
+
+			// If there is a cursor.Decode error
+			if err != nil {
+				log.Print(err)
+				return nil, err
+
+				// If there are no cursor.Decode errors
+			}
+			ret = append(ret, result)
+		}
+	}
+	return ret, nil
+}
+
 // FindPatientByID helper for finding patient by id easily
 func (ic *IntouchClient) FindPatientByID(id primitive.ObjectID) (*Patient, error) {
 	return ic.FindPatient(bson.D{{"_id", id}})
@@ -244,7 +277,7 @@ func (ic *IntouchClient) AddLink(id primitive.ObjectID, link string) error {
 		return errs["ErrLinkInvalid"]
 	}
 	filter := bson.D{{"_id", id}}
-	update := bson.D{{"$set",bson.D{{"link", link}}}}
+	update := bson.D{{"$set", bson.D{{"link", link}}}}
 	return ic.updateField(filter, update, Ses)
 }
 

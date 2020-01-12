@@ -6,11 +6,14 @@ import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './DashboardWrapper'
 import DoctorInterface from './DoctorInterface'
 import PatientInterface from './PatientInterface'
+import CreateAccount from './CreateAccount'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
 
 // Initializing global variables
+/* var globalThis = window; */
+(window as any).globalThis = window;
 globalThis.words = new Map();
 globalThis.display_words = Array.from( globalThis.words.keys() );
 globalThis.sentiment = Array.from( globalThis.words.values() ); 
@@ -22,10 +25,11 @@ class Server extends React.Component {
     return (
       <Router>
         <Route path='/login'><Login /></Route>
+        <Route path='/createAccount'><CreateAccount /></Route>
         <PrivilegedRoute exact path='/'><Dashboard /></PrivilegedRoute>
         <PrivilegedRoute path='/dashboard'><Dashboard /></PrivilegedRoute>
-        <PrivilegedRoute path='/DoctorInterface'><DoctorInterface /></PrivilegedRoute>
-        <PrivilegedRoute path='/PatientInterface'><PatientInterface /></PrivilegedRoute>
+        <PrivilegedRoute path='/DoctorInterface/:link' component={DoctorInterface} ></PrivilegedRoute>
+        <PrivilegedRoute path='/PatientInterface/:link' component={PatientInterface} ></PrivilegedRoute>
       </Router>
     )
   }

@@ -29,6 +29,28 @@ func getPatient(c *gin.Context) {
 	c.JSON(200, *patient)
 }
 
+func getPatientsOfProvider(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	username := c.Param("user")
+	resultChan := app.NewResultChannel()
+	err := DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+		pat, err := ic.FindPatient(bson.D{{"username", username}})
+		return pat, err
+	})
+	if err != nil {
+		c.String(500, "All workers busy")
+		return
+	}
+	result := <-resultChan
+	patient, err := result.Result.(*app.Patient), result.Err
+
+	if err != nil {
+		c.String(500, "Unable to get patient")
+		return
+	}
+	c.JSON(200, *patient)
+}
+
 func getSession(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	sessionID, err := primitive.ObjectIDFromHex(c.Param("id"))

@@ -3,9 +3,6 @@ package routes
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/BLimmie/intouch-health-capstone-2019/app"
-	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"image"
 	"image/jpeg"
 	"io/ioutil"
@@ -14,6 +11,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/BLimmie/intouch-health-capstone-2019/app"
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func submitSentimentText(c *gin.Context) {
@@ -124,7 +125,7 @@ func submitSentimentFrame(c *gin.Context) {
 				}
 			}
 		}
-		nextFileIdx := (*maxFrame)+1
+		nextFileIdx := (*maxFrame) + 1
 		*filename = filepath.Join("session", sessionID, strconv.Itoa(nextFileIdx)+".jpg")
 		f, err := os.Create(*filename)
 		if err != nil {
@@ -165,7 +166,7 @@ func submitSentimentFrame(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	res2:= result.Result.(map[string]float32)
+	res2 := result.Result.(map[string]float32)
 	output["au"] = res2
 
 	metric := app.FrameMetrics{

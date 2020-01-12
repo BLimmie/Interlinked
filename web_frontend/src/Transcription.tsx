@@ -19,7 +19,7 @@ async function interpret_sentiment(sentiment: string, i: number) {
   return null;
 }
 
-function httpCall(method: string, url:string, data:any, callback:(result:any, r:any)=>any, i: number) {
+export function httpCall(method: string, url:string, data:any, callback:(result:any, r:any)=>any, i: number) {
   var xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
   if (callback) xhr.onload = function() { callback(this['responseText'], i); };
