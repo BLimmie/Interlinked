@@ -16,7 +16,7 @@ func (agg *Aggregator) init() {
 	agg.conclusions["Time in Facial Emotions"] = timeSpentEmotion
 }
 
-func (agg *Aggregator) run() (interface{}, error) {
+func (agg *Aggregator) Run() (interface{}, error) {
 	fullRes := make(map[string]interface{})
 	for key, f := range agg.conclusions {
 		res, err := f(agg.session)

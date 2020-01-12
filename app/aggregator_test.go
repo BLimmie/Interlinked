@@ -88,7 +88,7 @@ func TestAggregator(t *testing.T) {
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	res, err := agg.run()
+	res, err := agg.Run()
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
