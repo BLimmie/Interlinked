@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 import Login from './Login'
 import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './DashboardWrapper'
+import DoctorInterface from './DoctorInterface'
 
 import PatientInterface from './PatientInterface'
 import PatientMainPage from './PatientMainPage'
@@ -33,6 +34,7 @@ class Server extends React.Component {
         <Route path='/login'><Login /></Route>
         <PrivilegedRoute exact path='/'><Dashboard /></PrivilegedRoute>
         <PrivilegedRoute path='/dashboard'><Dashboard /></PrivilegedRoute>
+        <PrivilegedRoute path='/DoctorInterface'><DoctorInterface /></PrivilegedRoute>
 
 
         <PrivilegedRoute path='/PatientInterface'><PatientInterface /></PrivilegedRoute>
