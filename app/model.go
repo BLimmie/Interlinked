@@ -33,7 +33,7 @@ var errs = map[string]error{
 	"ErrLinkInvalid":      errors.New("Link is already in use"),
 }
 
-var auLabels = map[string]string {
+var auLabels = map[string]string{
 	"AU01_r": "Inner Brow Raiser",
 	"AU02_r": "Outer Brow Raiser",
 	"AU04_r": "Brow Lowerer",
@@ -83,7 +83,12 @@ type FrameMetrics struct {
 	AU            map[string]float32
 }
 type LoginHandler struct {
-	CurrentTokens map[string]primitive.ObjectID
+	CurrentTokens map[string]UserCache
+}
+
+type UserCache struct {
+	Id primitive.ObjectID
+	UserType string
 }
 
 type ResultStruct struct {
@@ -115,12 +120,12 @@ type BlankSession struct {
 	Provider    UserRef
 }
 
-// Patient if referenced by Provider or Session then Salt, Password, and Patients have no values
+// Patient if referenced by Provider or Session then Salt, password, and Patients have no values
 type Patient struct {
 	ID        primitive.ObjectID `bson:"_id"`
 	Name      string
 	Username  string
-	Password  string
+	password  string
 	salt      string
 	Providers []UserRef
 }
@@ -140,12 +145,12 @@ type UserRef struct {
 	Username string
 }
 
-// Provider if referenced by Patient or Session then Salt, Password, and Patients have no values
+// Provider if referenced by Patient or Session then Salt, password, and Patients have no values
 type Provider struct {
 	ID       primitive.ObjectID `bson:"_id"`
 	Name     string
 	Username string
-	Password string
+	password string
 	salt     string
 	Patients []UserRef
 }
@@ -158,6 +163,6 @@ type IntouchClient struct {
 }
 
 type Aggregator struct {
-	session *Session
+	session     *Session
 	conclusions map[string]func(session *Session) (interface{}, error)
 }

@@ -21,7 +21,7 @@ func Test_GetCredentials(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 	if user != returnUser || pass != returnPass {
-		t.Fatalf("Username or Password does not match")
+		t.Fatalf("Username or password does not match")
 	}
 }
 

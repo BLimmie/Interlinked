@@ -115,3 +115,29 @@ func getProvider(c *gin.Context) {
 
 	c.JSON(200, *provider)
 }
+
+func getUserFromToken(c *gin.Context) {
+	token := c.Param("token")
+
+	if registry.Exists(token) {
+		isPatient := registry.CurrentTokens[token].UserType == "patient"
+		id := registry.CurrentTokens[token].Id
+		resultChan := app.NewResultChannel()
+		err := DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+			if isPatient {
+				return ic.FindPatientByID(id)
+			} else {
+				return ic.FindProviderByID(id)
+			}
+		})
+		if err != nil {
+			c.String(500, "All workers busy")
+			return
+		}
+		res := <- resultChan
+		user, err := res.Result, res.Err
+		c.JSON(200, user)
+	} else {
+		c.String(404, "Token not found")
+	}
+}

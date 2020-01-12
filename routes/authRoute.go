@@ -22,7 +22,7 @@ func login(c *gin.Context) {
 	//Create token and add to the registry
 	token := app.CreateToken(*userId)
 
-	if err := registry.AddLogin(*userId, token); err != nil {
+	if err := registry.AddLogin(*userId, token, userType); err != nil {
 		c.String(200, "Already Logged in: %s", err.Error())
 		return
 	}

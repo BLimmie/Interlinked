@@ -3,9 +3,8 @@ package routes
 import (
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	cors "github.com/rs/cors/wrapper/gin"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var client *mongo.Client = nil
@@ -19,7 +18,7 @@ func init() {
 	ic = app.CreateIntouchClient("test", client)
 }
 
-var registry = app.LoginHandler{CurrentTokens: map[string]primitive.ObjectID{}}
+var registry = app.NewLoginHandler()
 
 func Routes() {
 	// Creates a gin router with default middleware:
@@ -34,6 +33,7 @@ func Routes() {
 	router.POST("/patient/:user", getPatient)
 	router.POST("/provider/:user", getProvider)
 	router.POST("/session/:id", getSession)
+	router.POST("/user/:token", getUserFromToken)
 	// Submit New Data
 	router.POST("/patient", addPatient)
 	router.POST("/provider", addProvider)

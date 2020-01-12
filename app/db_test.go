@@ -47,7 +47,7 @@ func TestIsUsernameInUse(t *testing.T) {
 }
 
 func TestInsertProvider(t *testing.T) {
-	id, err := testic.InsertUser(providerA.Name, "wewewewe", providerA.Password, Pro)
+	id, err := testic.InsertUser(providerA.Name, "wewewewe", providerA.password, Pro)
 
 	if err != nil {
 		t.Errorf("Insert failed with %s", err.Error())
@@ -61,8 +61,8 @@ func TestInsertProvider(t *testing.T) {
 
 func TestAuthenticateProvider(t *testing.T) {
 	providerB := Provider{primitive.NilObjectID, "Brian Lim", "blim", "catsarecute", "salt", []UserRef{}}
-	provID, _ := testic.InsertUser(providerB.Name, providerB.Username, providerB.Password, Pro)
-	id, err := testic.AuthenticateUser(providerB.Username, providerB.Password, Pro)
+	provID, _ := testic.InsertUser(providerB.Name, providerB.Username, providerB.password, Pro)
+	id, err := testic.AuthenticateUser(providerB.Username, providerB.password, Pro)
 
 	if err != nil {
 		t.Errorf("Authentication failed with %s", err.Error())
@@ -74,7 +74,7 @@ func TestAuthenticateProvider(t *testing.T) {
 }
 
 func TestDeleteProvider(t *testing.T) {
-	id, _ := testic.InsertUser(providerA.Name, "damascus", providerA.Password, Pro)
+	id, _ := testic.InsertUser(providerA.Name, "damascus", providerA.password, Pro)
 	err := testic.DeleteEntity(*id, Pro)
 	if err != nil {
 		t.Errorf("Delete failed with %s", err.Error())
@@ -87,9 +87,9 @@ func TestDeleteProvider(t *testing.T) {
 }
 
 func TestDeleteProviderAndReferences(t *testing.T) {
-	id, _ := testic.InsertUser(providerA.Name, "wethepeople", providerA.Password, Pro)
-	id1, _ := testic.InsertUser(patientA.Name, "declarewar", patientA.Password, Pat)
-	id2, _ := testic.InsertUser(patientB.Name, "oneveryone", patientB.Password, Pat)
+	id, _ := testic.InsertUser(providerA.Name, "wethepeople", providerA.password, Pro)
+	id1, _ := testic.InsertUser(patientA.Name, "declarewar", patientA.password, Pat)
+	id2, _ := testic.InsertUser(patientB.Name, "oneveryone", patientB.password, Pat)
 
 	testic.AssociatePatient(*id, *id1)
 	testic.AssociatePatient(*id, *id2)
@@ -128,7 +128,7 @@ func TestDeleteProviderAndReferences(t *testing.T) {
 }
 
 func TestUpdateProviderUsername(t *testing.T) {
-	id, _ := testic.InsertUser(providerA.Name, "hopeisgone", providerA.Password, Pro)
+	id, _ := testic.InsertUser(providerA.Name, "hopeisgone", providerA.password, Pro)
 	newusername := "bedazzled"
 
 	err := testic.UpdateUsername(*id, newusername, Pro)
@@ -145,9 +145,9 @@ func TestUpdateProviderUsername(t *testing.T) {
 }
 
 func TestUpdateProviderUsernameAndReferences(t *testing.T) {
-	id, _ := testic.InsertUser(providerA.Name, "myfathersaid", providerA.Password, Pro)
-	id1, _ := testic.InsertUser(patientA.Name, "butshesaid", patientA.Password, Pat)
-	id2, _ := testic.InsertUser(patientB.Name, "hesaid", patientB.Password, Pat)
+	id, _ := testic.InsertUser(providerA.Name, "myfathersaid", providerA.password, Pro)
+	id1, _ := testic.InsertUser(patientA.Name, "butshesaid", patientA.password, Pat)
+	id2, _ := testic.InsertUser(patientB.Name, "hesaid", patientB.password, Pat)
 	testic.AssociatePatient(*id, *id1)
 	testic.AssociatePatient(*id, *id2)
 	newusername := "mynazzle"
@@ -189,7 +189,7 @@ func TestUpdateProviderUsernameAndReferences(t *testing.T) {
 }
 
 func TestInsertPatient(t *testing.T) {
-	id, err := testic.InsertUser(patientA.Name, "whatislife", patientA.Password, Pat)
+	id, err := testic.InsertUser(patientA.Name, "whatislife", patientA.password, Pat)
 
 	if err != nil {
 		t.Errorf("Insert failed with %s", err.Error())
@@ -204,8 +204,8 @@ func TestInsertPatient(t *testing.T) {
 
 func TestAuthenticatePatient(t *testing.T) {
 	patientB := Patient{primitive.NilObjectID, "Dead Man", "iamdead", "dogsarecute", "salt", []UserRef{}}
-	patID, _ := testic.InsertUser(patientB.Name, patientB.Username, patientB.Password, Pat)
-	id, err := testic.AuthenticateUser(patientB.Username, patientB.Password, Pat)
+	patID, _ := testic.InsertUser(patientB.Name, patientB.Username, patientB.password, Pat)
+	id, err := testic.AuthenticateUser(patientB.Username, patientB.password, Pat)
 
 	if err != nil {
 		t.Errorf("Authentication failed with %s", err.Error())
@@ -217,7 +217,7 @@ func TestAuthenticatePatient(t *testing.T) {
 }
 
 func TestDeletePatient(t *testing.T) {
-	id, _ := testic.InsertUser(patientA.Name, "handsomeboi", patientA.Password, Pat)
+	id, _ := testic.InsertUser(patientA.Name, "handsomeboi", patientA.password, Pat)
 	err := testic.DeleteEntity(*id, Pat)
 	if err != nil {
 		t.Errorf("Delete failed with %s", err.Error())
@@ -230,9 +230,9 @@ func TestDeletePatient(t *testing.T) {
 }
 
 func TestDeletePatientAndReferences(t *testing.T) {
-	id, _ := testic.InsertUser(patientA.Name, "ntesticeboi", patientA.Password, Pat)
-	id1, _ := testic.InsertUser(providerA.Name, "sadboi", providerA.Password, Pro)
-	id2, _ := testic.InsertUser(providerB.Name, "goodboi", providerB.Password, Pro)
+	id, _ := testic.InsertUser(patientA.Name, "ntesticeboi", patientA.password, Pat)
+	id1, _ := testic.InsertUser(providerA.Name, "sadboi", providerA.password, Pro)
+	id2, _ := testic.InsertUser(providerB.Name, "goodboi", providerB.password, Pro)
 
 	testic.AssociatePatient(*id1, *id)
 	testic.AssociatePatient(*id2, *id)
@@ -271,7 +271,7 @@ func TestDeletePatientAndReferences(t *testing.T) {
 }
 
 func TestUpdatePatientUsername(t *testing.T) {
-	id, _ := testic.InsertUser(patientA.Name, "soyboi", patientA.Password, Pat)
+	id, _ := testic.InsertUser(patientA.Name, "soyboi", patientA.password, Pat)
 	newusername := "greenboi"
 
 	err := testic.UpdateUsername(*id, newusername, Pat)
@@ -289,9 +289,9 @@ func TestUpdatePatientUsername(t *testing.T) {
 
 func TestUpdatePatientUsernameAndReferences(t *testing.T) {
 
-	id, _ := testic.InsertUser(patientA.Name, "coolboi", patientA.Password, Pat)
-	id1, _ := testic.InsertUser(providerA.Name, "yesboi", providerA.Password, Pro)
-	id2, _ := testic.InsertUser(providerB.Name, "noboi", providerB.Password, Pro)
+	id, _ := testic.InsertUser(patientA.Name, "coolboi", patientA.password, Pat)
+	id1, _ := testic.InsertUser(providerA.Name, "yesboi", providerA.password, Pro)
+	id2, _ := testic.InsertUser(providerB.Name, "noboi", providerB.password, Pro)
 	testic.AssociatePatient(*id1, *id)
 	testic.AssociatePatient(*id2, *id)
 	newusername := "hotboi"
@@ -332,8 +332,8 @@ func TestUpdatePatientUsernameAndReferences(t *testing.T) {
 	testic.DeleteEntity(*id2, Pro)
 }
 func TestAssociatePatient(t *testing.T) {
-	proID, _ := testic.InsertUser(providerA.Name, "pobody", providerA.Password, Pro)
-	patID, _ := testic.InsertUser(patientA.Name, "nerfect", patientA.Password, Pat)
+	proID, _ := testic.InsertUser(providerA.Name, "pobody", providerA.password, Pro)
+	patID, _ := testic.InsertUser(patientA.Name, "nerfect", patientA.password, Pat)
 
 	err := testic.AssociatePatient(*proID, *patID)
 	if err != nil {
@@ -370,8 +370,8 @@ func TestAssociatePatient(t *testing.T) {
 }
 
 func TestDissociatePatient(t *testing.T) {
-	proID, _ := testic.InsertUser(providerA.Name, "cold", providerA.Password, Pro)
-	patID, _ := testic.InsertUser(patientA.Name, "lukewarm", patientA.Password, Pat)
+	proID, _ := testic.InsertUser(providerA.Name, "cold", providerA.password, Pro)
+	patID, _ := testic.InsertUser(patientA.Name, "lukewarm", patientA.password, Pat)
 
 	err := testic.AssociatePatient(*proID, *patID)
 	if err != nil {
@@ -409,10 +409,10 @@ func TestDissociatePatient(t *testing.T) {
 }
 
 func TestIsLinkInUse(t *testing.T) {
-	idA, _ := testic.InsertUser(providerA.Name, "asdf", providerA.Password, Pro)
+	idA, _ := testic.InsertUser(providerA.Name, "asdf", providerA.password, Pro)
 	aa, _ := testic.FindProviderByID(*idA)
 	pro := aa.ToRef()
-	idB, _ := testic.InsertUser(patientA.Name, "fdsa", patientA.Password, Pat)
+	idB, _ := testic.InsertUser(patientA.Name, "fdsa", patientA.password, Pat)
 	bb, _ := testic.FindPatientByID(*idB)
 	pat := bb.ToRef()
 	ses, err := testic.InsertSession(createdTime, pat, pro)
@@ -432,10 +432,10 @@ func TestIsLinkInUse(t *testing.T) {
 	testic.DeleteEntity(*idB, Pat)
 }
 func TestInsertSession(t *testing.T) {
-	idA, _ := testic.InsertUser(providerA.Name, "aa", providerA.Password, Pro)
+	idA, _ := testic.InsertUser(providerA.Name, "aa", providerA.password, Pro)
 	aa, _ := testic.FindProviderByID(*idA)
 	pro := aa.ToRef()
-	idB, _ := testic.InsertUser(patientA.Name, "bb", patientA.Password, Pat)
+	idB, _ := testic.InsertUser(patientA.Name, "bb", patientA.password, Pat)
 	bb, _ := testic.FindPatientByID(*idB)
 	pat := bb.ToRef()
 	ses, err := testic.InsertSession(createdTime, pat, pro)
@@ -460,10 +460,10 @@ func TestInsertSession(t *testing.T) {
 }
 
 func TestInsertSessionMetric(t *testing.T) {
-	idA, _ := testic.InsertUser(providerA.Name, "blue", providerA.Password, Pro)
+	idA, _ := testic.InsertUser(providerA.Name, "blue", providerA.password, Pro)
 	aa, _ := testic.FindProviderByID(*idA)
 	pro := aa.ToRef()
-	idB, _ := testic.InsertUser(patientA.Name, "red", patientA.Password, Pat)
+	idB, _ := testic.InsertUser(patientA.Name, "red", patientA.password, Pat)
 	bb, _ := testic.FindPatientByID(*idB)
 	pat := bb.ToRef()
 	ses, err := testic.InsertSession(createdTime, pat, pro)
