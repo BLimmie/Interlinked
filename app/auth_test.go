@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"testing"
 )
@@ -21,6 +23,12 @@ func Test_GetCredentials(t *testing.T) {
 	if user != returnUser || pass != returnPass {
 		t.Fatalf("Username or Password does not match")
 	}
+}
+
+func TestCreateToken(t *testing.T) {
+	id := primitive.NewObjectID()
+	s := CreateToken(id)
+	fmt.Println(s)
 }
 
 func Test_XorBytes(t *testing.T) {

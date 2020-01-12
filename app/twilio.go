@@ -97,7 +97,6 @@ func GetAuthToken(identityType string, roomName string) (map[string] string, err
 	}
 
 	if(identityType == "Patient"){
-		fmt.Println(roomExists)
 		if(!roomExists(roomName)){
 			return map[string] string {
 				"token": "",
@@ -105,7 +104,6 @@ func GetAuthToken(identityType string, roomName string) (map[string] string, err
 			}, nil
 		} else {
 			deleteRoom(roomName)
-			fmt.Println(roomExists)
 		}
 	}
 

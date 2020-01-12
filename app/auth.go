@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"os"
 	"strings"
@@ -55,7 +56,7 @@ func CreateToken(user primitive.ObjectID) string {
 	timeBytes := [12]byte(primitive.NewObjectID())
 	timeSlice := timeBytes[:]
 	arr := xorByteArray(append(userSlice, timeSlice...), passcode)
-	return string(arr[:])
+	return hex.EncodeToString(arr)
 }
 
 func NewSalt() string {
