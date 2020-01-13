@@ -6,13 +6,13 @@ import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './DashboardWrapper'
 import DoctorInterface from './DoctorInterface'
 
-import PatientInterface from './PatientInterface'
-import PatientMainPage from './PatientMainPage'
-import PatientProfile from './PatientProfile'
-import PatientMyDoctor from './PatientMyDoctor'
-import PatientFindDoctor from './PatientFindDoctor'
-import PatientAppointments from './PatientAppointments'
-import PatientSummary from './PatientSummary'
+import PatientInterface from './PatientPages/PatientInterface'
+import PatientMainPage from './PatientPages/PatientMainPage'
+import PatientProfile from './PatientPages/PatientProfile'
+import PatientMyDoctor from './PatientPages/PatientMyDoctor'
+import PatientFindDoctor from './PatientPages/PatientFindDoctor'
+import PatientAppointments from './PatientPages/PatientAppointments'
+import PatientSummary from './PatientPages/PatientSummary'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
