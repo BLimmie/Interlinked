@@ -88,6 +88,13 @@ export default class Login extends React.Component<LoginProps, LoginState> {
 
   authenticate() {
     // XXX
+    // MZ: Now that we are able to visit the Gin server and get the frontend
+    // pages, we should let the frontend send requests to the Gin server.
+    // TODO
+    // Create some user in the database for testing login.
+    /*
+       fetch("http://localhost/login")
+     */
     if (this.state.username === 'admin' && this.state.password === 'admin') {
       sessionStorage.setItem('authenticated', 'yes_you_are_admin')
       this.setState({loggedIn: true})
