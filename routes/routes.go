@@ -53,6 +53,10 @@ func Routes() {
 	router.POST("/login", login)
 
 	router.Static("/", "./routes/js/build")
+        // XXX
+        // MZ: Currently, we can visit "/", but can't GET "/login", "/dashboard" or
+        // other paths defined in the frontend. I am researching the server used
+        // by npm to know how to configure that in Gin.
 
 	// By default it serves on :8080 unless a
 	// PORT environment variable was defined.
