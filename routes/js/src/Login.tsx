@@ -71,6 +71,7 @@ export default class Login extends React.Component<LoginProps, LoginState> {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   this.setState({password: e.target.value})}
                 id='password'
+                type='password'
                 placeholder='password'/>
             </FormControl>
           </Grid>
