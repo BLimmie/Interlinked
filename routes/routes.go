@@ -1,6 +1,7 @@
 package routes
 
 import (
+        "net/http"
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
@@ -52,11 +53,10 @@ func Routes() {
 	// Authenticate
 	router.POST("/login", login)
 
-	router.Static("/", "./routes/js/build")
-        // XXX
-        // MZ: Currently, we can visit "/", but can't GET "/login", "/dashboard" or
-        // other paths defined in the frontend. I am researching the server used
-        // by npm to know how to configure that in Gin.
+        router.LoadHTMLFiles("routes/js/build/index.html")
+	router.GET("/*_page", func(c *gin.Context) {
+                c.HTML(http.StatusOK, "index.html", nil)
+	})
 
 	// By default it serves on :8080 unless a
 	// PORT environment variable was defined.
