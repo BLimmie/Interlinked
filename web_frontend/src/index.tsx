@@ -5,6 +5,8 @@ import Login from './Login'
 import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './DashboardWrapper'
 import DoctorInterface from './DoctorInterface'
+import DoctorMainPage from './DoctorMainPage'
+import DoctorAppointments from './DoctorAppointments'
 
 import PatientInterface from './PatientPages/PatientInterface'
 import PatientMainPage from './PatientPages/PatientMainPage'
@@ -37,7 +39,8 @@ class Server extends React.Component {
         <PrivilegedRoute exact path='/'><Dashboard /></PrivilegedRoute>
         <PrivilegedRoute path='/dashboard'><Dashboard /></PrivilegedRoute>
         <PrivilegedRoute path='/DoctorInterface'><DoctorInterface /></PrivilegedRoute>
-
+        <PrivilegedRoute path='/DoctorMainPage'><DoctorMainPage /></PrivilegedRoute>
+        <PrivilegedRoute path='/DoctorAppointments'><DoctorAppointments current_selection={0}/></PrivilegedRoute>
 
         <PrivilegedRoute path='/PatientInterface'><PatientInterface /></PrivilegedRoute>
         <PrivilegedRoute path='/PatientMainPage'><PatientMainPage /></PrivilegedRoute>
