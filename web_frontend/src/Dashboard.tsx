@@ -19,14 +19,14 @@ export default class Dashboard extends React.Component {
         <Grid item xs={12}></Grid>
         <Grid item xs={12}></Grid>
         <Grid item>
-          <Link to='/DoctorInterface'>
+          <Link to='/DoctorInterface/yes'>
             <Button variant='contained'>
               Join as Doctor
             </Button>
           </Link>
         </Grid>
         <Grid item>
-          <Link to='/PatientInterface'>
+          <Link to='/PatientInterface/yes'>
             <Button variant='contained'>
               Join as Patient
             </Button>

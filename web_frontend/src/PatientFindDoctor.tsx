@@ -8,6 +8,21 @@ import { Grid, Button } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { httpCall } from './funcs'
+
+// Person class to fill out info in list
+class Person {
+    name: string =  "";
+    pic: string = "";
+    profile: string = "";
+    username: string = "";
+
+    constructor(name: string, pic: string, profile: string, username: string) {
+        this.name = name;
+        this.pic = pic;
+        this.profile = profile;
+    }
+}
 
 interface PageProps extends WithStyles<typeof styles>{
     current_selection: number;
@@ -15,6 +30,7 @@ interface PageProps extends WithStyles<typeof styles>{
 
 interface PageState {
     current_selection: number;
+    people: Person[];
 }
 
 const styles = (_: Theme) => createStyles({
@@ -65,48 +81,43 @@ const styles = (_: Theme) => createStyles({
   },
 })
 
-// Person class to fill out info in list
-class Person {
-    name: string =  "";
-    pic: string = "";
-    profile: string = "";
-
-    constructor(name: string, pic: string, profile: string) {
-        this.name = name;
-        this.pic = pic;
-        this.profile = profile;
-    }
-}
-
-
 class PatientFindDoctor extends React.Component<PageProps, PageState> {
-    private people: Person[] = [];
+    // private people: Person[] = [];
     private profile_contents: string = "";
     private picture: string = "";
     private search_term: string = '';
+    private username: string = sessionStorage.getItem('username')!
   
     constructor(props: PageProps) {
         super(props);
+        this.state = {
+            current_selection: props.current_selection,
+            people: [],
+        }
         // A hardcoded batch of people
-        this.people.push(new Person("Doctor Wu", "./Images/default.png", "Has never failed."));
-        this.people.push(new Person("Head Doctor", "./Images/default.png", "89 years old"));
-        this.people.push(new Person("Poor Tom", "./Images/default.png", "Popular with the ladies."));
-        this.people.push(new Person("Urban Guerilla", "./Images/default.png", "A doctor?"));
-        this.people.push(new Person("Doremifasolati Do", "./Images/default.png", "profile profile profile"));
-        this.people.push(new Person("Naval Doctor Kira", "./Images/default.png", "Dislikes people who can't choose between the land and the sea."));
-        this.people.push(new Person("Holly Kira", "./Images/default.png", "WILL forget your name."));
-        this.people.push(new Person("Dr. Ferdinand", "./Images/default.png", "Worthy of respect."));
-        this.people.push(new Person("Beverly Crusher", "./Images/default.png", "Has military experience."));
-        this.people.push(new Person("Julian Bashir", "./Images/default.png", "Custom made."));
-        this.people.push(new Person("Dr. Nishikino", "./Images/default.png", "profile profile profile"));
+        // this.people.push(new Person("Doctor Wu", "./Images/default.png", "Has never failed."));
+        // this.people.push(new Person("Head Doctor", "./Images/default.png", "89 years old"));
+        // this.people.push(new Person("Poor Tom", "./Images/default.png", "Popular with the ladies."));
+        // this.people.push(new Person("Urban Guerilla", "./Images/default.png", "A doctor?"));
+        // this.people.push(new Person("Doremifasolati Do", "./Images/default.png", "profile profile profile"));
+        // this.people.push(new Person("Naval Doctor Kira", "./Images/default.png", "Dislikes people who can't choose between the land and the sea."));
+        // this.people.push(new Person("Holly Kira", "./Images/default.png", "WILL forget your name."));
+        // this.people.push(new Person("Dr. Ferdinand", "./Images/default.png", "Worthy of respect."));
+        // this.people.push(new Person("Beverly Crusher", "./Images/default.png", "Has military experience."));
+        // this.people.push(new Person("Julian Bashir", "./Images/default.png", "Custom made."));
+        // this.people.push(new Person("Dr. Nishikino", "./Images/default.png", "profile profile profile"));
 
 
-        this.profile_contents = this.people[0].profile;
-        this.picture = this.people[0].pic;
+        // this.profile_contents = this.state.people[0].profile;
+        // this.picture = this.state.people[0].pic;
+        this.profile_contents = ""
+        this.picture = "./Images/default.png"
 
         // If you're having problems with callbacks and "this is undefined", then use these types of lines
         this.page_alter = this.page_alter.bind(this);
         this.render_row = this.render_row.bind(this);
+        this.getAssociatedUsers = this.getAssociatedUsers.bind(this);
+        this.getAssociatedUsers()
 
         this.setState({
             current_selection: props.current_selection
@@ -114,8 +125,8 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
     }
 
     page_alter(index: any) {
-        this.profile_contents = this.people[index].profile
-        this.picture = this.people[index].pic
+        this.profile_contents = this.state.people[index].profile
+        this.picture = this.state.people[index].pic
         this.setState({
             current_selection: index
         });
@@ -126,13 +137,32 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
     render_row(props: ListChildComponentProps) {
         const { index, style } = props;
 
-        var temp_people = this.people
+        var temp_people = this.state.people
       
         return (
           <ListItem button style={style} key={index} onClick={() => this.page_alter(index)}>
-            <ListItemText primary={temp_people[index].name} />
+            <ListItemText primary={temp_people[index].name} secondary={temp_people[index].username} />
           </ListItem>
         );
+    }
+
+    getAssociatedUsers() {
+        httpCall('POST', "http://localhost:8080/patient/" + this.username, [], null, (result:any, rr:number) => {
+            if (rr === 200) {
+              let arr = JSON.parse(result).Providers
+              if (arr !== null) {
+                let temp: Person[] = []
+                arr = arr.forEach((element: Object) => {
+                    let name = Object.values(element)[1]
+                    let username = Object.values(element)[2]
+                   temp.push(new Person(name as string, "./Images/default.png", "yes mam", username as string)) 
+                });
+                this.profile_contents = temp[0].profile;
+                this.picture = temp[0].pic;
+                this.setState({people: temp})
+              }
+            } 
+          })
     }
 
     render() {
@@ -301,7 +331,7 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
 
                         <Grid item>
                             <div className={this.props.classes.doctor_list}>
-                                <FixedSizeList height={478} width={449} itemSize={50} itemCount={this.people.length}>
+                                <FixedSizeList height={478} width={449} itemSize={50} itemCount={this.state.people.length}>
                                     {this.render_row}
                                 </FixedSizeList>
                             </div>

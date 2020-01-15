@@ -45,6 +45,7 @@ class Transcription extends React.Component<SpeechProps> {
     private i = 0;
 
     render() {
+      let globalThis = window
       let the_props: SpeechProps  = this.props
   
       if (!the_props.browserSupportsSpeechRecognition) {

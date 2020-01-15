@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 // Like, "dying" would probably be sad, and "not dying" would be happy
 // Maybe later, just do 0 (none, primary) 1 (positive, secondary) 2 (negative, error) for now
 
-
+var globalThis = window
 function Neutral0() {
     return (
       <Typography variant="body1" color="primary" align="left" gutterBottom>
