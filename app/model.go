@@ -2,9 +2,10 @@ package app
 
 import (
 	"errors"
+	"sync"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"sync"
 )
 
 type Entity int
@@ -87,7 +88,7 @@ type LoginHandler struct {
 }
 
 type UserCache struct {
-	Id primitive.ObjectID
+	Id       primitive.ObjectID
 	UserType string
 }
 
@@ -106,7 +107,7 @@ type WorkerHandler struct {
 type Session struct {
 	ID           primitive.ObjectID `bson:"_id"`
 	Link         string
-	CreatedTime  string
+	CreatedTime  int64
 	Patient      UserRef
 	Provider     UserRef
 	TextMetrics  []TextMetrics
@@ -115,7 +116,7 @@ type Session struct {
 
 // BlankSession for inserting new document with random id rather than our own
 type BlankSession struct {
-	CreatedTime string
+	CreatedTime int64
 	Patient     UserRef
 	Provider    UserRef
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import Image from './Images/mainPatient.png'
+import Image from './Images/mainDoc.png'
 import { Box } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
@@ -30,7 +30,7 @@ createStyles({
 }),
 );
 
-export default function PatientMainPage() {
+export default function DoctorMainPage() {
     const classes = useStyles();
 
     return (
@@ -52,7 +52,7 @@ export default function PatientMainPage() {
                 </Grid>
 
                 <Grid item>
-                <Link to='/PatientProfile'>
+                <Link to='/DoctorProfile'>
                     <Button className={classes.top_button}>
                     
                     </Button>
@@ -60,25 +60,9 @@ export default function PatientMainPage() {
                 </Grid>
 
                 <Grid item>
-                </Grid>
-                <Grid item>
-                </Grid>
-                <Grid item>
-                </Grid>
-                <Grid item>
-                </Grid>
-                <Grid item>
-                </Grid>
-
-                <Grid item>
-                <Link to='/PatientMyDoctor'>
-                    <Button className={classes.top_button}>
+                <Button className={classes.padding} disabled>
                     
                     </Button>
-                </Link>
-                </Grid>
-
-                <Grid item>
                 </Grid>
                 <Grid item>
                 </Grid>
@@ -86,18 +70,6 @@ export default function PatientMainPage() {
                 </Grid>
                 <Grid item>
                 </Grid>
-                <Grid item>
-                </Grid>
-
-                <Grid item className={classes.small_padding}></Grid>
-                <Grid item>
-                <Link to='/PatientFindDoctor'>
-                    <Button className={classes.top_button}>
-                    
-                    </Button>
-                </Link>
-                </Grid>
-
                 <Grid item>
                 </Grid>
                 <Grid item>
@@ -109,14 +81,56 @@ export default function PatientMainPage() {
                 <Grid item>
                 </Grid>
 
-                <Grid item>
-                <Link to='/PatientAppointments'>
-                    <Button className={classes.top_button}>
-                    
-                    </Button>
-                </Link>
-                </Grid>
                 
+
+                <Grid item>
+                <Link to='/DoctorMyPatients'>
+                    <Button className={classes.top_button}>
+                    
+                    </Button>
+                </Link>
+                </Grid>
+
+                <Grid item>
+                <Button className={classes.padding} disabled>
+                    
+                    </Button>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+
+
+                <Grid item>
+                <Link to='/DoctorFindPatient'>
+                    <Button className={classes.top_button}>
+                    
+                    </Button>
+                </Link>
+                </Grid>
+
+                <Grid item>
+                <Button className={classes.padding} disabled>
+                    
+                    </Button>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
                 <Grid item>
                 </Grid>
                 <Grid item>
@@ -131,12 +145,13 @@ export default function PatientMainPage() {
                 </Grid>
 
                 <Grid item>
-                <Link to='/PatientSummary'>
+                <Link to='/DoctorAppointments'>
                     <Button className={classes.top_button}>
                     
                     </Button>
                 </Link>
                 </Grid>
+
                 <Grid item className={classes.padding}></Grid>
             </Grid>
         </div>

@@ -8,7 +8,7 @@ import { Snackbar } from '@material-ui/core'
 import { Box } from '@material-ui/core'
 import { httpCall } from './funcs'
 
-import Image from './Images/test.png'
+import Image from './Images/background_login_16-9.png'
 
 const styles = (_: Theme) => createStyles({
   root: {

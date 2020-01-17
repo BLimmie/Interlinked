@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/BLimmie/intouch-health-capstone-2019/app"
+	// "github.com/BLimmie/intouch-health-capstone-2019/app"
+	"../app"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,7 +15,7 @@ import (
 func addSession(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 
-	created := time.Now().String()
+	created := time.Now().Unix()
 	resChan := app.NewResultChannel()
 	DBWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
 		pat, err := ic.FindPatient(bson.D{{"username", c.Request.Header.Get("patUsername")}})

@@ -3,8 +3,8 @@ import { withStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Image from './Images/background_patientFindDoctor_16-9.png'
 import DefaultImage from './Images/default.png'
 import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { Grid, Button } from '@material-ui/core'
+import { Link, Redirect } from 'react-router-dom';
+import { Grid, Button, Snackbar } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
@@ -21,6 +21,7 @@ class Person {
         this.name = name;
         this.pic = pic;
         this.profile = profile;
+        this.username = username;
     }
 }
 
@@ -31,6 +32,10 @@ interface PageProps extends WithStyles<typeof styles>{
 interface PageState {
     current_selection: number;
     people: Person[];
+    addPatOnce: boolean
+    redirectLink: boolean
+    link: string
+    resMsg: string
 }
 
 const styles = (_: Theme) => createStyles({
@@ -81,32 +86,25 @@ const styles = (_: Theme) => createStyles({
   },
 })
 
-class PatientFindDoctor extends React.Component<PageProps, PageState> {
+class DoctorFindPatient extends React.Component<PageProps, PageState> {
     // private people: Person[] = [];
     private profile_contents: string = "";
     private picture: string = "";
-    private search_term: string = '';
+    private patToAdd: string = '';
+    // TODO Don't use username or id from sessionstorage
     private username: string = sessionStorage.getItem('username')!
+    private id: string = sessionStorage.getItem('id')!
   
     constructor(props: PageProps) {
         super(props);
         this.state = {
             current_selection: props.current_selection,
             people: [],
+            addPatOnce: false,
+            redirectLink: false,
+            link: '',
+            resMsg: '',
         }
-        // A hardcoded batch of people
-        // this.people.push(new Person("Doctor Wu", "./Images/default.png", "Has never failed."));
-        // this.people.push(new Person("Head Doctor", "./Images/default.png", "89 years old"));
-        // this.people.push(new Person("Poor Tom", "./Images/default.png", "Popular with the ladies."));
-        // this.people.push(new Person("Urban Guerilla", "./Images/default.png", "A doctor?"));
-        // this.people.push(new Person("Doremifasolati Do", "./Images/default.png", "profile profile profile"));
-        // this.people.push(new Person("Naval Doctor Kira", "./Images/default.png", "Dislikes people who can't choose between the land and the sea."));
-        // this.people.push(new Person("Holly Kira", "./Images/default.png", "WILL forget your name."));
-        // this.people.push(new Person("Dr. Ferdinand", "./Images/default.png", "Worthy of respect."));
-        // this.people.push(new Person("Beverly Crusher", "./Images/default.png", "Has military experience."));
-        // this.people.push(new Person("Julian Bashir", "./Images/default.png", "Custom made."));
-        // this.people.push(new Person("Dr. Nishikino", "./Images/default.png", "profile profile profile"));
-
 
         // this.profile_contents = this.state.people[0].profile;
         // this.picture = this.state.people[0].pic;
@@ -116,6 +114,8 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
         // If you're having problems with callbacks and "this is undefined", then use these types of lines
         this.page_alter = this.page_alter.bind(this);
         this.render_row = this.render_row.bind(this);
+        this.createSession = this.createSession.bind(this);
+        this.associateUser = this.associateUser.bind(this);
         this.getAssociatedUsers = this.getAssociatedUsers.bind(this);
         this.getAssociatedUsers()
 
@@ -146,10 +146,44 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
         );
     }
 
+    createSession() {
+        if (this.state.people.length > 0) {
+            let pat = this.state.people[this.state.current_selection].username
+            httpCall('POST', "http://localhost:8080/session", [['Provusername', this.username!],
+            ['Patusername', pat]], null, (result:any, rr:number) => {
+                if (rr === 200) {
+                    console.log(result)
+                    let ret = JSON.parse(result)
+                    this.setState({link: ret.id, 
+                    redirectLink: true})
+                } else {
+                    this.setState({resMsg: 'failed: session not created', 
+                    addPatOnce: true})
+                }
+            })
+        }
+    }
+
+    associateUser() {
+        if (this.patToAdd !== "") {
+          httpCall('POST', "http://localhost:8080/associateUser", [['Provid', this.id!],
+          ['Patusername', this.patToAdd]], null, (result:any, rr:number) => {
+              if (rr === 200) {
+                this.setState({resMsg: 'success: added user'})
+              } else {
+                this.setState({resMsg: 'failed: invalid user added'})
+              }
+            })
+        } else {
+          this.setState({resMsg: 'failed: no username entered'})
+        }
+        this.setState({addPatOnce: true})
+    }
+
     getAssociatedUsers() {
-        httpCall('POST', "http://localhost:8080/patient/" + this.username, [], null, (result:any, rr:number) => {
+        httpCall('POST', "http://localhost:8080/provider/" + this.username, [], null, (result:any, rr:number) => {
             if (rr === 200) {
-              let arr = JSON.parse(result).Providers
+              let arr = JSON.parse(result).Patients
               if (arr !== null) {
                 let temp: Person[] = []
                 arr = arr.forEach((element: Object) => {
@@ -166,10 +200,7 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
     }
 
     render() {
-
-
-
-        return (
+        return this.state.redirectLink ? (<Redirect to={'/DoctorInterface/' + this.state.link} />) : (
         <Box justifyContent="center"
             className={this.props.classes.background}
             style={{backgroundImage: `url(${Image})` }}>
@@ -321,7 +352,7 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
                             id='search'
                             placeholder='Search'
                             fullWidth
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.search_term = e.target.value}}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.patToAdd = e.target.value}}
                         />
 
                         <Grid item>
@@ -388,7 +419,7 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
                                 </Grid>
 
                                 <Grid item>
-                                    <Button className={this.props.classes.make_appt} >
+                                    <Button className={this.props.classes.make_appt} onClick = {this.createSession} >
                                     
                                     </Button>
                                 </Grid>
@@ -429,10 +460,12 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
                         </Grid>
 
                         <Grid item>
-                            <Button className={this.props.classes.add_doc} >
+                            <Button className={this.props.classes.add_doc} onClick={this.associateUser}>
                             
                             </Button>
                         </Grid>
+                        <Snackbar open={this.state.addPatOnce}
+                message={this.state.resMsg} />
                     </Grid>
                 </Grid>
             </div>
@@ -442,4 +475,4 @@ class PatientFindDoctor extends React.Component<PageProps, PageState> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(PatientFindDoctor)
+export default withStyles(styles, { withTheme: true })(DoctorFindPatient)

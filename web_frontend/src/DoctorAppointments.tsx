@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles, createStyles, Theme } from '@material-ui/core/styles'
-import Image from './Images/background_patientAppointments_16-9.png'
+import Image from './Images/background_doctorAppointments_16-9.png'
 import { Box, Typography, WithStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
@@ -76,28 +76,28 @@ class Appointment {
 }
 
 
-class PatientAppointments extends React.Component<PageProps, PageState> {
+class DoctorAppointments extends React.Component<PageProps, PageState> {
     private appointments: Appointment[] = [];
-    private doc_name: string = "";
+    private patient_name: string = "";
     private date: string = "";
   
     constructor(props: PageProps) {
         super(props);
         // A hardcoded batch of appointments
-        this.appointments.push(new Appointment("Doctor Wu", "01/30/20_1700"));
-        this.appointments.push(new Appointment("Poor Tom", "02/12/20_0800"));
-        this.appointments.push(new Appointment("Head Doctor", "06/15/20_2100"));
-        this.appointments.push(new Appointment("Urban Guerilla", "01/30/20_1700"));
-        this.appointments.push(new Appointment("Doremifasolati Do", "02/12/20_0800"));
-        this.appointments.push(new Appointment("Naval Doctor Kira", "06/15/20_2100"));
-        this.appointments.push(new Appointment("Holly Kira", "01/30/20_1700"));
-        this.appointments.push(new Appointment("Dr. Ferdinand", "02/12/20_0800"));
-        this.appointments.push(new Appointment("Beverly Crusher", "06/15/20_2100"));
-        this.appointments.push(new Appointment("Julian Bashir", "01/30/20_1700"));
-        this.appointments.push(new Appointment("Dr. Nishikino", "02/12/20_0800"));
+        this.appointments.push(new Appointment("Mountain Tim", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Lucy Steel", "02/12/20_0800"));
+        this.appointments.push(new Appointment("Scarlet Valentine", "06/15/20_2100"));
+        this.appointments.push(new Appointment("Blackmore", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Mike O.", "02/12/20_0800"));
+        this.appointments.push(new Appointment("Stephen Steel", "06/15/20_2100"));
+        this.appointments.push(new Appointment("William Riker", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Miles O'Brien", "02/12/20_0800"));
+        this.appointments.push(new Appointment("Hal Emmerich", "06/15/20_2100"));
+        this.appointments.push(new Appointment("Duncan MacLeod", "01/30/20_1700"));
+        this.appointments.push(new Appointment("Nico Y.", "02/12/20_0800"));
         this.format_dates()
 
-        this.doc_name = this.appointments[0].name;
+        this.patient_name = this.appointments[0].name;
         this.date = this.appointments[0].date;
 
         // If you're having problems with callbacks and "this is undefined", then use these types of lines
@@ -110,7 +110,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
     }
 
     page_alter(index: any) {
-        this.doc_name = this.appointments[index].name;
+        this.patient_name = this.appointments[index].name;
         this.date = this.appointments[index].date;
         this.setState({
             current_selection: index
@@ -162,107 +162,122 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
             className={this.props.classes.background}
             style={{backgroundImage: `url(${Image})` }}>
             <div style={{ padding: 20 }}>
-                <Grid
-                    container
-                    spacing={1}
-                    direction='row'
-                    alignItems='center'
-                    justify='flex-start'
-                >
-                    <Grid item>
-                    <Button className={this.props.classes.padding} disabled>
-                        
-                        </Button>
-                    </Grid>
-
-                    <Grid item>
-                    <Link to='/PatientProfile'>
-                        <Button className={this.props.classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                    </Grid>
-
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-
-                    <Grid item>
-                    <Link to='/PatientMyDoctor'>
-                        <Button className={this.props.classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                    </Grid>
-
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-
-                    <Grid item className={this.props.classes.small_padding}></Grid>
-                    <Grid item>
-                    <Link to='/PatientFindDoctor'>
-                        <Button className={this.props.classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                    </Grid>
-
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-
-                    <Grid item>
-                    <Link to='/PatientMainPage'>
-                        <Button className={this.props.classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                    </Grid>
+            <Grid
+                container
+                spacing={1}
+                direction='row'
+                alignItems='center'
+                justify='flex-start'
+            >
+                <Grid item>
+                <Button className={this.props.classes.padding} disabled>
                     
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-                    <Grid item>
-                    </Grid>
-
-                    <Grid item>
-                    <Link to='/PatientSummary'>
-                        <Button className={this.props.classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                    </Grid>
-                    <Grid item className={this.props.classes.padding}></Grid>
+                    </Button>
                 </Grid>
+
+                <Grid item>
+                <Link to='/DoctorProfile'>
+                    <Button className={this.props.classes.top_button}>
+                    
+                    </Button>
+                </Link>
+                </Grid>
+
+                <Grid item>
+                <Button className={this.props.classes.padding} disabled>
+                    
+                    </Button>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+
+                
+
+                <Grid item>
+                <Link to='/DoctorMyPatients'>
+                    <Button className={this.props.classes.top_button}>
+                    
+                    </Button>
+                </Link>
+                </Grid>
+
+                <Grid item>
+                <Button className={this.props.classes.padding} disabled>
+                    
+                    </Button>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+
+
+                <Grid item>
+                <Link to='/DoctorFindPatients'>
+                    <Button className={this.props.classes.top_button}>
+                    
+                    </Button>
+                </Link>
+                </Grid>
+
+                <Grid item>
+                <Button className={this.props.classes.padding} disabled>
+                    
+                    </Button>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+                <Grid item>
+                </Grid>
+
+                <Grid item>
+                <Link to='/DoctorMainPage'>
+                    <Button className={this.props.classes.top_button}>
+                    
+                    </Button>
+                </Link>
+                </Grid>
+
+                <Grid item className={this.props.classes.padding}></Grid>
+            </Grid>
 
                 <Grid
                     container
@@ -358,7 +373,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
                         </Grid>
                         <Grid item>
                             <Typography variant="h6" color="primary">
-                                    {"Doctor Name: " + this.doc_name}
+                                    {"Patient Name: " + this.patient_name}
                             </Typography>
                         </Grid>
                         <Grid item>
@@ -383,10 +398,13 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
                             <Button className={this.props.classes.small_padding} disabled>
                             </Button>
                         </Grid>
+
                         <Grid item>
-                            <Button className={this.props.classes.small_padding} disabled>
+                            <Button className={this.props.classes.view_profile} >
+                            
                             </Button>
                         </Grid>
+
                         <Grid item>
                             <Button className={this.props.classes.small_padding} disabled>
                             </Button>
@@ -422,4 +440,4 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(PatientAppointments)
+export default withStyles(styles, { withTheme: true })(DoctorAppointments)

@@ -1,7 +1,8 @@
 package routes
 
 import (
-	"github.com/BLimmie/intouch-health-capstone-2019/app"
+	// "github.com/BLimmie/intouch-health-capstone-2019/app"
+	"../app"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -58,6 +59,29 @@ func getSession(c *gin.Context) {
 	resultChan := app.NewResultChannel()
 	err = DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
 		session, err := ic.FindSessionByID(sessionID)
+		return session, err
+	})
+	if err != nil {
+		c.String(500, "All workers busy")
+		return
+	}
+	result := <-resultChan
+	session, err := result.Result.(*app.Session), result.Err
+
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	c.JSON(200, *session)
+}
+
+func getLatestSession(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	patusername := c.Request.Header.Get("patusername")
+	provusername := c.Request.Header.Get("provusername")
+	resultChan := app.NewResultChannel()
+	err := DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+		session, err := ic.FindLatestSession(provusername, patusername)
 		return session, err
 	})
 	if err != nil {
@@ -134,7 +158,7 @@ func getUserFromToken(c *gin.Context) {
 			c.String(500, "All workers busy")
 			return
 		}
-		res := <- resultChan
+		res := <-resultChan
 		user, err := res.Result, res.Err
 		c.JSON(200, user)
 	} else {

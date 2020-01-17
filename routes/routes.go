@@ -1,7 +1,8 @@
 package routes
 
 import (
-	"github.com/BLimmie/intouch-health-capstone-2019/app"
+	// "github.com/BLimmie/intouch-health-capstone-2019/app"
+	"../app"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,7 +33,7 @@ func Routes() {
 		AllowOriginFunc: func(origin string) bool { return true },
 		// AllowedOrigins:   []string{"http://localhost:3000", "*"},
 		AllowedMethods:   []string{"PUT", "GET", "POST", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Origin", "Content-Type", "X-Auth-Token", "Authorization", "Name", "Username", "Password", "Providerid", "Patientusername"},
+		AllowedHeaders:   []string{"Origin", "Content-Type", "X-Auth-Token", "Authorization", "Name", "Username", "Password", "Provid", "Patid", "Patusername", "Provusername"},
 		AllowCredentials: true,
 		Debug:            true,
 	})
@@ -41,6 +42,7 @@ func Routes() {
 	router.POST("/patient/:user", getPatient)
 	router.POST("/provider/:user", getProvider)
 	router.POST("/session/:id", getSession)
+	router.POST("/latestsession", getLatestSession)
 	router.POST("/user/:token", getUserFromToken)
 	// Submit New Data
 	router.POST("/patient", addPatient)

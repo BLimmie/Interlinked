@@ -14,12 +14,13 @@
     "@types/request": "^2.48.3",
     "@types/request-promise-native": "^1.0.17",
     "@types/twilio-video": "^2.0.10",
-    "babel-jest": "^24.9.0",
     "chart.js": "^2.9.2",
     "ibm-watson": "^5.1.0",
     "peer": "^0.2.10",
     "peerjs": "^1.1.0",
     "react": "latest",
+    "react-alert": "^6.0.0",
+    "react-alert-template-oldschool-dark": "^1.0.1",
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
@@ -52,6 +53,8 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.2"
+    "@types/react-alert": "^5.2.0",
+    "@types/react-router-dom": "^5.1.2",
+    "@types/jest": "^24.0.25"
   }
 }

@@ -4,10 +4,10 @@ import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
 import Webcam from 'react-webcam'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { Room } from 'twilio-video'
-import { RoomTextField } from './Video/RoomTextField'
-import { getRoom, setRemoteVideo } from './Video/Twilio'
-import VideoControls, { avStateInterface, defaultAVState } from './Video/VideoControls'
-import { WebcamWithControls } from './Video/WebcamWithControls'
+import { RoomTextField } from '../Video/RoomTextField'
+import { getRoom, setRemoteVideo } from '../Video/Twilio'
+import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
+import { WebcamWithControls } from '../Video/WebcamWithControls'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
