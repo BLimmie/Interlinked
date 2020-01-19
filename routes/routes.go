@@ -1,8 +1,7 @@
 package routes
 
 import (
-	// "github.com/BLimmie/intouch-health-capstone-2019/app"
-	"../app"
+	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"go.mongodb.org/mongo-driver/mongo"

@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	// "github.com/BLimmie/intouch-health-capstone-2019/app"
-	"../app"
+	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

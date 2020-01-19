@@ -1,9 +1,8 @@
 package routes
 
 import (
+	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
-	// "github.com/BLimmie/intouch-health-capstone-2019/app"
-	"../app"
 )
 
 type roomProperties struct {
