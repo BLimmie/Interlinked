@@ -94,6 +94,7 @@ class Login extends React.Component<LoginProps, LoginState> {
               <Input
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   this.setState({password: e.target.value})}
+                type='password'
                 id='password'
                 placeholder='password'/>
             </FormControl>
@@ -173,7 +174,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   }
 
   changeUserType = (context: Login) => {
-      context.setState({isPatient: !this.state.isPatient})
+    context.setState({isPatient: !this.state.isPatient})
   }
 }
 
