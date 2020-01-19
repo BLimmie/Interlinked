@@ -1,26 +1,27 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
+	"github.com/gin-gonic/gin"
 )
 
 type roomProperties struct {
-	IdentityType string  `json:"identityType"` 
-	RoomName string  `json:"roomName"` 
+	IdentityType string `json:"identityType"`
+	RoomName     string `json:"roomName"`
 }
+
 func getToken(c *gin.Context) {
 
 	c.Header("Access-Control-Allow-Origin", "*")
 
 	var json roomProperties
-	if err := c.ShouldBindJSON(&json); err !=nil {
+	if err := c.ShouldBindJSON(&json); err != nil {
 		c.String(500, err.Error())
 		return
 	}
 
 	resChan := app.NewResultChannel()
-	GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error){
+	GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
 		return app.GetAuthToken(json.IdentityType, json.RoomName)
 	})
 	result := <-resChan
@@ -30,6 +31,6 @@ func getToken(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200,res)
+	c.JSON(200, res)
 
 }

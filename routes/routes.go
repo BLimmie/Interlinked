@@ -30,16 +30,26 @@ func Routes() {
 	GCPWorkers = app.NewWorkerHandler(4)
 	router := gin.Default()
 	//Allow all origin headers
-	router.Use(cors.Default())
+	corsOps := cors.New(cors.Options{
+		AllowOriginFunc: func(origin string) bool { return true },
+		// AllowedOrigins:   []string{"http://localhost:3000", "*"},
+		AllowedMethods:   []string{"PUT", "GET", "POST", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Origin", "Content-Type", "X-Auth-Token", "Authorization", "Name", "Username", "Password", "Provid", "Patid", "Patusername", "Provusername"},
+		AllowCredentials: true,
+		Debug:            true,
+	})
+	router.Use(corsOps)
 	// Get Object Data
 	router.POST("/patient/:user", getPatient)
 	router.POST("/provider/:user", getProvider)
 	router.POST("/session/:id", getSession)
+	router.POST("/latestsession", getLatestSession)
 	router.POST("/user/:token", getUserFromToken)
 	// Submit New Data
 	router.POST("/patient", addPatient)
 	router.POST("/provider", addProvider)
 	router.POST("/session", addSession)
+	router.POST("/associateUser", associateUser)
 
 	// Get Session Metrics
 	router.POST("/metrics/:id", getSessionMetrics)

@@ -74,6 +74,29 @@ func getSession(c *gin.Context) {
 	c.JSON(200, *session)
 }
 
+func getLatestSession(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	patusername := c.Request.Header.Get("patusername")
+	provusername := c.Request.Header.Get("provusername")
+	resultChan := app.NewResultChannel()
+	err := DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+		session, err := ic.FindLatestSession(provusername, patusername)
+		return session, err
+	})
+	if err != nil {
+		c.String(500, "All workers busy")
+		return
+	}
+	result := <-resultChan
+	session, err := result.Result.(*app.Session), result.Err
+
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	c.JSON(200, *session)
+}
+
 func getProvider(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	username := c.Param("user")
@@ -134,7 +157,7 @@ func getUserFromToken(c *gin.Context) {
 			c.String(500, "All workers busy")
 			return
 		}
-		res := <- resultChan
+		res := <-resultChan
 		user, err := res.Result, res.Err
 		c.JSON(200, user)
 	} else {

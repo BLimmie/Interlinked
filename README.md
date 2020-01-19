@@ -49,6 +49,11 @@ store.sh: save db to dump.gz
 `go get -u github.com/google/go-cmp/cmp` before testing  
 `go test` to run all test files 
 
+### Running App
+`source env.sh` in root directory then `cd db` and `./start_db.sh`    
+`go run main.go`  
+`npm start` in web_frontend  (also do `npm install` first time)  
+
 # OpenFace
 Download this
 https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_v2.2.0_win_x64.zip  

@@ -193,6 +193,24 @@ func (ic *IntouchClient) FindSessionByUserID(id primitive.ObjectID, flag Entity)
 	return ic.FindSession(filter)
 }
 
+func (ic *IntouchClient) FindLatestSession(proUsername string, patUsername string) (*Session, error) {
+	var result Session
+	// filter := bson.D{{"patient._id", patId},
+	// 				{"provider._id", proId},
+	// 				{"max": }}
+	findOps := options.FindOneOptions{}
+	findOps.SetSort(bson.D{{"createdtime", -1}})
+	err := ic.SesCol.FindOne(nil, bson.D{{"patient.username", patUsername},
+		{"provider.username", proUsername}}, &findOps).Decode(&result)
+
+	if err != nil {
+		log.Print(err)
+		return nil, err
+	}
+
+	return &result, nil
+}
+
 // IsUsernameInUse checks if username is already assigned to someone
 // returns true if so, false otherwise
 func (ic *IntouchClient) IsUsernameInUse(username string) bool {
@@ -235,7 +253,7 @@ func (ic *IntouchClient) InsertUser(name string, username string, password strin
 
 // InsertSession inserts a session with link, created time, patient, and provider
 // returns nil id and error if problems arise, else id and nil
-func (ic *IntouchClient) InsertSession(created string, patient *UserRef, provider *UserRef) (*primitive.ObjectID, error) {
+func (ic *IntouchClient) InsertSession(created int64, patient *UserRef, provider *UserRef) (*primitive.ObjectID, error) {
 	return ic.insertEntity(BlankSession{created, *patient, *provider}, Ses)
 }
 
@@ -244,7 +262,7 @@ func (ic *IntouchClient) AddLink(id primitive.ObjectID, link string) error {
 		return errs["ErrLinkInvalid"]
 	}
 	filter := bson.D{{"_id", id}}
-	update := bson.D{{"$set",bson.D{{"link", link}}}}
+	update := bson.D{{"$set", bson.D{{"link", link}}}}
 	return ic.updateField(filter, update, Ses)
 }
 
