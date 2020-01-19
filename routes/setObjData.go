@@ -55,7 +55,7 @@ func addProvider(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
 	_, err := hex.DecodeString(username)
-	if err != nil {
+	if (err == nil && len(username) == 24) {
 		c.String(400, "Username not allowed")
 		return
 	}
@@ -71,7 +71,7 @@ func addPatient(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	name, username, password := c.Request.Header.Get("name"), c.Request.Header.Get("username"), c.Request.Header.Get("password")
 	_, err := hex.DecodeString(username)
-	if err != nil {
+	if (err == nil && len(username) == 24) {
 		c.String(400, "Username not allowed")
 		return
 	}
