@@ -3,7 +3,7 @@ import React from 'react'
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
 import Emotions from "./Emotions"
 import Webcam from 'react-webcam'
-import {Redirect} from 'react-router-dom'
+import {Redirect, RouteComponentProps} from 'react-router-dom'
 import VideoControls, { avStateInterface, defaultAVState } from './Video/VideoControls'
 import { getRoom, setRemoteVideo } from './Video/Twilio'
 import { RoomTextField } from './Video/RoomTextField'
@@ -31,16 +31,18 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function DoctorInterface()  {
+type LinkParams = {link: string}
+export default function DoctorInterface({ match }: RouteComponentProps<LinkParams>)  {
   const classes = useStyles();
 
   const [avState, setAvState] = React.useState<avStateInterface>(defaultAVState)
 
-  const [roomField, setRoomField] = React.useState<string>('')
+  const [roomField, setRoomField] = React.useState<string>(match.params.link)
   const [videoRoom, setVideoRoom] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
   const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
 
+  let globalThis = window
   globalThis.words = new Map();
   globalThis.display_words = Array.from( globalThis.words.keys() );
   globalThis.sentiment = Array.from( globalThis.words.values() ); 
@@ -48,14 +50,21 @@ export default function DoctorInterface()  {
   globalThis.phrase_count = 0;
   
   const createRoom = () => {
-    const localTrackStream = (webcamRef.current as Webcam ).stream.getTracks()
-    getRoom(roomField, localTrackStream, "Doctor")
-      .then((room: Room) => {
-        setVideoRoom(room)
-        setRemoteVideo(room, endSession)
-      })
-      .catch(() => {setRoomField("Room name does not exist, try again")})
+    if (!videoRoom) {
+      if (navigator.mediaDevices.getUserMedia) { 
+        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
+          const localTrackStream = stream.getTracks()
+          getRoom(roomField, localTrackStream, "Doctor")
+            .then((room: Room) => {
+              setVideoRoom(room)
+              setRemoteVideo(room, endSession)
+            })
+            .catch(() => {setRoomField("Room name does not exist, try again")})
+          }).catch(console.log)
+      }
+    }
   }
+  createRoom()
 
   const endSession: Function = () => {
     if(videoRoom)
@@ -64,25 +73,14 @@ export default function DoctorInterface()  {
   }
 
   if(endChat)
-    return <Redirect to='/' />
+    return <Redirect to='/client/' />
   
   return (
     <div className={classes.root} >
       <Grid container className={classes.upperHalf} >
         <Grid item xs={1} />
         {
-          !videoRoom &&
-          <Grid item className={classes.their_video} xs = {5} >
-            <RoomTextField
-              inputLabel="Type a room name to create a chat"
-              setRoomName={setRoomField}
-              roomName={roomField}
-              submitRoom={() => createRoom()}
-            />
-          </Grid>
-        }
-        {
-          videoRoom &&
+          // videoRoom &&
           <Grid item className={classes.their_video}  id="remote" xs = {5} />
         } 
         <Grid item xs={1} />
@@ -119,6 +117,7 @@ export default function DoctorInterface()  {
             border = {8}
             borderColor = "white"
             borderRadius = "0%"
+            bgcolor="#c7c6ce"
           >
             <Transcription />
           </Box>

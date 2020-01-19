@@ -1,6 +1,7 @@
 package routes
 
 import (
+        "strings"
         "net/http"
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
@@ -54,8 +55,15 @@ func Routes() {
 	router.POST("/login", login)
 
         router.LoadHTMLFiles("routes/js/build/index.html")
-	router.GET("/*_page", func(c *gin.Context) {
+	router.GET("/*filename", func(c *gin.Context) {
+            if strings.HasPrefix(c.Request.URL.Path, "/client") {
                 c.HTML(http.StatusOK, "index.html", nil)
+            } else {
+                var relaPathFromPwdBuilder strings.Builder
+                relaPathFromPwdBuilder.WriteString("routes/js/build")
+                relaPathFromPwdBuilder.WriteString(c.Request.URL.Path)
+                c.File(relaPathFromPwdBuilder.String())
+            }
 	})
 
 	// By default it serves on :8080 unless a

@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, BrowserRouter} from 'react-router-dom'
 
 import DoctorInterface from './DoctorInterface'
-import PatientInterface from './PatientInterface'
+import PatientInterface from './PatientPages/PatientInterface'
 
 export default function App() {  
   return (

@@ -1,4 +1,4 @@
-import { connect, Room, RemoteParticipant, RemoteTrackPublication, RemoteVideoTrackPublication, RemoteVideoTrack } from "twilio-video"
+import { connect, Room } from "twilio-video"
 
 export async function getToken(identityType: string, roomName: string) {
     const jsonObject = JSON.stringify({
@@ -68,4 +68,13 @@ function handleNewParticipant(participant: any) {
     console.log("on");
     (remoteMediaContainer as HTMLElement).appendChild(track.attach());
   })
+}
+
+export function sendFrame(screenShot: string, cb: (result:any)=>any) {
+  httpCall(
+    'POST',
+    "http://localhost:8080/sentiment/frame",
+    screenShot.split(",")[1],
+    cb
+  )
 }

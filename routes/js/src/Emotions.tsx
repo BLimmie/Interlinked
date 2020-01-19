@@ -3,6 +3,8 @@ import {Polar} from 'react-chartjs-2';
 import { Grid, Button, Box } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
 
+var globalThis = window
+
 interface EmotionProps {
     current_phrase_count: number;
 }
