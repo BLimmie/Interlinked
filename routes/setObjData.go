@@ -57,6 +57,7 @@ func addProvider(c *gin.Context) {
 	_, err := hex.DecodeString(username)
 	if err != nil {
 		c.String(400, "Username not allowed")
+		return
 	}
 	_, err = ic.InsertUser(name, username, password, 1)
 	if err != nil {
@@ -72,6 +73,7 @@ func addPatient(c *gin.Context) {
 	_, err := hex.DecodeString(username)
 	if err != nil {
 		c.String(400, "Username not allowed")
+		return
 	}
 	_, err = ic.InsertUser(name, username, password, 0)
 	if err != nil {
