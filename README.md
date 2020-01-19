@@ -1,8 +1,19 @@
 # intouch-health-interlinked-2019
 
-### Dependencies:
+### Downloading
 
     go get -u github.com/gin-gonic/gin
+
+### Building
+
+    cd routes/js
+    npm run build
+    cd ../../
+    go build
+
+### Running
+
+    go run main.go
 
 ## Code Layout
 
@@ -16,6 +27,7 @@ The directory structure of a generated Revel application:
 
     routes/           Router Directory
         routes.go     Routes for endpoints in the API
+	js/	      Frontend code directory
 
 
 ### Database
