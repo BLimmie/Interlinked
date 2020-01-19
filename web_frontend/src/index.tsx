@@ -7,6 +7,9 @@ import PrivilegedRoute from './PrivilegedRoute'
 import Dashboard from './DashboardWrapper'
 import DoctorInterface from './DoctorInterface'
 import DoctorMainPage from './DoctorMainPage'
+import DoctorProfile from './DoctorProfile'
+import DoctorMyPatients from './DoctorMyPatients'
+import DoctorFindPatients from './DoctorFindPatients'
 import DoctorAppointments from './DoctorAppointments'
 import DoctorFindPatient from './DoctorFindPatient'
 
@@ -46,6 +49,9 @@ class Server extends React.Component {
         <PrivilegedRoute path='/DoctorInterface/:link' component={DoctorInterface} ></PrivilegedRoute>
         <PrivilegedRoute path='/PatientInterface/:link' component={PatientInterface} ></PrivilegedRoute>
         <PrivilegedRoute path='/DoctorMainPage'><DoctorMainPage /></PrivilegedRoute>
+        <PrivilegedRoute path='/DoctorProfile'><DoctorProfile /></PrivilegedRoute>
+        <PrivilegedRoute path='/DoctorMyPatients'><DoctorMyPatients current_selection={0} /></PrivilegedRoute>
+        <PrivilegedRoute path='/DoctorFindPatients'><DoctorFindPatients current_selection={0} /></PrivilegedRoute>
         <PrivilegedRoute path='/DoctorAppointments'><DoctorAppointments current_selection={0}/></PrivilegedRoute>
         <PrivilegedRoute path='/DoctorFindPatient'><DoctorFindPatient current_selection={0}/></PrivilegedRoute>
 
