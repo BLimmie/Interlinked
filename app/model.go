@@ -73,12 +73,12 @@ type TimestampMetrics struct {
 }
 
 type TextMetrics struct {
-	Time      string
+	Time      int64
 	Text      string
 	Sentiment float32
 }
 type FrameMetrics struct {
-	Time          string
+	Time          int64
 	ImageFilename string
 	Emotion       map[string]string
 	AU            map[string]float32

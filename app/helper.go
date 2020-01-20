@@ -19,10 +19,22 @@ func formatTimeString(s string) string {
 	return strings.Split(s, " m=")[0]
 }
 
-func removeMonotonicString(s string) string {
-	return formatTimeString(s)
+func removeMonotonicTime(s string) (time.Time, error) {
+	return time.Parse(timeLayout, formatTimeString(s))
 }
 
-func removeMonotonicTime(t time.Time) (time.Time, error) {
-	return time.Parse(timeLayout, removeMonotonicString(t.String()))
+func removeMonotonicTimeNoErr(s string) time.Time {
+	t, err := time.Parse(timeLayout, formatTimeString(s))
+	if err != nil {
+		panic(s)
+	}
+	return t
+}
+
+func removeMonotonicTimeFromTime(t time.Time) (time.Time, error) {
+	return removeMonotonicTime(t.String())
+}
+
+func timeFromInt(i int64) time.Time {
+	return time.Unix(i,0)
 }
