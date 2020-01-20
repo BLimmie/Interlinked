@@ -8,11 +8,12 @@ import SummaryButtonImage from '../ButtonAssets/Summary.png'
 import ViewProfileButtonImage from '../ButtonAssets/ViewProfile.png'
 import StartAppointmentButtonImage from '../ButtonAssets/StartAppointment.png'
 import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { Grid, Button } from '@material-ui/core'
+import { Link, Redirect } from 'react-router-dom';
+import { Grid, Button, Snackbar } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { httpCall } from '../funcs'
 
 interface PageProps extends WithStyles<typeof styles>{
     current_selection: number;
@@ -20,6 +21,11 @@ interface PageProps extends WithStyles<typeof styles>{
 
 interface PageState {
     current_selection: number;
+    people: Person[];
+    joinSessOnce: boolean
+    redirectLink: boolean
+    link: string
+    resMsg: string
 }
 
 const styles = (_: Theme) => createStyles({
@@ -80,44 +86,44 @@ class Person {
     name: string =  "";
     pic: string = "";
     profile: string = "";
+    username: string = "";
 
-    constructor(name: string, pic: string, profile: string) {
+    constructor(name: string, pic: string, profile: string, username: string) {
         this.name = name;
         this.pic = pic;
         this.profile = profile;
+        this.username = username;
     }
 }
 
 
 class PatientAppointments extends React.Component<PageProps, PageState> {
-    private people: Person[] = [];
     private profile_contents: string = "";
     private name: string = "";
     private picture: string = "";
     private search_term: string = '';
+    private username: string = sessionStorage.getItem('username')!
   
     constructor(props: PageProps) {
         super(props);
+        this.state = {
+            current_selection: props.current_selection,
+            people: [],
+            joinSessOnce: false,
+            redirectLink: false,
+            link: '',
+            resMsg: 'failed: session not joined'
+        }
         // A hardcoded batch of people
-        this.people.push(new Person("Doctor Wu", "../TrueImages/default.png", "Has never failed."));
-        this.people.push(new Person("Head Doctor", "../TrueImages/default.png", "89 years old"));
-        this.people.push(new Person("Poor Tom", "../TrueImages/default.png", "Popular with the ladies."));
-        this.people.push(new Person("Urban Guerilla", "../TrueImages/default.png", "A doctor?"));
-        this.people.push(new Person("Doremifasolati Do", "../TrueImages/default.png", "profile profile profile"));
-        this.people.push(new Person("Naval Doctor Kira", "../TrueImages/default.png", "Dislikes people who can't choose between the land and the sea."));
-        this.people.push(new Person("Holly Kira", "../TrueImages/default.png", "WILL forget your name."));
-        this.people.push(new Person("Dr. Ferdinand", "../TrueImages/default.png", "Worthy of respect."));
-        this.people.push(new Person("Beverly Crusher", "../TrueImages/default.png", "Has military experience."));
-        this.people.push(new Person("Julian Bashir", "../TrueImages/default.png", "Custom made."));
-        this.people.push(new Person("Dr. Nishikino", "../TrueImages/default.png", "profile profile profile"));
-
-        this.name = this.people[0].name;
-        this.profile_contents = this.people[0].profile;
-        this.picture = this.people[0].pic;
+        this.name = ''
+        this.profile_contents = ""
+        this.picture = "../TrueImages/default.png"
 
         // If you're having problems with callbacks and "this is undefined", then use these types of lines
         this.page_alter = this.page_alter.bind(this);
         this.render_row = this.render_row.bind(this);
+        this.getAssociatedUsers = this.getAssociatedUsers.bind(this);
+        this.joinSession = this.joinSession.bind(this);
 
         this.setState({
             current_selection: props.current_selection
@@ -125,9 +131,9 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
     }
 
     page_alter(index: any) {
-        this.name = this.people[index].name
-        this.profile_contents = this.people[index].profile
-        this.picture = this.people[index].pic
+        this.name = this.state.people[index].name
+        this.profile_contents = this.state.people[index].profile
+        this.picture = this.state.people[index].pic
         this.setState({
             current_selection: index
         });
@@ -138,20 +144,53 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
     render_row(props: ListChildComponentProps) {
         const { index, style } = props;
 
-        var temp_people = this.people
+        var temp_people = this.state.people
       
         return (
           <ListItem button style={style} key={index} onClick={() => this.page_alter(index)}>
-            <ListItemText primary={temp_people[index].name} />
+            <ListItemText primary={temp_people[index].name} secondary={temp_people[index].username} />
           </ListItem>
         );
     }
 
+    joinSession() {
+        if (this.state.people.length > 0) {
+            let pro = this.state.people[this.state.current_selection].username
+            httpCall('POST', "http://localhost:8080/latestsession", [['Provusername', pro], 
+                                ['Patusername', this.username]], null, (result:any, rr:number) => {
+                if (rr === 200) {
+                    console.log(result)
+                    let ret = JSON.parse(result)
+                    this.setState({link: ret.ID, 
+                    redirectLink: true})
+                } else {
+                    this.setState({joinSessOnce: true})
+                }
+            })
+        }
+    }
+
+    getAssociatedUsers() {
+        httpCall('POST', "http://localhost:8080/patient/" + this.username, [], null, (result:any, rr:number) => {
+            if (rr === 200) {
+              let arr = JSON.parse(result).Providers
+              if (arr !== null) {
+                let temp: Person[] = []
+                arr = arr.forEach((element: Object) => {
+                    let name = Object.values(element)[1]
+                    let username = Object.values(element)[2]
+                   temp.push(new Person(name as string, "../TrueImages/default.png", "yes mam", username as string)) 
+                });
+                this.profile_contents = temp[0].profile;
+                this.picture = temp[0].pic;
+                this.setState({people: temp})
+              }
+            } 
+          })
+    }
+
     render() {
-
-
-
-        return (
+        return this.state.redirectLink ? (<Redirect to={'/client/PatientInterface/' + this.state.link} />) : (
          <Box justifyContent="center"
             className={this.props.classes.background}
             style={{backgroundImage: `url(${Image})` }}>
@@ -236,7 +275,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
 
                         <Grid item>
                             <div className={this.props.classes.patient_list}>
-                                <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.people.length}>
+                                <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.state.people.length}>
                                     {this.render_row}
                                 </FixedSizeList>
                             </div>
@@ -343,11 +382,13 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
 
                         <Grid item>
                             <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${StartAppointmentButtonImage})` }}>
-                                <Button className={this.props.classes.start_button} >
+                                <Button className={this.props.classes.start_button} onClick={this.joinSession} >
                             
                                 </Button>
                             </Box>
                         </Grid>
+                        <Snackbar open={this.state.joinSessOnce}
+                message={this.state.resMsg} />
 
                     </Grid>
                 </Grid>

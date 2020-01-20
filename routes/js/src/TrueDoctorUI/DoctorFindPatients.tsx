@@ -9,11 +9,12 @@ import ViewProfileButtonImage from '../ButtonAssets/ViewProfile.png'
 import ViewSummaryButtonImage from '../ButtonAssets/ViewSummary.png'
 import MakeAppointmentButtonImage from '../ButtonAssets/MakeAppointment.png'
 import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { Grid, Button } from '@material-ui/core'
+import { Link, Redirect } from 'react-router-dom';
+import { Grid, Button, Snackbar } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { httpCall } from '../funcs'
 
 interface PageProps extends WithStyles<typeof styles>{
     current_selection: number;
@@ -21,6 +22,11 @@ interface PageProps extends WithStyles<typeof styles>{
 
 interface PageState {
     current_selection: number;
+    people: Person[];
+    addPatOnce: boolean
+    redirectLink: boolean
+    link: string
+    resMsg: string
 }
 
 const styles = (_: Theme) => createStyles({
@@ -71,43 +77,45 @@ class Person {
     name: string =  "";
     pic: string = "";
     profile: string = "";
+    username: string = "";
 
-    constructor(name: string, pic: string, profile: string) {
+    constructor(name: string, pic: string, profile: string, username: string) {
         this.name = name;
         this.pic = pic;
         this.profile = profile;
+        this.username = username;
     }
 }
 
 
 class DoctorFindPatients extends React.Component<PageProps, PageState> {
-    private people: Person[] = [];
     private profile_contents: string = "";
     private picture: string = "";
-    private search_term: string = '';
+    private patToAdd: string = '';
+    // TODO Don't use username or id from sessionstorage
+    private username: string = sessionStorage.getItem('username')!
+    private id: string = sessionStorage.getItem('id')!
   
     constructor(props: PageProps) {
         super(props);
-        // A hardcoded batch of people
-        this.people.push(new Person("Mountain Tim", "../TrueImages/default.png", "A lonely man."));
-        this.people.push(new Person("Lucy Steel", "../TrueImages/default.png", "Head's in the right place."));
-        this.people.push(new Person("Scarlet Valentine", "../TrueImages/default.png", "First Lady."));
-        this.people.push(new Person("Blackmore", "../TrueImages/default.png", "When it rains, it pours."));
-        this.people.push(new Person("Mike O.", "../TrueImages/default.png", "The bells are ringing."));
-        this.people.push(new Person("Stephen Steel", "../TrueImages/default.png", "profile profile profile"));
-        this.people.push(new Person("William Riker", "../TrueImages/default.png", "Number One."));
-        this.people.push(new Person("Miles O'Brien", "../TrueImages/default.png", "One of the little guys."));
-        this.people.push(new Person("Hal Emmerich", "../TrueImages/default.png", "profile profile profile"));
-        this.people.push(new Person("Duncan MacLeod", "../TrueImages/default.png", "In great health."));
-        this.people.push(new Person("Nico Y.", "../TrueImages/default.png", "profile profile profile"));
-
-
-        this.profile_contents = this.people[0].profile;
-        this.picture = this.people[0].pic;
+        this.state = {
+            current_selection: props.current_selection,
+            people: [],
+            addPatOnce: false,
+            redirectLink: false,
+            link: '',
+            resMsg: '',
+        }
+        this.profile_contents = ""
+        this.picture = "./TrueImages/default.png"
 
         // If you're having problems with callbacks and "this is undefined", then use these types of lines
         this.page_alter = this.page_alter.bind(this);
         this.render_row = this.render_row.bind(this);
+        this.createSession = this.createSession.bind(this);
+        this.associateUser = this.associateUser.bind(this);
+        this.getAssociatedUsers = this.getAssociatedUsers.bind(this);
+        this.getAssociatedUsers()
 
         this.setState({
             current_selection: props.current_selection
@@ -115,8 +123,8 @@ class DoctorFindPatients extends React.Component<PageProps, PageState> {
     }
 
     page_alter(index: any) {
-        this.profile_contents = this.people[index].profile
-        this.picture = this.people[index].pic
+        this.profile_contents = this.state.people[index].profile
+        this.picture = this.state.people[index].pic
         this.setState({
             current_selection: index
         });
@@ -127,20 +135,73 @@ class DoctorFindPatients extends React.Component<PageProps, PageState> {
     render_row(props: ListChildComponentProps) {
         const { index, style } = props;
 
-        var temp_people = this.people
+        var temp_people = this.state.people
       
         return (
           <ListItem button style={style} key={index} onClick={() => this.page_alter(index)}>
-            <ListItemText primary={temp_people[index].name} />
+            <ListItemText primary={temp_people[index].name} secondary={temp_people[index].username} />
           </ListItem>
         );
+    }
+
+    createSession() {
+        if (this.state.people.length > 0) {
+            let pat = this.state.people[this.state.current_selection].username
+            httpCall('POST', "http://localhost:8080/session", [['Provusername', this.username!],
+            ['Patusername', pat]], null, (result:any, rr:number) => {
+                if (rr === 200) {
+                    console.log(result)
+                    let ret = JSON.parse(result)
+                    this.setState({link: ret.id, 
+                    redirectLink: true})
+                } else {
+                    this.setState({resMsg: 'failed: session not created', 
+                    addPatOnce: true})
+                }
+            })
+        }
+    }
+
+    associateUser() {
+        if (this.patToAdd !== "") {
+          httpCall('POST', "http://localhost:8080/associateUser", [['Provid', this.id!],
+          ['Patusername', this.patToAdd]], null, (result:any, rr:number) => {
+              if (rr === 200) {
+                this.setState({resMsg: 'success: added user'})
+              } else {
+                this.setState({resMsg: 'failed: invalid user added'})
+              }
+            })
+        } else {
+          this.setState({resMsg: 'failed: no username entered'})
+        }
+        this.setState({addPatOnce: true})
+    }
+
+    getAssociatedUsers() {
+        httpCall('POST', "http://localhost:8080/provider/" + this.username, [], null, (result:any, rr:number) => {
+            if (rr === 200) {
+              let arr = JSON.parse(result).Patients
+              if (arr !== null) {
+                let temp: Person[] = []
+                arr = arr.forEach((element: Object) => {
+                    let name = Object.values(element)[1]
+                    let username = Object.values(element)[2]
+                   temp.push(new Person(name as string, "./TrueImages/default.png", "yes mam", username as string)) 
+                });
+                this.profile_contents = temp[0].profile;
+                this.picture = temp[0].pic;
+                this.setState({people: temp})
+              }
+            } 
+          })
     }
 
     render() {
 
 
 
-        return (
+        return this.state.redirectLink ? (<Redirect to={'/client/DoctorInterface/' + this.state.link} />) : (
          <Box justifyContent="center"
             className={this.props.classes.background}
             style={{backgroundImage: `url(${Image})` }}>
@@ -215,7 +276,7 @@ class DoctorFindPatients extends React.Component<PageProps, PageState> {
                             id='search'
                             placeholder='Search'
                             fullWidth
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.search_term = e.target.value}}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.patToAdd = e.target.value}}
                         />
 
                         <Grid item>
@@ -225,7 +286,7 @@ class DoctorFindPatients extends React.Component<PageProps, PageState> {
 
                         <Grid item>
                             <div className={this.props.classes.patient_list}>
-                                <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.people.length}>
+                                <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.state.people.length}>
                                     {this.render_row}
                                 </FixedSizeList>
                             </div>
@@ -303,7 +364,7 @@ class DoctorFindPatients extends React.Component<PageProps, PageState> {
 
                                 <Grid item>
                                     <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${MakeAppointmentButtonImage})` }}>
-                                        <Button className={this.props.classes.side_button} >
+                                        <Button className={this.props.classes.side_button} onClick={this.createSession} >
                                         
                                         </Button>
                                     </Box>
@@ -327,6 +388,8 @@ class DoctorFindPatients extends React.Component<PageProps, PageState> {
                                 </Typography>
                             </Box>
                         </Grid>
+                        <Snackbar open={this.state.addPatOnce}
+                message={this.state.resMsg} />
 
                     </Grid>
                 </Grid>

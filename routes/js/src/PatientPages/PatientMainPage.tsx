@@ -52,7 +52,7 @@ export default function PatientMainPage() {
                 </Grid>
 
                 <Grid item>
-                <Link to='/PatientProfile'>
+                <Link to='/client/PatientProfile'>
                     <Button className={classes.top_button}>
                     
                     </Button>
@@ -71,7 +71,7 @@ export default function PatientMainPage() {
                 </Grid>
 
                 <Grid item>
-                <Link to='/PatientMyDoctor'>
+                <Link to='/client/PatientMyDoctor'>
                     <Button className={classes.top_button}>
                     
                     </Button>
@@ -91,7 +91,7 @@ export default function PatientMainPage() {
 
                 <Grid item className={classes.small_padding}></Grid>
                 <Grid item>
-                <Link to='/PatientFindDoctor'>
+                <Link to='/client/PatientFindDoctor'>
                     <Button className={classes.top_button}>
                     
                     </Button>
@@ -110,7 +110,7 @@ export default function PatientMainPage() {
                 </Grid>
 
                 <Grid item>
-                <Link to='/PatientAppointments'>
+                <Link to='/client/PatientAppointments'>
                     <Button className={classes.top_button}>
                     
                     </Button>

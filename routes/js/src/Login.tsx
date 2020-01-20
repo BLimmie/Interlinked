@@ -56,7 +56,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   // The "div style" line is a necessary workaround for a bug in Material UI Grid that causes it to extend too far,
   // resulting in the scrollbars you may have seen. The aforementioned line fixes that.
   render() {
-    return this.state.loggedIn ? (this.state.isPatient ? (<Redirect to='/client/PatientMainPage' />) : (<Redirect to='/client/DoctorMainPage' />)) : (this.state.createAccount ? (<Redirect to='/client/createAccount' />) : (
+    return this.state.loggedIn ? (this.state.isPatient ? (<Redirect to='/client/TruePatientMainPage' />) : (<Redirect to='/client/TrueDoctorMainPage' />)) : (this.state.createAccount ? (<Redirect to='/client/createAccount' />) : (
       <Box justifyContent="center"
            className={this.props.classes.background}
            style={{backgroundImage: `url(${Image})` }}>     
