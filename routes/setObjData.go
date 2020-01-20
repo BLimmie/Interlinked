@@ -86,7 +86,7 @@ func addPatient(c *gin.Context) {
 
 func associateUser(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	providerid, patientusername := c.Request.Header.Get("provid"), c.Request.Header.Get("patientusername")
+	providerid, patientusername := c.Request.Header.Get("provid"), c.Request.Header.Get("patusername")
 	pat, err := ic.FindPatient(bson.D{{"username", patientusername}})
 	if err != nil {
 		c.String(500, err.Error())
