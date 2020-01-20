@@ -20,6 +20,24 @@ import PatientMyDoctor from './PatientPages/PatientMyDoctor'
 import PatientFindDoctor from './PatientPages/PatientFindDoctor'
 import PatientAppointments from './PatientPages/PatientAppointments'
 import PatientSummary from './PatientPages/PatientSummary'
+
+// Once the original UI files are no longer needed, just delete them and replace them
+// with the ones in the "True" folders.
+// The only code that needs to be modified after that is
+// 1. The imports below
+// 2. The PrivilegedRoute contents in this file
+// 3. The Links tied to each button in each UI file
+// 4. The Image and Asset imports in each UI file
+import TrueDoctorMainPage from './TrueDoctorUI/DoctorMainPage'
+import TrueDoctorProfile from './TrueDoctorUI/DoctorProfile'
+import TrueDoctorFindPatients from './TrueDoctorUI/DoctorFindPatients'
+import TrueDoctorAppointments from './TrueDoctorUI/DoctorAppointments'
+
+import TruePatientMainPage from './TruePatientUI/PatientMainPage'
+import TruePatientProfile from './TruePatientUI/PatientProfile'
+import TruePatientAppointments from './TruePatientUI/PatientAppointments'
+import TruePatientSummary from './TruePatientUI/PatientSummary'
+
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
@@ -61,6 +79,17 @@ class Server extends React.Component {
           <PrivilegedRoute path='/client/PatientFindDoctor'><PatientFindDoctor current_selection={0}/></PrivilegedRoute>
           <PrivilegedRoute path='/client/PatientAppointments'><PatientAppointments current_selection={0}/></PrivilegedRoute>
           <PrivilegedRoute path='/client/PatientSummary'><PatientSummary current_selection={0}/></PrivilegedRoute>
+          
+          <PrivilegedRoute path='/client/TrueDoctorMainPage'><TrueDoctorMainPage /></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TrueDoctorProfile'><TrueDoctorProfile /></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TrueDoctorFindPatients'><TrueDoctorFindPatients current_selection={0} /></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TrueDoctorAppointments'><TrueDoctorAppointments current_selection={0}/></PrivilegedRoute>
+
+          <PrivilegedRoute path='/client/TruePatientMainPage'><TruePatientMainPage /></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TruePatientProfile'><TruePatientProfile /></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TruePatientAppointments'><TruePatientAppointments current_selection={0}/></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TruePatientSummary'><TruePatientSummary current_selection={0}/></PrivilegedRoute>
+          
         </Switch>
       </Router>
     )
