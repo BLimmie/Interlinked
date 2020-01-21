@@ -1,25 +1,12 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import ReactDom from 'react-dom'
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
 import Login from './Login'
 import CreateAccount from './CreateAccount'
 import PrivilegedRoute from './PrivilegedRoute'
-import Dashboard from './DashboardWrapper'
-import DoctorInterface from './DoctorInterface'
-import DoctorMainPage from './DoctorMainPage'
-import DoctorProfile from './DoctorProfile'
-import DoctorMyPatients from './DoctorMyPatients'
-import DoctorFindPatients from './DoctorFindPatients'
-import DoctorAppointments from './DoctorAppointments'
-import DoctorFindPatient from './DoctorFindPatient'
 
-import PatientInterface from './PatientPages/PatientInterface'
-import PatientMainPage from './PatientPages/PatientMainPage'
-import PatientProfile from './PatientPages/PatientProfile'
-import PatientMyDoctor from './PatientPages/PatientMyDoctor'
-import PatientFindDoctor from './PatientPages/PatientFindDoctor'
-import PatientAppointments from './PatientPages/PatientAppointments'
-import PatientSummary from './PatientPages/PatientSummary'
+import DoctorInterface from './TrueDoctorUI/DoctorInterface'
+import PatientInterface from './TruePatientUI/PatientInterface'
 
 // Once the original UI files are no longer needed, just delete them and replace them
 // with the ones in the "True" folders.
@@ -30,7 +17,6 @@ import PatientSummary from './PatientPages/PatientSummary'
 // 4. The Image and Asset imports in each UI file
 import TrueDoctorMainPage from './TrueDoctorUI/DoctorMainPage'
 import TrueDoctorProfile from './TrueDoctorUI/DoctorProfile'
-import TrueDoctorFindPatients from './TrueDoctorUI/DoctorFindPatients'
 import TrueDoctorAppointments from './TrueDoctorUI/DoctorAppointments'
 
 import TruePatientMainPage from './TruePatientUI/PatientMainPage'
@@ -55,34 +41,29 @@ globalThis.sentiment = Array.from( globalThis.words.values() );
 globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
 
+
 class Server extends React.Component {
+  MainPageRoute: FunctionComponent<{}> = (props: {}) => {
+    let userType = sessionStorage.getItem("userType")
+    if (userType === "patient") {
+      return (<Redirect to='/client/TruePatientMainPage'/>)
+    } else {
+      return (<Redirect to='/client/TrueDoctorMainPage'/>)
+    }
+  }
+
   render() {
     return (
       <Router>
         <Switch>
           <Route path='/client/login'><Login /></Route>
           <Route path='/client/createAccount'><CreateAccount /></Route>
-          <PrivilegedRoute exact path='/'><Redirect to='/client/'/></PrivilegedRoute>
-          <PrivilegedRoute exact path='/client/'><Dashboard /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/dashboard'><Dashboard /></PrivilegedRoute>
+          <PrivilegedRoute exact path='/'><this.MainPageRoute /></PrivilegedRoute>
           <PrivilegedRoute path='/client/DoctorInterface/:link' component={DoctorInterface} ></PrivilegedRoute>
           <PrivilegedRoute path='/client/PatientInterface/:link' component={PatientInterface} ></PrivilegedRoute>
-          <PrivilegedRoute path='/client/DoctorMainPage'><DoctorMainPage /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/DoctorProfile'><DoctorProfile /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/DoctorMyPatients'><DoctorMyPatients current_selection={0} /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/DoctorFindPatients'><DoctorFindPatients current_selection={0} /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/DoctorAppointments'><DoctorAppointments current_selection={0}/></PrivilegedRoute>
-          <PrivilegedRoute path='/client/DoctorFindPatient'><DoctorFindPatient current_selection={0}/></PrivilegedRoute>
-          <PrivilegedRoute path='/client/PatientMainPage'><PatientMainPage /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/PatientProfile'><PatientProfile /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/PatientMyDoctor'><PatientMyDoctor /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/PatientFindDoctor'><PatientFindDoctor current_selection={0}/></PrivilegedRoute>
-          <PrivilegedRoute path='/client/PatientAppointments'><PatientAppointments current_selection={0}/></PrivilegedRoute>
-          <PrivilegedRoute path='/client/PatientSummary'><PatientSummary current_selection={0}/></PrivilegedRoute>
           
           <PrivilegedRoute path='/client/TrueDoctorMainPage'><TrueDoctorMainPage /></PrivilegedRoute>
           <PrivilegedRoute path='/client/TrueDoctorProfile'><TrueDoctorProfile /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/TrueDoctorFindPatients'><TrueDoctorFindPatients current_selection={0} /></PrivilegedRoute>
           <PrivilegedRoute path='/client/TrueDoctorAppointments'><TrueDoctorAppointments current_selection={0}/></PrivilegedRoute>
 
           <PrivilegedRoute path='/client/TruePatientMainPage'><TruePatientMainPage /></PrivilegedRoute>

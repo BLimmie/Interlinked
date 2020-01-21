@@ -124,6 +124,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
         this.render_row = this.render_row.bind(this);
         this.getAssociatedUsers = this.getAssociatedUsers.bind(this);
         this.joinSession = this.joinSession.bind(this);
+        this.getAssociatedUsers()
 
         this.setState({
             current_selection: props.current_selection

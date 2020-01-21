@@ -1,15 +1,15 @@
 import React from 'react'
 
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
-import Emotions from "./Emotions"
+import Emotions from "../Emotions"
 import Webcam from 'react-webcam'
 import {Redirect, RouteComponentProps} from 'react-router-dom'
-import VideoControls, { avStateInterface, defaultAVState } from './Video/VideoControls'
-import { getRoom, setRemoteVideo } from './Video/Twilio'
-import { RoomTextField } from './Video/RoomTextField'
-import { WebcamWithControls } from './Video/WebcamWithControls'
+import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
+import { getRoom, setRemoteVideo } from '../Video/Twilio'
+import { RoomTextField } from '../Video/RoomTextField'
+import { WebcamWithControls } from '../Video/WebcamWithControls'
 import { Room } from 'twilio-video'
-import Transcription from './Transcription'
+import Transcription from '../Transcription'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,7 +73,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   }
 
   if(endChat)
-    return <Redirect to='/client/' />
+    return <Redirect to='/client/TrueDoctorMainPage' />
   
   return (
     <div className={classes.root} >

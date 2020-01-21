@@ -239,16 +239,6 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
                  </Grid>
  
                  <Grid item>
-                   <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${FindPatientsButtonImage})` }}>
-                     <Link to='/client/TrueDoctorFindPatients'>
-                         <Button className={this.props.classes.top_button}>
-                         
-                         </Button>
-                     </Link>
-                   </Box>
-                 </Grid>
- 
-                 <Grid item>
                    <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${AppointmentsButtonImage})` }}>
                      <Link to='/client/TrueDoctorMainPage'>
                          <Button className={this.props.classes.current_top_button}>

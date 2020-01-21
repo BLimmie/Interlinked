@@ -40,15 +40,6 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
   const [videoRoom, setVideoRoom] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
 
-  // const joinRoom = () => {
-  //   const localTrackStream = (webcamRef.current as Webcam ).stream.getTracks()
-  //   getRoom( roomField, localTrackStream, "Patient")
-  //     .then((room: Room) => {
-  //       setVideoRoom(room)
-  //       setRemoteVideo(room, endSession)
-  //     })
-  //     .catch(() => {setRoomField("Room name does not exist, try again")})
-  // }
   const joinRoom = () => {
     if (!videoRoom) {
       if (navigator.mediaDevices.getUserMedia) { 
@@ -73,7 +64,7 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
   }
 
   if(endChat)
-    return <Redirect to='/client/' />
+    return <Redirect to='/client/TruePatientMainPage' />
   
   return (
     <div className={classes.root} >

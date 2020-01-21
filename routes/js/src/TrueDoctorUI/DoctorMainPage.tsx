@@ -55,16 +55,6 @@ export default function DoctorMainPage() {
                 </Grid>
 
                 <Grid item>
-                  <Box className={classes.button_background} style={{backgroundImage: `url(${FindPatientsButtonImage})` }}>
-                    <Link to='/client/TrueDoctorFindPatients'>
-                        <Button className={classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                  </Box>
-                </Grid>
-
-                <Grid item>
                   <Box className={classes.button_background} style={{backgroundImage: `url(${AppointmentsButtonImage})` }}>
                     <Link to='/client/TrueDoctorAppointments'>
                         <Button className={classes.top_button}>
