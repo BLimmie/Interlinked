@@ -8,6 +8,7 @@ import AppointmentsButtonImage from '../ButtonAssets/AppointmentsSelected.png'
 import ViewProfileButtonImage from '../ButtonAssets/ViewProfile.png'
 import ViewSummaryButtonImage from '../ButtonAssets/ViewSummary.png'
 import StartAppointmentButtonImage from '../ButtonAssets/StartAppointment.png'
+import AddPatientButtonImage from '../ButtonAssets/AddPatient.png'
 import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
 import { Link, Redirect } from 'react-router-dom';
 import { Grid, Button, Snackbar } from '@material-ui/core'
@@ -394,16 +395,6 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
                         </Grid>
 
                         <Grid item>
-                            <Box
-                                className={this.props.classes.profile_contents}
-                                bgcolor="#b5b3bc">
-                                <Typography variant="body1" color="primary">
-                                    {this.profile_contents}
-                                </Typography>
-                            </Box>
-                        </Grid>
-
-                        <Grid item>
                             <Button disabled>
                             </Button>
                         </Grid>
@@ -415,9 +406,39 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
                                 </Button>
                             </Box>
                         </Grid>
+                        
+                        <Grid item>
+                            <Button disabled>
+                            </Button>
+                        </Grid>
 
                         <Grid item>
-                            <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${StartAppointmentButtonImage})` }}>
+                            <Button disabled>
+                            </Button>
+                        </Grid>
+                                                
+                        <Grid item>
+                            <Button disabled>
+                            </Button>
+                        </Grid>
+
+                        <Grid item>
+                            <Button disabled>
+                            </Button>
+                        </Grid>
+                                                
+                        <Grid item>
+                            <Button disabled>
+                            </Button>
+                        </Grid>
+
+                        <Grid item>
+                            <Button disabled>
+                            </Button>
+                        </Grid>
+                        
+                        <Grid item>
+                            <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${AddPatientButtonImage})` }}>
                                 <Button className={this.props.classes.start_button} onClick = {this.associateUser}>
                             
                                 </Button>
