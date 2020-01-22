@@ -8,12 +8,20 @@ var core_2 = require("@material-ui/core/");
 var icons_1 = require("@material-ui/icons");
 var useStyles = styles_1.makeStyles(function (theme) {
     return styles_1.createStyles({
-        icon: {
+        icon_on:{
+            color: theme.palette.primary["main"],
+            fontSize:45
+        },
+        icon_off:{
             color: theme.palette.background["default"],
-            fontSize: 80
+            fontSize:45
+        },
+        button_box: {
+            width: "5vw",
+            height: "7vh"
         },
         padding: {
-            paddingLeft: '4px'
+            paddingLeft: '15px',
         },
         widthHundred: {
             width: '100%'
@@ -57,38 +65,32 @@ function VideoControls(props) {
             video: avState.video
         });
     };
-    return (react_1.createElement(core_2.Grid, { container: true, className: className },
-        react_1.createElement(core_2.Grid, { item: true, xs: 3 },
+    return (react_1.createElement(core_2.Grid, { container: true, spacing: 2, direction: 'row', 
+                                                alignItems: 'flex-start', justify: 'flex-start' },
+        react_1.createElement(core_2.Grid, { item: true },
             avState.audio &&
-                react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setMic(false); } },
-                    react_1.createElement(icons_1.MicOffOutlined, { className: classes.icon })),
+                react_1.createElement(core_1.Box, { className: classes.button_box, bgcolor: "#6e6b7a", justifyContent: "center" },
+                    react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setMic(false); } },
+                        react_1.createElement(icons_1.MicOffSharp, { className: classes.icon_off }))),
             avState.audio === false &&
-                react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setMic(true); } },
-                    react_1.createElement(icons_1.MicOutlined, { className: classes.icon }))),
-        react_1.createElement(core_2.Grid, { item: true, xs: 3 }),
-        react_1.createElement(core_2.Grid, { item: true, xs: 5 },
-            react_1.createElement(core_1.Box, { border: 8, borderColor: "white", borderRadius: "0%" },
+                react_1.createElement(core_1.Box, { className: classes.button_box, bgcolor: "#c7c6ce" },
+                    react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setMic(true); } },
+                        react_1.createElement(icons_1.MicSharp, { className: classes.icon_on })))),
+        react_1.createElement(core_2.Grid, { item: true },
+            avState.video === false &&
+                react_1.createElement(core_1.Box, { className: classes.button_box, bgcolor: "#6e6b7a" },
+                    react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setVidFeed(true); } },
+                        react_1.createElement(icons_1.VideocamOffSharp, { className: classes.icon_off }))),
+            avState.video &&
+                react_1.createElement(core_1.Box, { className: classes.button_box, bgcolor: "#c7c6ce" },
+                    react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setVidFeed(false); } },
+                        react_1.createElement(icons_1.VideocamSharp, { className: classes.icon_on })))),  
+        react_1.createElement(core_2.Grid, { item: true },
+            react_1.createElement(core_1.Box, { className: classes.button_box, bgcolor: "#d26363" },
                 react_1.createElement(react_router_dom_1.Link, { to: {
                         pathname: '/'
                     } },
-                    react_1.createElement(core_1.Button, { className: classes.widthHundred, color: "primary", size: "large", variant: "outlined", onClick: function () { return endSession(); } }, "End Session")))),
-        react_1.createElement(core_2.Grid, { item: true, xs: 1 }),
-        react_1.createElement(core_2.Grid, { item: true, xs: 3 },
-            avState.video &&
-                react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setVidFeed(false); } },
-                    react_1.createElement(icons_1.VideocamOffOutlined, { className: classes.icon })),
-            avState.video === false &&
-                react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return setVidFeed(true); } },
-                    react_1.createElement(icons_1.VideocamOutlined, { className: classes.icon }))),
-        react_1.createElement(core_2.Grid, { item: true, xs: 2 },
-            avState.volume > 0 &&
-                react_1.createElement(core_1.IconButton, { onClick: function () { return setVolume(0); } },
-                    react_1.createElement(icons_1.VolumeUpOutlined, { className: classes.icon })),
-            avState.volume === 0 &&
-                react_1.createElement(core_1.IconButton, { onClick: function () { return setVolume(30); } },
-                    react_1.createElement(icons_1.VolumeOffOutlined, { className: classes.icon }))),
-        react_1.createElement(core_2.Grid, { item: true, xs: 1 }),
-        react_1.createElement(core_2.Grid, { item: true, xs: 5 },
-            react_1.createElement(core_1.Slider, { value: avState.volume, style: { width: "230px" }, onChange: onVolumeChange }))));
+                    react_1.createElement(core_1.IconButton, { className: classes.padding, onClick: function () { return endSession(); } }, 
+                        react_1.createElement(icons_1.CallEndSharp, { className: classes.icon_off })))))));
 }
 exports["default"] = VideoControls;

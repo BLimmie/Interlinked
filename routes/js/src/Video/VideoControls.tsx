@@ -4,16 +4,24 @@ import { Link } from 'react-router-dom'
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { Grid  } from '@material-ui/core/'
-import {VideocamOffOutlined, MicOffOutlined, VolumeUpOutlined, VolumeOffOutlined, MicOutlined, VideocamOutlined} from '@material-ui/icons'
+import {VideocamOffSharp, MicOffSharp, VolumeUpSharp, VolumeOffSharp, CallEndSharp, MicSharp, VideocamSharp} from '@material-ui/icons'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    icon:{
+    icon_on:{
+      color: theme.palette.primary.main,
+      fontSize:45
+    },
+    icon_off:{
       color: theme.palette.background.default,
-      fontSize:80
+      fontSize:45
+    },
+    button_box: {
+      width: "5vw",
+      height: "7vh"
     },
     padding:{
-      paddingLeft: '4px'
+      paddingLeft: '15px'
     },
     widthHundred: {
       width: '100%'
@@ -75,97 +83,82 @@ export default function VideoControls(props:VideoControlsProps)  {
   }
 
   return (
-      <Grid container className={className} >
-        <Grid item xs={3} >
+    <Grid 
+      container
+      spacing={2}
+      direction='row'
+      alignItems='flex-start'
+      justify='flex-start'
+    >
+        <Grid item >
           { avState.audio &&
-            <IconButton className={classes.padding} onClick={() => setMic(false)} >
-              <MicOffOutlined
-                data-testid={"mic-off-icon"}
-                className={classes.icon}
-              />
-            </IconButton>
+            <Box className={classes.button_box} bgcolor="#6e6b7a" justifyContent="center">
+              <IconButton className={classes.padding} onClick={() => setMic(false)} >
+                <MicOffSharp
+                  data-testid={"mic-off-icon"}
+                  className={classes.icon_off}
+                />
+              </IconButton>
+            </Box>
           }
           { avState.audio === false &&
-            <IconButton className={classes.padding} onClick={() => setMic(true)} >
-              <MicOutlined
-                data-testid={"mic-on-icon"}
-                className={classes.icon}
-              />
-            </IconButton>
+            <Box className={classes.button_box} bgcolor="#c7c6ce">
+              <IconButton className={classes.padding} onClick={() => setMic(true)} >
+                <MicSharp
+                  data-testid={"mic-on-icon"}
+                  className={classes.icon_on}
+                />
+              </IconButton>
+            </Box>
           }
         </Grid>
-        <Grid item xs={3} />
-        <Grid item xs={5}>
-          <Box
-            border = {8}
-            borderColor = "white"
-            borderRadius = "0%"
-          >
+
+        <Grid item>
+            { avState.video === false &&
+              <Box className={classes.button_box} bgcolor="#6e6b7a">
+                <IconButton
+                  className={classes.padding}
+                  onClick={() => setVidFeed(true)}
+                >
+                  <VideocamOffSharp
+                    data-testid={"videocam-off-icon"}
+                    className={classes.icon_off}
+                  />
+                </IconButton>
+              </Box>
+            }
+            { avState.video &&
+              <Box className={classes.button_box} bgcolor="#c7c6ce">
+                <IconButton
+                  className={classes.padding}
+                  onClick={() => setVidFeed(false)}
+                >
+                  <VideocamSharp
+                    data-testid={"videocam-on-icon"}
+                    className={classes.icon_on}
+                  />
+                </IconButton>
+              </Box>
+            }
+        </Grid>
+
+        <Grid item>
+          <Box className={classes.button_box} bgcolor="#d26363">
             <Link to={{
               pathname:'/'
             }}>
-              <Button
-                className={classes.widthHundred}
-                color="primary"
-                size="large"
-                variant="outlined"
+              <IconButton
+                className={classes.padding}
                 onClick={() => endSession()}
-              >End Session</Button>
+              >
+                <CallEndSharp
+                  data-testid={"call-end-icon"}
+                  className={classes.icon_off}
+                />
+              </IconButton>
             </Link>
           </Box>
         </Grid>
-        <Grid item xs={1} />
-        <Grid item xs={3} >
-            { avState.video &&
-              <IconButton
-                className={classes.padding}
-                onClick={() => setVidFeed(false)}
-              >
-                <VideocamOffOutlined
-                  data-testid={"videocam-off-icon"}
-                  className={classes.icon}
-                />
-              </IconButton>
-            }
-            { avState.video === false &&
-              <IconButton
-                className={classes.padding}
-                onClick={() => setVidFeed(true)}
-              >
-                <VideocamOutlined
-                  data-testid={"videocam-on-icon"}
-                  className={classes.icon}
-                />
-              </IconButton>
-            }
-        </Grid>
-        <Grid item xs={2} >
-          { avState.volume > 0 &&
-            <IconButton onClick={() => setVolume(0)} >
-              <VolumeUpOutlined
-                data-testid={"volume-up-icon"}
-                className={classes.icon}
-              />
-            </IconButton>
-          }
-          { avState.volume === 0 &&
-            <IconButton onClick={() => setVolume(30)} >
-              <VolumeOffOutlined
-                data-testid={"volume-off-icon"}
-                className={classes.icon}
-              />
-            </IconButton>
-          }
-        </Grid>
-        <Grid item xs={1} />
-        <Grid item xs={5}>
-          <Slider
-            value={avState.volume}
-            style={{width:"230px"}}
-            onChange={onVolumeChange}
-            data-testid={"volume-slider"}
-          />
-        </Grid>
-      </Grid>
+    </Grid>
   )
 }
