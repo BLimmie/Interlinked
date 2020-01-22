@@ -10,11 +10,19 @@ import { RoomTextField } from '../Video/RoomTextField'
 import { WebcamWithControls } from '../Video/WebcamWithControls'
 import { Room } from 'twilio-video'
 import Transcription from '../Transcription'
+import Image from '../TrueImages/background_Interface_16-9.png'
+import TextboxImage from '../TrueImages/background_textbox_default.png'
+import AUs from '../AUs'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       background: '#16001f'
+    },
+    background: {
+      height: "100vh",
+      width: "100vw",
+      backgroundSize: 'cover'
     },
     upperHalf: {
       height: "55vh"
@@ -24,6 +32,19 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '100%',
         height: '90%',
       }
+    },
+    their_video_box: {
+      width: "70vw",
+      height: "70vh"
+    },
+    textbox_box: {
+      width: "70vw",
+      height: "25vh",
+      backgroundSize: 'cover'
+    },
+    textbox: {
+      width: "45vw",
+      height: "25vh",
     },
     lowerHalf: {
       height: "45vh",
@@ -76,53 +97,87 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
     return <Redirect to='/client/TrueDoctorMainPage' />
   
   return (
-    <div className={classes.root} >
-      <Grid container className={classes.upperHalf} >
-        <Grid item xs={1} />
-        {
-          // videoRoom &&
-          <Grid item className={classes.their_video}  id="remote" xs = {5} />
-        } 
-        <Grid item xs={1} />
-        <Grid item xs={5}>
-          <Box
-            my = {2}
-            border = {8}
-            borderColor = "white"
-            borderRadius = "0%"
-          >
-            <Emotions current_phrase_count={0} />
-          </Box>
+    <Box
+         className={classes.background}
+         style={{backgroundImage: `url(${Image})` }}>
+      <div style={{ padding: "1vw" }} >
+        <Grid 
+          container
+          spacing={2}
+          direction='row'
+          alignItems='flex-start'
+          justify='space-evenly'
+        >
+          <Grid item>
+            <Grid
+              container
+              spacing={1}
+              direction='column'
+              alignItems='flex-start'
+              justify='flex-start'
+            >
+                <Grid item>
+                  <Box className={classes.their_video_box}
+                        bgcolor="#6e6b7a"               
+                        border = {2}
+                        borderColor = "#6e6b7a">
+                    {
+                      // videoRoom &&
+                      <Grid item className={classes.their_video}  id="remote" xs = {5} />
+                    }
+                  </Box>
+                </Grid>
+            
+              <Grid item>
+                <Box justifyContent="center"
+                  className={classes.textbox_box}
+                  style={{backgroundImage: `url(${TextboxImage})` }}
+                >
+                  <div style={{ paddingLeft: "13vw", paddingTop: "1vh"}} >
+                    <Box className={classes.textbox} >
+                      <Transcription />
+                    </Box>
+                  </div>
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item>
+            <Grid
+              container
+              spacing={2}
+              direction='column'
+              alignItems='center'
+              justify='flex-start'
+            >
+                <Grid item>
+                    <Emotions current_phrase_count={0} />
+                </Grid>
+
+            </Grid>
+          </Grid>
+
+
+
+          <Grid item xs={3} /*Beginning of the lower half*/ >
+            <WebcamWithControls
+              webcamRef={webcamRef}
+              avState={avState}
+              sendScreenshots={false}
+              room={videoRoom}
+            />
+          </Grid>
+          <Grid item xs={4}> 
+            <VideoControls
+              endSession={() => endSession()}
+              avState={avState}
+              setAVState={setAvState}
+            />
+          </Grid>
+
         </Grid>
-      </Grid>
-      <Grid container className={classes.lowerHalf}>
-        <Grid item xs={3} /*Beginning of the lower half*/ >
-          <WebcamWithControls
-            webcamRef={webcamRef}
-            avState={avState}
-            sendScreenshots={false}
-            room={videoRoom}
-          />
-        </Grid>
-        <Grid item xs={4}> 
-          <VideoControls
-            endSession={() => endSession()}
-            avState={avState}
-            setAVState={setAvState}
-          />
-        </Grid>
-        <Grid item xs={5}>
-          <Box
-            className={classes.lowerHalf}
-            border = {8}
-            borderColor = "white"
-            borderRadius = "0%"
-            bgcolor="#c7c6ce"
-          >
-            <Transcription />
-          </Box>
-        </Grid>
-      </Grid>
-    </div>
+      </div>
+    </Box>
   ); //Replace "<Transcription />" with "<Transcript_Tests i={0} />" to run the transcription and emotion display tests
 }
