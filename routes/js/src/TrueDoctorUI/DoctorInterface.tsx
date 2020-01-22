@@ -100,13 +100,13 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
     <Box
          className={classes.background}
          style={{backgroundImage: `url(${Image})` }}>
-      <div style={{ padding: "1vw" }} >
+      <div style={{ padding: "1vw", paddingRight:"2vw", paddingLeft:"2vw" }} >
         <Grid 
           container
           spacing={2}
           direction='row'
           alignItems='flex-start'
-          justify='space-evenly'
+          justify='space-between'
         >
           <Grid item>
             <Grid
@@ -159,22 +159,27 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
           </Grid>
 
 
+          <div style={{ zIndex: 100, position:'absolute', top: "56vh", left:"1vw"}}>
+            
+            <Grid item xs={4} >
+              <WebcamWithControls
+                webcamRef={webcamRef}
+                avState={avState}
+                sendScreenshots={false}
+                room={videoRoom}
+              />
+            </Grid>
+          </div>
 
-          <Grid item xs={3} /*Beginning of the lower half*/ >
-            <WebcamWithControls
-              webcamRef={webcamRef}
-              avState={avState}
-              sendScreenshots={false}
-              room={videoRoom}
-            />
-          </Grid>
-          <Grid item xs={4}> 
-            <VideoControls
-              endSession={() => endSession()}
-              avState={avState}
-              setAVState={setAvState}
-            />
-          </Grid>
+          <div style={{ zIndex: 100, position:'absolute', top: "63vh", left:"54vw"}}>
+            <Grid item> 
+                <VideoControls
+                  endSession={() => endSession()}
+                  avState={avState}
+                  setAVState={setAvState}
+                />
+            </Grid>
+          </div>
 
         </Grid>
       </div>
