@@ -41,7 +41,7 @@ func submitSentimentText(c *gin.Context) {
 		return
 	}
 	metric := app.TextMetrics{
-		Time:      time.Now().String(),
+		Time:      time.Now().Unix(),
 		Sentiment: res,
 		Text:      string(text),
 	}
@@ -172,7 +172,7 @@ func submitSentimentFrame(c *gin.Context) {
 	output["au"] = res2
 
 	metric := app.FrameMetrics{
-		Time:          time.Now().String(),
+		Time:          time.Now().Unix(),
 		ImageFilename: filepath.ToSlash(*filename),
 		Emotion:       res,
 		AU:            res2,

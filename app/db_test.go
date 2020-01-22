@@ -21,7 +21,7 @@ var providerA = Provider{primitive.NilObjectID, "Hello World", "HW", "123456", "
 var providerB = Provider{primitive.NilObjectID, "Gehrig Weber", "spiderman", "marvel", "salt", []UserRef{}}
 var patientA = Patient{primitive.NilObjectID, "Mtestichaelangelo Z", "stout", "adonis", "salt", []UserRef{}}
 var patientB = Patient{primitive.NilObjectID, "Diego Perez", "ddog", "okbud", "salt", []UserRef{}}
-var createdTime = "test"
+var createdTime int64 = 0
 
 func TestIsUsernameInUse(t *testing.T) {
 	username := "fzhao"
@@ -475,7 +475,7 @@ func TestInsertSessionMetric(t *testing.T) {
 		t.Errorf("No session with id %s", *ses)
 	}
 
-	metric := TextMetrics{time.Now().String(), "yadda", 0}
+	metric := TextMetrics{time.Now().Unix(), "yadda", 0}
 	ic.InsertTextMetric(*ses, metric)
 
 	session, _ := testic.FindSessionByID(*ses)
