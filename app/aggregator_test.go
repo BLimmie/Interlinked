@@ -8,38 +8,38 @@ import (
 )
 
 func TestAggregator(t *testing.T) {
-	currentTime, _ := removeMonotonicTime(time.Now())
+	currentTime, _ := removeMonotonicTimeFromTime(time.Now())
 	s := Session{
 		ID:           primitive.NewObjectID(),
 		Link:         "/",
-		CreatedTime:  currentTime.String(),
+		CreatedTime:  currentTime.Unix(),
 		Patient:      UserRef{},
 		Provider:     UserRef{},
 		TextMetrics:  []TextMetrics{
 			{
-				Time:      currentTime.Add(10*time.Second).String(),
+				Time:      currentTime.Add(10*time.Second).Unix(),
 				Text:      "",
 				Sentiment: .1,
 			},
 			{
-				Time:      currentTime.Add(20*time.Second).String(),
+				Time:      currentTime.Add(20*time.Second).Unix(),
 				Text:      "",
 				Sentiment: .8,
 			},
 			{
-				Time:      currentTime.Add(30*time.Second).String(),
+				Time:      currentTime.Add(30*time.Second).Unix(),
 				Text:      "",
 				Sentiment: 0,
 			},
 			{
-				Time:      currentTime.Add(40*time.Second).String(),
+				Time:      currentTime.Add(40*time.Second).Unix(),
 				Text:      "",
 				Sentiment: -0.9,
 			},
 		},
 		ImageMetrics: []FrameMetrics{
 			{
-				Time:          currentTime.Add(10*time.Second).String(),
+				Time:          currentTime.Add(10*time.Second).Unix(),
 				ImageFilename: "",
 				Emotion:       map[string]string{
 					"joy": "VERY_LIKELY",
@@ -50,7 +50,7 @@ func TestAggregator(t *testing.T) {
 				AU:            nil,
 			},
 			{
-				Time:          currentTime.Add(20*time.Second).String(),
+				Time:          currentTime.Add(20*time.Second).Unix(),
 				ImageFilename: "",
 				Emotion:       map[string]string{
 					"joy": "VERY_LIKELY",
@@ -61,7 +61,7 @@ func TestAggregator(t *testing.T) {
 				AU:            nil,
 			},
 			{
-				Time:          currentTime.Add(30*time.Second).String(),
+				Time:          currentTime.Add(30*time.Second).Unix(),
 				ImageFilename: "",
 				Emotion:       map[string]string{
 					"joy": "VERY_UNLIKELY",
@@ -72,7 +72,7 @@ func TestAggregator(t *testing.T) {
 				AU:            nil,
 			},
 			{
-				Time:          currentTime.Add(40*time.Second).String(),
+				Time:          currentTime.Add(40*time.Second).Unix(),
 				ImageFilename: "",
 				Emotion:       map[string]string{
 					"joy": "VERY_UNLIKELY",
@@ -88,7 +88,7 @@ func TestAggregator(t *testing.T) {
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	res, err := agg.run()
+	res, err := agg.Run()
 	if err != nil {
 		t.Fatalf(err.Error())
 	}

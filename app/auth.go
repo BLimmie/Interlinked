@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"math/rand"
 	"os"
 	"strings"
 
@@ -56,6 +57,9 @@ func CreateToken(user primitive.ObjectID) string {
 	timeBytes := [12]byte(primitive.NewObjectID())
 	timeSlice := timeBytes[:]
 	arr := xorByteArray(append(userSlice, timeSlice...), passcode)
+	rand.Shuffle(24, func(i, j int) {
+		arr[i], arr[j] = arr[j], arr[i]
+	})
 	return hex.EncodeToString(arr)
 }
 
