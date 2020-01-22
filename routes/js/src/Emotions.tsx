@@ -1,7 +1,8 @@
 import React from 'react';
-import {Polar} from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2'
 import { Grid, Button, Box } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
+import AUs from './AUs'
 
 var globalThis = window
 
@@ -20,7 +21,7 @@ function rand(min: number, max: number) {
 // For demo purposes
 function random_server_output() {
 
-  var tmp = rand(1, 5);
+  var tmp = rand(1,5);
 
   if (tmp === 1) {
     globalThis.emotions_AUs = '{"AU":{"Blink":0,"Brow Lowerer":0,"Cheek Raiser":3.62,"Chin Raiser":0,"Dimpler":1.46,"Inner Brow Raiser":0,"Jaw Drop":1.9,"Lid Tightener":2.91,"Lip Corner Depressor":0.24,"Lip Corner Puller":3.44,"Lip Stretcher":0,"Lip Tightener":0,"Lips Part":2.65,"Nose Wrinkler":1.46,"Outer Brow Raiser":0,"Upper Lid Raiser":0,"Upper Lip Raiser":2.87},"Emotion":{"anger":"VERY_UNLIKELY","joy":"VERY_LIKELY","sorrow":"VERY_UNLIKELY","surprise":"VERY_UNLIKELY"}}'
@@ -45,16 +46,6 @@ function random_server_output() {
 setInterval(random_server_output, 1000);
 
 
-function get_AUs() {
-  let temp: string[] = []
-
-  for (var AU in JSON.parse(globalThis.emotions_AUs).AU) {
-    temp.push(AU + ": " + JSON.parse(globalThis.emotions_AUs).AU[AU])
-  }
-
-  return temp;
-}
-
 export default class Emotions extends React.Component<EmotionProps, EmotionState> {
     private timer: any;
     private showAUs: boolean = false;
@@ -62,7 +53,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
     private sorrow_level = 0;
     private anger_level = 0;
     private surprise_level = 0;
-    private AUs: string[] = [];
+    //private AUs: string[] = [];
   
     constructor(props: EmotionProps) {
       super(props);
@@ -119,28 +110,25 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
     }
 
     determineAUs() {
-      this.AUs = get_AUs();
+      let temp: boolean[] = []
 
-      if ((this.AUs).length < 15) {
-        this.AUs.length = 15;
+      for (var AU in JSON.parse(globalThis.emotions_AUs).AU) {
+          // just in case you want the text and numbers together
+          // If using this line, temp has to be a string array
+          //temp.push(AU + ": " + JSON.parse(globalThis.emotions_AUs).AU[AU])
+
+          // The numbers on their own
+          if (JSON.parse(globalThis.emotions_AUs).AU[AU] > 0) {
+              temp.push(true)
+          }
+          else {
+              temp.push(false)
+          }
+
       }
 
-      for (var i = 0; i < 15; i++) {
-        if (this.AUs[i] == null) {
-          this.AUs[i] = " ";
-        }
-      }
+      globalThis.AU_exists = temp;
 
-      return null;
-    }
-
-    change_view() {
-      if (this.showAUs === false) {
-        this.showAUs = true;
-      }
-      else {
-        this.showAUs = false;
-      }
       return null;
     }
   
@@ -157,15 +145,15 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
 
     render() {
       const legendOpts = {
-        display: true,
+        display: false,
         fullWidth: true,
-        reverse: true,
+        reverse: false,
         labels: {
-          fontColor: 'rgb(255, 255, 255)'
+          fontColor: 'rgb(110, 107, 122)'
         }
       };
 
-      if (this.showAUs === false) {
+
 
         return ( 
           <Grid
@@ -175,103 +163,49 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
           alignItems='center'
           justify='center'
         >
-        <Polar data={() => ({
+          <Grid item xs = {12}>
+        <Bar data={() => ({
           datasets: [{
             data: [      
-              this.surprise_level,        
-              this.anger_level,
-              this.sorrow_level,
               this.joy_level,
+              this.sorrow_level,
+              this.anger_level,
+              this.surprise_level,                  
             ],
             backgroundColor: [
-              '#ffa136',
-              '#ff3636',
-              '#4242ed',
-              '#ffff36',
+              '#d2d263',
+              '#6868c6',
+              '#d26363',
+              '#d29e63',
             ],
-            label: 'Facial Emotions' // for legend
+            borderColor: [
+              '#bdbd59',
+              '#5e5eb3',
+              '#bd5959',
+              '#bd8f59',
+            ],
+            borderWidth: 1
           }],
           labels: [
-            'Surprise',
-            'Anger',
-            'Sorrow',
             'Joy',
-          ],
-          })} legend={legendOpts} height={149}/>
-          <Box
-            my = {2}
-            border = {3}
-            borderColor = "white"
-            borderRadius = "0%"
-          >
-            <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-            onClick={() => this.change_view()}
-            >Details</Button>
-          </Box>
-        </Grid>
-        );
-      }
-
-      else {
-
-        return ( 
-          <Grid
-          container
-          spacing={0}
-          direction='column'
-          alignItems='center'
-          justify='center'
-        >
-        <Grid item xs = {12}>
-        <Polar data={() => ({
-          datasets: [{
-            data: [      
-              this.surprise_level,        
-              this.anger_level,
-              this.sorrow_level,
-              this.joy_level,
-            ],
-            backgroundColor: [
-              '#ffa136',
-              '#ff3636',
-              '#4242ed',
-              '#ffff36',
-            ],
-            label: 'Facial Emotions' // for legend
-          }],
-          labels: [
-            'Surprise',
-            'Anger',
             'Sorrow',
-            'Joy',
+            'Anger',
+            'Surprise',
           ],
-          })} legend={legendOpts} height={170} />
+          })} legend={legendOpts} height={282}/>
           </Grid>
-          <Typography variant="body2" color="primary" align='center'>
-            {this.AUs[0] + " | " + this.AUs[1] + " | " + this.AUs[2]} <br/>
-            {this.AUs[3] + " | " + this.AUs[4] + " | " + this.AUs[5]} <br/>
-            {this.AUs[6] + " | " + this.AUs[7] + " | " + this.AUs[8]} <br/>
-            {this.AUs[9] + " | " + this.AUs[10] + " | " + this.AUs[11]} <br/>
-            {this.AUs[12] + " | " + this.AUs[13] + " | " + this.AUs[14]}
-          </Typography>
-          <Box
-            my = {0}
-            border = {3}
-            borderColor = "white"
-            borderRadius = "0%"
-          >
-            <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-            onClick={() => this.change_view()}
-            >Details</Button>
-          </Box>
+          <Grid item>
+            
+            <Box height={"63vh"} width={"23vw"} bgcolor="#b5b3bc">
+              <div style={{paddingTop: "1vh"}} >
+                <AUs />
+              </div>
+            </Box>
+          </Grid>
+          
         </Grid>
+        
         );
       }
-    }
+  
   }

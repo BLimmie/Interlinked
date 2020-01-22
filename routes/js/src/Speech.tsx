@@ -18,7 +18,7 @@ var globalThis = window
 function Neutral0() {
     return (
       <Typography variant="body1" color="primary" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript]}
+        {"■ " + display_words[globalThis.point_in_transcript]}
         {" "}
       </Typography>
     );
@@ -27,7 +27,7 @@ function Neutral0() {
   function Neutral1() {
     return (
       <Typography variant="body1" color="primary" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript + 1]}
+        {"■ " + display_words[globalThis.point_in_transcript + 1]}
         {" "}
       </Typography>
     );
@@ -36,7 +36,7 @@ function Neutral0() {
   function Neutral2() {
     return (
       <Typography variant="body1" color="primary" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript + 2]}
+        {"■ " + display_words[globalThis.point_in_transcript + 2]}
       </Typography>
     );
   }
@@ -44,7 +44,7 @@ function Neutral0() {
   function Positive0() {
     return (
       <Typography variant="body1" color="secondary" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript]}
+        {"■ " + display_words[globalThis.point_in_transcript]}
         {" "}
       </Typography>
     );
@@ -53,7 +53,7 @@ function Neutral0() {
   function Positive1() {
     return (
       <Typography variant="body1" color="secondary" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript + 1]}
+        {"■ " + display_words[globalThis.point_in_transcript + 1]}
         {" "}
       </Typography>
     );
@@ -62,7 +62,7 @@ function Neutral0() {
   function Positive2() {
     return (
       <Typography variant="body1" color="secondary" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript + 2]}
+        {"■ " + display_words[globalThis.point_in_transcript + 2]}
       </Typography>
     );
   }
@@ -71,7 +71,7 @@ function Neutral0() {
   function Negative0() {
     return (
       <Typography variant="body1" color="error" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript]}
+        {"■ " + display_words[globalThis.point_in_transcript]}
         {" "}
       </Typography>
     );
@@ -80,7 +80,7 @@ function Neutral0() {
   function Negative1() {
     return (
       <Typography variant="body1" color="error" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript + 1]}
+        {"■ " + display_words[globalThis.point_in_transcript + 1]}
         {" "}
       </Typography>
     );
@@ -89,7 +89,7 @@ function Neutral0() {
   function Negative2() {
     return (
       <Typography variant="body1" color="error" align="left" gutterBottom>
-        {"> " + display_words[globalThis.point_in_transcript + 2]}
+        {"■ " + display_words[globalThis.point_in_transcript + 2]}
       </Typography>
     );
   }
@@ -108,7 +108,7 @@ export default function Speech() {
     if (globalThis.phrase_count === 1) {
       if (sentiment[globalThis.point_in_transcript] === 0) {
         return (
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Neutral0 />
           </Container>
         );
@@ -116,7 +116,7 @@ export default function Speech() {
   
       if (sentiment[globalThis.point_in_transcript] === 1) {
         return (
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Positive0 />
           </Container>
         );
@@ -124,7 +124,7 @@ export default function Speech() {
   
       if (sentiment[globalThis.point_in_transcript] === 2) {
         return (
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Negative0 />
           </Container>
         );
@@ -132,7 +132,7 @@ export default function Speech() {
   
       else {
         return (
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Neutral0 />
           </Container>
         );
@@ -143,7 +143,7 @@ export default function Speech() {
       if (sentiment[globalThis.point_in_transcript] === 0) {
         if (sentiment[globalThis.point_in_transcript + 1] === 0) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Neutral1 />
             </Container>
@@ -152,7 +152,7 @@ export default function Speech() {
     
         if (sentiment[globalThis.point_in_transcript + 1] === 1) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Positive1 />
             </Container>
@@ -161,7 +161,7 @@ export default function Speech() {
     
         if (sentiment[globalThis.point_in_transcript + 1] === 2) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Negative1 />
             </Container>
@@ -171,7 +171,7 @@ export default function Speech() {
         else {
           //Should never happen
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Neutral1 />
             </Container>
@@ -182,7 +182,7 @@ export default function Speech() {
       if (sentiment[globalThis.point_in_transcript] === 1) { 
         if (sentiment[globalThis.point_in_transcript + 1] === 0) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Positive0 />
               <Neutral1 />
             </Container>
@@ -191,7 +191,7 @@ export default function Speech() {
     
         if (sentiment[globalThis.point_in_transcript + 1] === 1) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Positive0 />
               <Positive1 />
             </Container>
@@ -200,7 +200,7 @@ export default function Speech() {
     
         if (sentiment[globalThis.point_in_transcript + 1] === 2) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Positive0 />
               <Negative1 />
             </Container>
@@ -210,7 +210,7 @@ export default function Speech() {
         else {
           //Should never happen
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Neutral1 />
             </Container>
@@ -221,7 +221,7 @@ export default function Speech() {
       if (sentiment[globalThis.point_in_transcript] === 2) { 
         if (sentiment[globalThis.point_in_transcript + 1] === 0) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Negative0 />
               <Neutral1 />
             </Container>
@@ -230,7 +230,7 @@ export default function Speech() {
     
         if (sentiment[globalThis.point_in_transcript + 1] === 1) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Negative0 />
               <Positive1 />
             </Container>
@@ -239,7 +239,7 @@ export default function Speech() {
     
         if (sentiment[globalThis.point_in_transcript + 1] === 2) {
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Negative0 />
               <Negative1 />
             </Container>
@@ -249,7 +249,7 @@ export default function Speech() {
         else {
           //Should never happen
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Neutral1 />
             </Container>
@@ -259,7 +259,7 @@ export default function Speech() {
 
       else {
         return (
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Neutral0 />
             <Neutral1 />
           </Container>
@@ -273,7 +273,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -283,7 +283,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Positive2 />
@@ -293,7 +293,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Negative2 />
@@ -304,7 +304,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -316,7 +316,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 1) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Positive1 />
                 <Neutral2 />
@@ -326,7 +326,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Positive1 />
                 <Positive2 />
@@ -336,7 +336,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Positive1 />
                 <Negative2 />
@@ -347,7 +347,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -359,7 +359,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Negative1 />
                 <Neutral2 />
@@ -369,7 +369,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Negative1 />
                 <Positive2 />
@@ -379,7 +379,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Negative1 />
                 <Negative2 />
@@ -390,7 +390,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -402,7 +402,7 @@ export default function Speech() {
         else {
           //Should never happen
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Neutral1 />
               <Neutral2 />
@@ -416,7 +416,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -426,7 +426,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Neutral1 />
                 <Positive2 />
@@ -436,7 +436,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Neutral1 />
                 <Negative2 />
@@ -447,7 +447,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -459,7 +459,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 1) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Positive1 />
                 <Neutral2 />
@@ -469,7 +469,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Positive1 />
                 <Positive2 />
@@ -479,7 +479,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Positive1 />
                 <Negative2 />
@@ -490,7 +490,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -502,7 +502,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Negative1 />
                 <Neutral2 />
@@ -512,7 +512,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Negative1 />
                 <Positive2 />
@@ -522,7 +522,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Positive0 />
                 <Negative1 />
                 <Negative2 />
@@ -533,7 +533,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -545,7 +545,7 @@ export default function Speech() {
         else {
           //Should never happen
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Neutral1 />
               <Neutral2 />
@@ -559,7 +559,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -569,7 +569,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Neutral1 />
                 <Positive2 />
@@ -579,7 +579,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Neutral1 />
                 <Negative2 />
@@ -590,7 +590,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -602,7 +602,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 1) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Positive1 />
                 <Neutral2 />
@@ -612,7 +612,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Positive1 />
                 <Positive2 />
@@ -622,7 +622,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Positive1 />
                 <Negative2 />
@@ -633,7 +633,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -645,7 +645,7 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Negative1 />
                 <Neutral2 />
@@ -655,7 +655,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Negative1 />
                 <Positive2 />
@@ -665,7 +665,7 @@ export default function Speech() {
       
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Negative0 />
                 <Negative1 />
                 <Negative2 />
@@ -676,7 +676,7 @@ export default function Speech() {
           else {
             //Should never happen
             return (
-              <Container maxWidth="sm">
+              <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
                 <Neutral2 />
@@ -688,7 +688,7 @@ export default function Speech() {
         else {
           //Should never happen
           return (
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
               <Neutral0 />
               <Neutral1 />
               <Neutral2 />
@@ -701,7 +701,7 @@ export default function Speech() {
       // No sentiment labels
       else {
         return (
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Neutral0 />
             <Neutral1 />
             <Neutral2 />
