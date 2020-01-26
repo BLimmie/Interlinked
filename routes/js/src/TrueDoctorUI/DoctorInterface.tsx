@@ -152,7 +152,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
               justify='flex-start'
             >
                 <Grid item>
-                    <Emotions current_phrase_count={0} />
+                    <Emotions version={0} />
                 </Grid>
 
             </Grid>
