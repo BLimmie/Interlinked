@@ -7,11 +7,11 @@ import AUs from './AUs'
 var globalThis = window
 
 interface EmotionProps {
-    current_phrase_count: number;
+    version: number;
 }
 
 interface EmotionState {
-    current_phrase_count: number;
+    version: number;
 }
 
 function rand(min: number, max: number) {
@@ -53,12 +53,14 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
     private sorrow_level = 0;
     private anger_level = 0;
     private surprise_level = 0;
+    private version = 0;
     //private AUs: string[] = [];
   
     constructor(props: EmotionProps) {
       super(props);
+      this.version = props.version
       this.setState({
-        current_phrase_count: props.current_phrase_count
+        version: props.version
       });
     }
   
@@ -103,7 +105,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
 
         // This exists to trick React into updating the graph
         this.setState({
-            current_phrase_count: globalThis.phrase_count
+            version: this.version
         });
     
         return null;
@@ -154,7 +156,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
       };
 
 
-
+      if (this.version === 0) {
         return ( 
           <Grid
           container
@@ -197,7 +199,7 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
           <Grid item>
             
             <Box height={"63vh"} width={"23vw"} bgcolor="#b5b3bc">
-              <div style={{paddingTop: "1vh"}} >
+              <div style={{paddingTop: "2vh"}} >
                 <AUs />
               </div>
             </Box>
@@ -206,6 +208,52 @@ export default class Emotions extends React.Component<EmotionProps, EmotionState
         </Grid>
         
         );
+      }
+
+      else {
+        return (
+          <Grid
+          container
+          spacing={0}
+          direction='column'
+          alignItems='center'
+          justify='center'
+        >
+          <Grid item xs = {12}>
+        <Bar data={() => ({
+          datasets: [{
+            data: [      
+              this.joy_level,
+              this.sorrow_level,
+              this.anger_level,
+              this.surprise_level,                  
+            ],
+            backgroundColor: [
+              '#d2d263',
+              '#6868c6',
+              '#d26363',
+              '#d29e63',
+            ],
+            borderColor: [
+              '#bdbd59',
+              '#5e5eb3',
+              '#bd5959',
+              '#bd8f59',
+            ],
+            borderWidth: 1
+          }],
+          labels: [
+            'Joy',
+            'Sorrow',
+            'Anger',
+            'Surprise',
+          ],
+          })} legend={legendOpts} height={210} width={250}/>
+          </Grid>
+          
+        </Grid>
+        );
+      }
       }
   
   }

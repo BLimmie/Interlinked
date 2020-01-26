@@ -15,7 +15,7 @@ const AU_theme = createMuiTheme({
       }
     },
     typography: {
-      fontSize: 15,
+      fontSize: 18,
     }
   });
 
@@ -29,7 +29,7 @@ function Display_AU0() {
     if (globalThis.AU_exists[15] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[0]}
                 </Typography>
             </ThemeProvider>
@@ -39,7 +39,7 @@ function Display_AU0() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[0]}
                 </Typography>
             </ThemeProvider>
@@ -51,7 +51,7 @@ function Display_AU1() {
     if (globalThis.AU_exists[7] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[1]}
                 </Typography>
             </ThemeProvider>
@@ -61,7 +61,7 @@ function Display_AU1() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[1]}
                 </Typography>
             </ThemeProvider>
@@ -73,7 +73,7 @@ function Display_AU2() {
     if (globalThis.AU_exists[5] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[2]}
                 </Typography>
             </ThemeProvider>
@@ -83,7 +83,7 @@ function Display_AU2() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[2]}
                 </Typography>
             </ThemeProvider>
@@ -95,7 +95,7 @@ function Display_AU3() {
     if (globalThis.AU_exists[14] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[3]}
                 </Typography>
             </ThemeProvider>
@@ -105,7 +105,7 @@ function Display_AU3() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[3]}
                 </Typography>
             </ThemeProvider>
@@ -117,7 +117,7 @@ function Display_AU4() {
     if (globalThis.AU_exists[1] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[4]}
                 </Typography>
             </ThemeProvider>
@@ -127,7 +127,7 @@ function Display_AU4() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[4]}
                 </Typography>
             </ThemeProvider>
@@ -139,7 +139,7 @@ function Display_AU5() {
     if (globalThis.AU_exists[0] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[5]}
                 </Typography>
             </ThemeProvider>
@@ -149,7 +149,7 @@ function Display_AU5() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[5]}
                 </Typography>
             </ThemeProvider>
@@ -161,7 +161,7 @@ function Display_AU6() {
     if (globalThis.AU_exists[13] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[6]}
                 </Typography>
             </ThemeProvider>
@@ -171,7 +171,7 @@ function Display_AU6() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[6]}
                 </Typography>
             </ThemeProvider>
@@ -183,7 +183,7 @@ function Display_AU7() {
     if (globalThis.AU_exists[2] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[7]}
                 </Typography>
             </ThemeProvider>
@@ -193,7 +193,7 @@ function Display_AU7() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[7]}
                 </Typography>
             </ThemeProvider>
@@ -205,7 +205,7 @@ function Display_AU8() {
     if (globalThis.AU_exists[4] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[8]}
                 </Typography>
             </ThemeProvider>
@@ -215,7 +215,7 @@ function Display_AU8() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[8]}
                 </Typography>
             </ThemeProvider>
@@ -227,7 +227,7 @@ function Display_AU9() {
     if (globalThis.AU_exists[16] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[9]}
                 </Typography>
             </ThemeProvider>
@@ -237,7 +237,7 @@ function Display_AU9() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[9]}
                 </Typography>
             </ThemeProvider>
@@ -249,7 +249,7 @@ function Display_AU10() {
     if (globalThis.AU_exists[8] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[10]}
                 </Typography>
             </ThemeProvider>
@@ -259,7 +259,7 @@ function Display_AU10() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[10]}
                 </Typography>
             </ThemeProvider>
@@ -271,7 +271,7 @@ function Display_AU11() {
     if (globalThis.AU_exists[9] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[11]}
                 </Typography>
             </ThemeProvider>
@@ -281,7 +281,7 @@ function Display_AU11() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[11]}
                 </Typography>
             </ThemeProvider>
@@ -293,7 +293,7 @@ function Display_AU12() {
     if (globalThis.AU_exists[10] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[12]}
                 </Typography>
             </ThemeProvider>
@@ -303,7 +303,7 @@ function Display_AU12() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[12]}
                 </Typography>
             </ThemeProvider>
@@ -315,7 +315,7 @@ function Display_AU13() {
     if (globalThis.AU_exists[11] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[13]}
                 </Typography>
             </ThemeProvider>
@@ -325,7 +325,7 @@ function Display_AU13() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[13]}
                 </Typography>
             </ThemeProvider>
@@ -337,7 +337,7 @@ function Display_AU14() {
     if (globalThis.AU_exists[12] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[14]}
                 </Typography>
             </ThemeProvider>
@@ -347,7 +347,7 @@ function Display_AU14() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[14]}
                 </Typography>
             </ThemeProvider>
@@ -359,7 +359,7 @@ function Display_AU15() {
     if (globalThis.AU_exists[3] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[15]}
                 </Typography>
             </ThemeProvider>
@@ -369,7 +369,7 @@ function Display_AU15() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[15]}
                 </Typography>
             </ThemeProvider>
@@ -381,7 +381,7 @@ function Display_AU16() {
     if (globalThis.AU_exists[6] === true) {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
+                <Typography variant="body1" color="primary" align="center" >
                     {AU_strings[16]}
                 </Typography>
             </ThemeProvider>
@@ -391,7 +391,7 @@ function Display_AU16() {
     else {
         return (
             <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
+                <Typography variant="body1" color="secondary" align="center" >
                     {AU_strings[16]}
                 </Typography>
             </ThemeProvider>
