@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Route, RouteProps, Redirect } from 'react-router-dom'
 import { httpCall } from './funcs'
-import { responsiveFontSizes } from '@material-ui/core';
 
 type PrivilegedRouteProps = RouteProps;
 

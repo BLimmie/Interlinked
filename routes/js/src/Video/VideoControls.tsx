@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, IconButton, Slider, Box} from '@material-ui/core' 
+import { IconButton, Box} from '@material-ui/core'
 import { Link } from 'react-router-dom'
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { Grid  } from '@material-ui/core/'
-import {VideocamOffSharp, MicOffSharp, VolumeUpSharp, VolumeOffSharp, CallEndSharp, MicSharp, VideocamSharp} from '@material-ui/icons'
+import {VideocamOffSharp, MicOffSharp, CallEndSharp, MicSharp, VideocamSharp} from '@material-ui/icons'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,25 +47,9 @@ interface VideoControlsProps extends React.HTMLAttributes<HTMLElement>  {
 }
 // This function is what arranges all of the individual elements into the complete UI
 export default function VideoControls(props:VideoControlsProps)  {
-  const {className, avState, setAVState, endSession} = props
+  const {avState, setAVState, endSession} = props
 
   const classes = useStyles();
-
-  const onVolumeChange = (event:any, newValue: number | number[]) => {
-    setAVState({
-      volume: newValue as number,
-      audio: avState.audio,
-      video: avState.video
-    })
-  }
-
-  const setVolume = (value: number) => {
-    setAVState({
-      volume: value,
-      audio: avState.audio,
-      video: avState.video
-    })
-  }
 
   const setVidFeed = (on: boolean) => {
     setAVState({
@@ -74,6 +58,7 @@ export default function VideoControls(props:VideoControlsProps)  {
       video: on
     })
   }
+
   const setMic = (on: boolean) => {
     setAVState({
       volume: avState.volume,
@@ -83,7 +68,7 @@ export default function VideoControls(props:VideoControlsProps)  {
   }
 
   return (
-    <Grid 
+    <Grid
       container
       spacing={2}
       direction='row'

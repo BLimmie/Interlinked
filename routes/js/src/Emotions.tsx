@@ -1,7 +1,6 @@
 import React from 'react';
 import {Bar} from 'react-chartjs-2'
-import { Grid, Button, Box } from '@material-ui/core'
-import Typography from '@material-ui/core/Typography';
+import { Grid, Box } from '@material-ui/core'
 import AUs from './AUs'
 
 var globalThis = window
