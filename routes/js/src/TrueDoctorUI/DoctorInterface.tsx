@@ -1,18 +1,16 @@
 import React from 'react'
 
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
-import Emotions from "../Emotions"
-import Webcam from 'react-webcam'
+import Emotions, { zeroValueResponse, serverResponse, EmotionsInterface} from "../Emotions"
 import {Redirect, RouteComponentProps} from 'react-router-dom'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { getRoom, setRemoteVideo } from '../Video/Twilio'
-import { RoomTextField } from '../Video/RoomTextField'
-import { WebcamWithControls } from '../Video/WebcamWithControls'
+import { WebcamWithControls, setPatienSnapshotInterval } from '../Video/WebcamWithControls'
 import { Room } from 'twilio-video'
 import Transcription from '../Transcription'
+import {AUInterface} from '../AUs'
 import Image from '../TrueImages/background_Interface_16-9.png'
 import TextboxImage from '../TrueImages/background_textbox_default.png'
-import AUs from '../AUs'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,38 +56,51 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
 
   const [avState, setAvState] = React.useState<avStateInterface>(defaultAVState)
 
-  const [roomField, setRoomField] = React.useState<string>(match.params.link)
   const [videoRoom, setVideoRoom] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
-  const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
+  const [intervalId, setIntervalId] = React.useState<NodeJS.Timeout>()
+  const [patientFrameResponse, setPatientResonse] = React.useState<serverResponse>(zeroValueResponse)
+  const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
 
-  let globalThis = window
-  globalThis.words = new Map();
-  globalThis.display_words = Array.from( globalThis.words.keys() );
-  globalThis.sentiment = Array.from( globalThis.words.values() ); 
-  globalThis.point_in_transcript = 0;
-  globalThis.phrase_count = 0;
   
   const createRoom = () => {
     if (!videoRoom) {
-      if (navigator.mediaDevices.getUserMedia) { 
-        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
-          const localTrackStream = stream.getTracks()
-          getRoom(roomField, localTrackStream, "Doctor")
-            .then((room: Room) => {
-              setVideoRoom(room)
-              setRemoteVideo(room, endSession)
-            })
-            .catch(() => {setRoomField("Room name does not exist, try again")})
-          }).catch(console.log)
+      if (localVidStream) { 
+        getRoom(match.params.link, localVidStream.getTracks(), "Doctor")
+          .then((room: Room) => {
+            setVideoRoom(room)
+            setRemoteVideo(room, endSession)
+          })
+          .catch(() => {console.log("Room name does not exist, exit please")})
       }
     }
   }
+
   createRoom()
+
+  const resultToResponse = (result: any) => {
+    if(result && result === "no faces found"){
+      console.log(result)
+    } else {
+      const AUs: AUInterface = JSON.parse(result).AU
+      const Emotions: EmotionsInterface = JSON.parse(result).Emotion
+      setPatientResonse({aus: AUs, emotions: Emotions})
+    }
+  }
+   
+  React.useEffect(() => {
+   const id = setPatienSnapshotInterval(resultToResponse)
+   setIntervalId(id)
+  }, [])
 
   const endSession: Function = () => {
     if(videoRoom)
       videoRoom.disconnect()
+    clearInterval((intervalId as NodeJS.Timeout))
+    if(localVidStream)
+      localVidStream.getTracks().forEach((track:MediaStreamTrack) => {
+        track.stop()
+      })
     setEndChat(true)
   }
 
@@ -99,7 +110,8 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   return (
     <Box
          className={classes.background}
-         style={{backgroundImage: `url(${Image})` }}>
+         style={{backgroundImage: `url(${Image})` }}
+     >
       <div style={{ padding: "1vw", paddingRight:"2vw", paddingLeft:"2vw" }} >
         <Grid 
           container
@@ -152,9 +164,8 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
               justify='flex-start'
             >
                 <Grid item>
-                    <Emotions version={0} />
+                    <Emotions response={patientFrameResponse}/>
                 </Grid>
-
             </Grid>
           </Grid>
 
@@ -163,10 +174,10 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
             
             <Grid item xs={4} >
               <WebcamWithControls
-                webcamRef={webcamRef}
                 avState={avState}
-                sendScreenshots={false}
                 room={videoRoom}
+                localVidStream={localVidStream}
+                setLocalVidStream={setLocalVidStream}
               />
             </Grid>
           </div>

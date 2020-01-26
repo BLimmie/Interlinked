@@ -1,10 +1,8 @@
 import React from 'react'
 
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
-import Webcam from 'react-webcam'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { Room } from 'twilio-video'
-import { RoomTextField } from '../Video/RoomTextField'
 import { getRoom, setRemoteVideo } from '../Video/Twilio'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { WebcamWithControls } from '../Video/WebcamWithControls'
@@ -33,25 +31,21 @@ type LinkParams = {link: string}
 export default function PatientInterface({ match }: RouteComponentProps<LinkParams>)  {
   
   const classes = useStyles();
-  const webcamRef:  React.RefObject<Webcam> = React.useRef(null)
   const [avState, setAvState] = React.useState<avStateInterface>(defaultAVState)
   
-  const [roomField, setRoomField] = React.useState<string>(match.params.link)
   const [videoRoom, setVideoRoom] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
+  const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
 
   const joinRoom = () => {
     if (!videoRoom) {
-      if (navigator.mediaDevices.getUserMedia) { 
-        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => {
-          const localTrackStream = stream.getTracks()
-          getRoom(roomField, localTrackStream, "Patient")
-            .then((room: Room) => {
-              setVideoRoom(room)
-              setRemoteVideo(room, endSession)
-            })
-            .catch(() => {setRoomField("Room name does not exist, try again")})
-          }).catch(console.log)
+      if (localVidStream) { 
+        getRoom(match.params.link, localVidStream.getTracks(), "Patient")
+          .then((room: Room) => {
+            setVideoRoom(room)
+            setRemoteVideo(room, endSession)
+          })
+          .catch(() => {console.log("Room name does not exist, try again")})
       }
     }
   }
@@ -60,6 +54,10 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
   const endSession: Function = () => {
     if(videoRoom)
       videoRoom.disconnect()
+    if(localVidStream)
+      localVidStream.getTracks().forEach((track:MediaStreamTrack) => {
+        track.stop()
+      })
     setEndChat(true)
   }
 
@@ -80,10 +78,10 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
     <Grid container className={classes.lowerHalf}>
       <Grid item xs={3} /*Beginning of the lower half*/ >
         <WebcamWithControls
-          webcamRef={webcamRef}
           avState={avState}
-          sendScreenshots={true}
           room={videoRoom}
+          localVidStream={localVidStream}
+          setLocalVidStream={setLocalVidStream}
         />
       </Grid>
       <Grid item xs={4}> 

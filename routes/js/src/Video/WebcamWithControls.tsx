@@ -2,18 +2,17 @@ import React from 'react'
 
 import { avStateInterface } from './VideoControls'
 
-import Webcam from 'react-webcam'
-import { sendFrame } from './Twilio'
+import { httpCall } from './Twilio'
 import { makeStyles, createStyles, Theme } from '@material-ui/core'
 import { LocalAudioTrackPublication, Room, LocalVideoTrackPublication } from 'twilio-video'
-import { useAlert } from 'react-alert'
+
 
 
 interface WebcamWithControlsProps{
-    webcamRef?:  React.RefObject<Webcam>
     avState: avStateInterface
-    sendScreenshots: boolean
     room: Room | undefined
+    localVidStream: MediaStream | undefined
+    setLocalVidStream: React.Dispatch<React.SetStateAction<MediaStream | undefined>>
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,21 +24,50 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+function sendFrame(screenShot: string, cb: (result:any)=>any) {
+  httpCall(
+    'POST',
+    "http://localhost:8080/sentiment/frame",
+    screenShot.split(",")[1],
+    cb
+  )
+}
+
+export function setPatienSnapshotInterval(resultCB: (result: any) => void ) : NodeJS.Timeout {
+  const id = setInterval(() => {
+    const videoParentElement = document.getElementById('remote')
+    const videoElement = videoParentElement && videoParentElement.lastElementChild
+    const imageCanvas = document.createElement('canvas')
+    imageCanvas.width = 640
+    imageCanvas.height = 480
+    const ctx = imageCanvas.getContext('2d')
+    if(videoElement && ctx)
+      ctx.drawImage(videoElement as CanvasImageSource, 0, 0 , 640, 480)
+      sendFrame(imageCanvas.toDataURL('image/jpeg'), (result: any) => { resultCB(result)} )
+  }, 3000)
+  return id
+}
+
 export const WebcamWithControls: React.SFC<WebcamWithControlsProps> = (props) => {
-  const classes = useStyles();
-  const alert = useAlert()
+  const styles = useStyles()
+  
+  const { avState, room, localVidStream, setLocalVidStream} = props
 
-  const {webcamRef, avState, sendScreenshots, room} = props
-
-  const [currentWebcam, setCurrentWebcam] = React.useState<Webcam>()
-  const [startedInterval, setStartedInterval] = React.useState<boolean>(false)
   
   React.useEffect(()=> {
-    webcamRef && setCurrentWebcam((webcamRef.current as Webcam))
-  },[webcamRef])
+    navigator.mediaDevices.getUserMedia({video: {width: 720}, audio: true}).then(stream => {
+      const localVideo = document.querySelector('#local-video');
+      (localVideo as HTMLVideoElement).srcObject = stream;
+
+      (localVideo as HTMLVideoElement).onloadedmetadata = function(e: any) {
+        (localVideo as HTMLVideoElement).play()
+      }
+      setLocalVidStream(stream)
+    })
+  },[])
 
   React.useEffect(() => {
-    if(currentWebcam){
+    if(localVidStream){
       //Enable or disable local video or audio
       if(avState.audio === false)
         room && (room as Room).localParticipant.audioTracks.forEach((audioTrack: LocalAudioTrackPublication) => {
@@ -53,15 +81,13 @@ export const WebcamWithControls: React.SFC<WebcamWithControlsProps> = (props) =>
         room && (room as Room).localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
           videoTrack.track.disable()
         });
-        const stream = currentWebcam.stream
-        if(stream) stream.getVideoTracks()[0].enabled = false
+        localVidStream.getVideoTracks()[0].enabled = false
       }
       if(avState.video === true){
         room && (room as Room).localParticipant.videoTracks.forEach((videoTrack:LocalVideoTrackPublication) => {
           videoTrack.track.enable()
         });
-        const stream = currentWebcam.stream
-        if(stream) stream.getVideoTracks()[0].enabled = true
+        localVidStream.getVideoTracks()[0].enabled = true
       }
     }
     // Change remote video's volume
@@ -71,35 +97,9 @@ export const WebcamWithControls: React.SFC<WebcamWithControlsProps> = (props) =>
     }
   },[avState])
 
-  const handleFaceResult = (result: string) => {
-    if(result) {
-      if (result === "no faces found"){
-        alert.error("Face not Visible")
-      }
-      // TODO: Handle successful result
-    }
-  }
-
-  if(sendScreenshots && !startedInterval){
-    if(webcamRef && webcamRef.current){
-      setInterval(() => {
-        const screenShot = webcamRef && webcamRef.current && 
-          webcamRef.current.getScreenshot()
-        if(screenShot){
-          setStartedInterval(true)
-          sendFrame(screenShot, (result: any) => { handleFaceResult(result)})
-        }
-      }, 5000)
-    }
-  }
-
   return (
-    <Webcam
-        className={classes.video}
-        audio={avState.audio}
-        id="local" 
-        ref={webcamRef}
-        screenshotFormat="image/jpeg"
-    />
+    <div id="local-media">
+      <video id="local-video" className={styles.video} />
+    </div>
   );
 }
