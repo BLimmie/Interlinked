@@ -170,7 +170,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
           </Grid>
 
 
-          <div style={{ zIndex: 100, position:'absolute', top: "56vh", left:"1vw"}}>
+          <div style={{ zIndex: 100, position:'absolute', top: "59vh", left:"1vw"}}>
             
             <Grid item xs={4} >
               <WebcamWithControls
