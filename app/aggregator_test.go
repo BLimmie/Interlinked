@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"testing"
@@ -10,77 +11,77 @@ import (
 func TestAggregator(t *testing.T) {
 	currentTime, _ := removeMonotonicTimeFromTime(time.Now())
 	s := Session{
-		ID:           primitive.NewObjectID(),
-		Link:         "/",
-		CreatedTime:  currentTime.Unix(),
-		Patient:      UserRef{},
-		Provider:     UserRef{},
-		TextMetrics:  []TextMetrics{
+		ID:          primitive.NewObjectID(),
+		Link:        "/",
+		CreatedTime: currentTime.Unix(),
+		Patient:     UserRef{},
+		Provider:    UserRef{},
+		TextMetrics: []TextMetrics{
 			{
-				Time:      currentTime.Add(10*time.Second).Unix(),
+				Time:      currentTime.Add(10 * time.Second).Unix(),
 				Text:      "",
 				Sentiment: .1,
 			},
 			{
-				Time:      currentTime.Add(20*time.Second).Unix(),
+				Time:      currentTime.Add(20 * time.Second).Unix(),
 				Text:      "",
 				Sentiment: .8,
 			},
 			{
-				Time:      currentTime.Add(30*time.Second).Unix(),
+				Time:      currentTime.Add(30 * time.Second).Unix(),
 				Text:      "",
 				Sentiment: 0,
 			},
 			{
-				Time:      currentTime.Add(40*time.Second).Unix(),
+				Time:      currentTime.Add(40 * time.Second).Unix(),
 				Text:      "",
 				Sentiment: -0.9,
 			},
 		},
 		ImageMetrics: []FrameMetrics{
 			{
-				Time:          currentTime.Add(10*time.Second).Unix(),
+				Time:          currentTime.Add(10 * time.Second).Unix(),
 				ImageFilename: "",
-				Emotion:       map[string]string{
-					"joy": "VERY_LIKELY",
-					"sorrow": "VERY_UNLIKELY",
-					"anger": "VERY_UNLIKELY",
+				Emotion: map[string]string{
+					"joy":      "VERY_LIKELY",
+					"sorrow":   "VERY_UNLIKELY",
+					"anger":    "VERY_UNLIKELY",
 					"surprise": "POSSIBLE",
 				},
-				AU:            nil,
+				AU: nil,
 			},
 			{
-				Time:          currentTime.Add(20*time.Second).Unix(),
+				Time:          currentTime.Add(20 * time.Second).Unix(),
 				ImageFilename: "",
-				Emotion:       map[string]string{
-					"joy": "VERY_LIKELY",
-					"sorrow": "VERY_UNLIKELY",
-					"anger": "VERY_UNLIKELY",
+				Emotion: map[string]string{
+					"joy":      "VERY_LIKELY",
+					"sorrow":   "VERY_UNLIKELY",
+					"anger":    "VERY_UNLIKELY",
 					"surprise": "POSSIBLE",
 				},
-				AU:            nil,
+				AU: nil,
 			},
 			{
-				Time:          currentTime.Add(30*time.Second).Unix(),
+				Time:          currentTime.Add(30 * time.Second).Unix(),
 				ImageFilename: "",
-				Emotion:       map[string]string{
-					"joy": "VERY_UNLIKELY",
-					"sorrow": "VERY_LIKELY",
-					"anger": "VERY_UNLIKELY",
+				Emotion: map[string]string{
+					"joy":      "VERY_UNLIKELY",
+					"sorrow":   "VERY_LIKELY",
+					"anger":    "VERY_UNLIKELY",
 					"surprise": "VERY_UNLIKELY",
 				},
-				AU:            nil,
+				AU: nil,
 			},
 			{
-				Time:          currentTime.Add(40*time.Second).Unix(),
+				Time:          currentTime.Add(40 * time.Second).Unix(),
 				ImageFilename: "",
-				Emotion:       map[string]string{
-					"joy": "VERY_UNLIKELY",
-					"sorrow": "VERY_LIKELY",
-					"anger": "VERY_LIKELY",
+				Emotion: map[string]string{
+					"joy":      "VERY_UNLIKELY",
+					"sorrow":   "VERY_LIKELY",
+					"anger":    "VERY_LIKELY",
 					"surprise": "POSSIBLE",
 				},
-				AU:            nil,
+				AU: nil,
 			},
 		},
 	}
@@ -92,5 +93,8 @@ func TestAggregator(t *testing.T) {
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	fmt.Println(res)
+	b, err := json.MarshalIndent(res, "", "  ")
+	if err == nil {
+		fmt.Println(string(b))
+	}
 }
