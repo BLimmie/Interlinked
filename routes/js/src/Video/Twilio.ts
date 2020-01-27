@@ -69,12 +69,3 @@ function handleNewParticipant(participant: any) {
     (remoteMediaContainer as HTMLElement).appendChild(track.attach());
   })
 }
-
-export function sendFrame(screenShot: string, cb: (result:any)=>any) {
-  httpCall(
-    'POST',
-    "http://localhost:8080/sentiment/frame",
-    screenShot.split(",")[1],
-    cb
-  )
-}

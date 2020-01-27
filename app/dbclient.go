@@ -195,9 +195,6 @@ func (ic *IntouchClient) FindSessionByUserID(id primitive.ObjectID, flag Entity)
 
 func (ic *IntouchClient) FindLatestSession(proUsername string, patUsername string) (*Session, error) {
 	var result Session
-	// filter := bson.D{{"patient._id", patId},
-	// 				{"provider._id", proId},
-	// 				{"max": }}
 	findOps := options.FindOneOptions{}
 	findOps.SetSort(bson.D{{"createdtime", -1}})
 	err := ic.SesCol.FindOne(nil, bson.D{{"patient.username", patUsername},
