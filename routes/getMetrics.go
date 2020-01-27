@@ -36,7 +36,11 @@ func getSessionMetricsAggregate(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	c.JSON(200, result)
+	response := result.(map[string]interface{})
+	response["Created Time"] = session.CreatedTime
+	response["Text Metrics"] = session.TextMetrics
+	response["Frame Metrics"] = session.ImageMetrics
+	c.JSON(200, response)
 }
 
 func getSessionMetrics(c *gin.Context) {

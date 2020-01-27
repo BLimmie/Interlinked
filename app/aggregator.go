@@ -5,7 +5,7 @@ import (
 	"sort"
 	"time"
 )
-
+var AUTHRESHOLD float32 = 3.75
 func AggregatorFromSession(session *Session) (*Aggregator, error) {
 	defaultAU := make(map[string]float32)
 	for _, label := range auLabels {
@@ -52,6 +52,8 @@ func (agg *Aggregator) init() {
 	agg.conclusions["Average Text Sentiment"] = isTextPositive
 	agg.conclusions["Time in Facial Emotions"] = timeSpentEmotion
 	agg.conclusions["Percent in Facial Emotion over last 10 seconds"] = emotionOverTime_RunningAggregate
+	agg.conclusions["Text sentiment over last 10 seconds"] = sentimentOverTime_RunningAggregate
+	agg.conclusions["AU Anomalies"] = condensedAU
 }
 
 func (agg *Aggregator) Run() (interface{}, error) {
@@ -117,11 +119,11 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 	lastTime := timeFromInt(session.ImageMetrics[len(session.ImageMetrics)-1].Time)
 	seconds := 10
 	for currentTime := initialTime.Add(time.Second * 10); currentTime.Before(lastTime); currentTime = currentTime.Add(time.Second) {
-		tenSecondsAgo := currentTime.Add(time.Duration(-10)*time.Second)
+		tenSecondsAgo := currentTime.Add(time.Duration(-10) * time.Second)
 		firstSegmentIdx := 0
 		for {
 			t := timeFromInt(session.ImageMetrics[firstSegmentIdx].Time)
-			if t.Before(tenSecondsAgo) || t.Equal(tenSecondsAgo){
+			if t.Before(tenSecondsAgo) || t.Equal(tenSecondsAgo) {
 				//This should guarantee that firstSegmentIdx>0, bug if not
 				firstSegmentIdx += 1
 			} else {
@@ -130,7 +132,7 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 			if firstSegmentIdx == 0 {
 				return nil, errors.New("frame sentiment not initialized properly")
 			}
-			if firstSegmentIdx >= len(session.ImageMetrics){
+			if firstSegmentIdx >= len(session.ImageMetrics) {
 				return nil, errors.New("out of bounds in image metrics")
 			}
 		}
@@ -168,7 +170,7 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 			}
 		}
 		var emotions_s = make(map[string]string)
-		totalTime := time.Second*10
+		totalTime := time.Second * 10
 		var emotions_p = make(map[string]float32)
 		for e, t := range emotions {
 			emotions_s[e] = t.String()
@@ -179,6 +181,75 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 			"Percentage": emotions_p,
 		}
 		seconds++
+	}
+	return fullList, nil
+}
+
+func sentimentOverTime_RunningAggregate(session *Session) (interface{}, error) {
+	initialTime := timeFromInt(session.CreatedTime)
+	fullList := make(map[int]float32)
+	lastTime := timeFromInt(session.TextMetrics[len(session.TextMetrics)-1].Time)
+	seconds := 10
+	for currentTime := initialTime.Add(time.Second * 10); currentTime.Before(lastTime); currentTime = currentTime.Add(time.Second) {
+		tenSecondsAgo := currentTime.Add(time.Duration(-10) * time.Second)
+		firstSegmentIdx := 0
+		for {
+			t := timeFromInt(session.TextMetrics[firstSegmentIdx].Time)
+			if t.Before(tenSecondsAgo) || t.Equal(tenSecondsAgo) {
+				//This should guarantee that firstSegmentIdx>0, bug if not
+				firstSegmentIdx += 1
+			} else {
+				break
+			}
+			if firstSegmentIdx == 0 {
+				return nil, errors.New("frame sentiment not initialized properly")
+			}
+			if firstSegmentIdx >= len(session.TextMetrics) {
+				return nil, errors.New("out of bounds in image metrics")
+			}
+		}
+		m := session.TextMetrics[firstSegmentIdx-1]
+		n := session.TextMetrics[firstSegmentIdx]
+		t := timeFromInt(n.Time)
+		dur := t.Sub(tenSecondsAgo)
+		currentCumulativeSentiment := 0.0
+		currentCumulativeSentiment += float64(m.Sentiment)*float64(dur)/float64(time.Second*10)
+		for i := firstSegmentIdx; timeFromInt(session.TextMetrics[i].Time).Before(currentTime); i++ {
+			m := session.TextMetrics[i]
+			nextTime := timeFromInt(session.TextMetrics[i+1].Time)
+			if nextTime.After(currentTime) {
+				nextTime = currentTime
+			}
+			dur := nextTime.Sub(timeFromInt(m.Time))
+			currentCumulativeSentiment += float64(m.Sentiment)*float64(dur)/float64(time.Second*10)
+		}
+		fullList[seconds] = float32(currentCumulativeSentiment)
+		seconds++
+	}
+
+	return fullList, nil
+}
+
+func condensedAU(session *Session) (interface{}, error) {
+	fullList := make(map[int]interface{})
+	createdTime := session.CreatedTime
+	for _, m := range session.ImageMetrics {
+		auList := make(map[string]map[string]interface{})
+		for _, label := range auLabels {
+			auList[label] = map[string]interface{}{
+				"Intensity": 0,
+				"Anomalous": false,
+			}
+		}
+		for label, value := range m.AU {
+			auList[label]["Intensity"] = value
+			if value >= AUTHRESHOLD {
+				auList[label]["Anomalous"] = true
+			}
+		}
+
+		seconds := m.Time - createdTime
+		fullList[int(seconds)] = auList
 	}
 	return fullList, nil
 }
