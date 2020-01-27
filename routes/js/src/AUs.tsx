@@ -1,9 +1,6 @@
 import React from 'react';
-import {Bar} from 'react-chartjs-2'
-import { Grid, Button, Box, ThemeProvider, createMuiTheme, Container } from '@material-ui/core'
+import { ThemeProvider, createMuiTheme, Container } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
-
-var globalThis = window
 
 const AU_theme = createMuiTheme({
     palette: {
@@ -15,411 +12,98 @@ const AU_theme = createMuiTheme({
       }
     },
     typography: {
-      fontSize: 15,
+      fontSize: 18,
     }
   });
 
-
-var AU_strings = ["Upper Lid Raiser", "Lid Tightener", "Inner Brow Raiser", "Outer Brow Raiser", "Brow Lowerer", "Blink",
-  "Nose Wrinkler", "Cheek Raiser", "Dimpler", "Upper Lip Raiser", "Lip Corner Depressor",
-  "Lip Corner Puller", "Lip Stretcher", "Lip Tightener", "Lips Part",
-  "Chin Raiser", "Jaw Drop"]
-
-function Display_AU0() {   
-    if (globalThis.AU_exists[15] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[0]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[0]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
+export interface AUInterface {
+    Blink: number
+    BrowLowerer: number
+    CheekRaiser: number
+    ChinRaiser: number
+    Dimpler: number
+    InnerBrowRaiser: number
+    JawDrop: number
+    LidTightener: number
+    LipCornerDepressor: number
+    LipCornerPuller: number
+    LipStretcher: number
+    LipTightener: number
+    LipsPart: number
+    NoseWrinkler: number
+    OuterBrowRaiser: number
+    UpperLidRaiser: number
+    UpperLip: number
 }
 
-function Display_AU1() {   
-    if (globalThis.AU_exists[7] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[1]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[1]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
+export const noAus: AUInterface = {
+    Blink: 0,
+    BrowLowerer: 0,
+    CheekRaiser: 0,
+    ChinRaiser: 0,
+    Dimpler: 0,
+    InnerBrowRaiser: 0,
+    JawDrop: 0,
+    LidTightener: 0,
+    LipCornerDepressor: 0,
+    LipCornerPuller: 0,
+    LipStretcher: 0,
+    LipTightener: 0,
+    LipsPart: 0,
+    NoseWrinkler: 0,
+    OuterBrowRaiser: 0,
+    UpperLidRaiser: 0,
+    UpperLip: 0,
 }
 
-function Display_AU2() {   
-    if (globalThis.AU_exists[5] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[2]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[2]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
+interface DisplayAUProps {
+    AUType: string
+    AUNumber: number
 }
 
-function Display_AU3() {   
-    if (globalThis.AU_exists[14] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[3]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
+function DisplayAU(props: DisplayAUProps) {
+    const { AUType, AUNumber } = props
+    const color = AUNumber > 1 ? "primary" : "secondary"
 
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[3]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
+    return (
+        <ThemeProvider theme={AU_theme}>
+            <Typography variant="body1" color={color} align="center" gutterBottom>
+                {AUType}
+            </Typography>
+        </ThemeProvider>
+    )
 }
 
-function Display_AU4() {   
-    if (globalThis.AU_exists[1] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[4]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[4]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
+interface AUsInterface {
+    AUs: AUInterface
 }
 
-function Display_AU5() {   
-    if (globalThis.AU_exists[0] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[5]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
+export default function AUs(props: AUsInterface) {
+    const {AUs} = props
+    const [aus, setAus] = React.useState<AUInterface>(AUs)
 
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[5]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
+    React.useEffect(() => {
+        setAus(AUs)
+    }, [AUs])
 
-function Display_AU6() {   
-    if (globalThis.AU_exists[13] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[6]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[6]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU7() {   
-    if (globalThis.AU_exists[2] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[7]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[7]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU8() {   
-    if (globalThis.AU_exists[4] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[8]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[8]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU9() {   
-    if (globalThis.AU_exists[16] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[9]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[9]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU10() {   
-    if (globalThis.AU_exists[8] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[10]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[10]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU11() {   
-    if (globalThis.AU_exists[9] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[11]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[11]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU12() {   
-    if (globalThis.AU_exists[10] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[12]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[12]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU13() {   
-    if (globalThis.AU_exists[11] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[13]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[13]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU14() {   
-    if (globalThis.AU_exists[12] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[14]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[14]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU15() {   
-    if (globalThis.AU_exists[3] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[15]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[15]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-function Display_AU16() {   
-    if (globalThis.AU_exists[6] === true) {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="primary" align="center" gutterBottom>
-                    {AU_strings[16]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-
-    else {
-        return (
-            <ThemeProvider theme={AU_theme}>
-                <Typography variant="body1" color="secondary" align="center" gutterBottom>
-                    {AU_strings[16]}
-                </Typography>
-            </ThemeProvider>
-        );
-    }
-}
-
-
-export default function AUs() {
     return (
         <Container maxWidth="lg">
-          <Display_AU0 />
-          <Display_AU1 />
-          <Display_AU2 />
-          <Display_AU3 />
-          <Display_AU4 />
-          <Display_AU5 />
-          <Display_AU6 />
-          <Display_AU7 />
-          <Display_AU8 />
-          <Display_AU9 />
-          <Display_AU10 />
-          <Display_AU11 />
-          <Display_AU12 />
-          <Display_AU13 />
-          <Display_AU14 />
-          <Display_AU15 />
-          <Display_AU16 />
+          <DisplayAU AUNumber={aus.Blink} AUType={"Blink"}/>
+          <DisplayAU AUNumber={aus.BrowLowerer} AUType={"Brow Lowerer"}/>
+          <DisplayAU AUNumber={aus.CheekRaiser} AUType={"Cheek Raiser"}/>
+          <DisplayAU AUNumber={aus.ChinRaiser} AUType={"Chin Raiser"}/>
+          <DisplayAU AUNumber={aus.Dimpler} AUType={"Dimpler"}/>
+          <DisplayAU AUNumber={aus.InnerBrowRaiser} AUType={"Inner Brow Raiser"}/>
+          <DisplayAU AUNumber={aus.JawDrop} AUType={"Jaw Drop"}/>
+          <DisplayAU AUNumber={aus.LidTightener} AUType={"Lid Tightener"}/>
+          <DisplayAU AUNumber={aus.LipCornerDepressor} AUType={"Lip Corner Depressor"}/>
+          <DisplayAU AUNumber={aus.LipCornerPuller} AUType={"Lip Corner Puller"}/>
+          <DisplayAU AUNumber={aus.LipStretcher} AUType={"Lip Stretcher"}/>
+          <DisplayAU AUNumber={aus.LipTightener} AUType={"Lip Tightener"}/>
+          <DisplayAU AUNumber={aus.LipsPart} AUType={"Lips Part"}/>
+          <DisplayAU AUNumber={aus.NoseWrinkler} AUType={"Nose Wrinkler"}/>
+          <DisplayAU AUNumber={aus.OuterBrowRaiser} AUType={"Outer Brow Raiser"}/>
+          <DisplayAU AUNumber={aus.UpperLidRaiser} AUType={"Upper Lip Raiser"}/>
         </Container>
       );
 }
