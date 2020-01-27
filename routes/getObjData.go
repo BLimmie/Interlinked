@@ -74,6 +74,59 @@ func getSession(c *gin.Context) {
 	c.JSON(200, *session)
 }
 
+func getSessions(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	userID, err := primitive.ObjectIDFromHex(c.Param("userid"))
+	if err != nil {
+		c.String(400, "Bad format")
+		return
+	}
+	resultChan := app.NewResultChannel()
+	err = DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+		sessions, err := ic.FindSessions(bson.D{{"patient._id", userID}})
+		return sessions, err
+	})
+	if err != nil {
+		c.String(500, "All workers busy")
+		return
+	}
+	result := <-resultChan
+	sessions, err := result.Result.([]app.Session), result.Err
+
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	c.JSON(200, sessions)
+}
+
+func getAssociatedSessions(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	proID, err := primitive.ObjectIDFromHex(c.Param("proid"))
+	patUsername := c.Param("patun")
+	if err != nil {
+		c.String(400, "Bad format")
+		return
+	}
+	resultChan := app.NewResultChannel()
+	err = DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+		sessions, err := ic.FindSessions(bson.D{{"provider._id", proID}, {"patient.username", patUsername}})
+		return sessions, err
+	})
+	if err != nil {
+		c.String(500, "All workers busy")
+		return
+	}
+	result := <-resultChan
+	sessions, err := result.Result.([]app.Session), result.Err
+
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	c.JSON(200, sessions)
+}
+
 func getLatestSession(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	patusername := c.Request.Header.Get("patusername")

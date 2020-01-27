@@ -1,8 +1,9 @@
 package routes
 
 import (
-        "strings"
-        "net/http"
+	"net/http"
+	"strings"
+
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
@@ -43,6 +44,8 @@ func Routes() {
 	router.POST("/patient/:user", getPatient)
 	router.POST("/provider/:user", getProvider)
 	router.POST("/session/:id", getSession)
+	router.POST("/sessions/:userid", getSessions)
+	router.POST("/associatedsessions/:proid/:patun", getAssociatedSessions)
 	router.POST("/latestsession", getLatestSession)
 	router.POST("/user/:token", getUserFromToken)
 	// Submit New Data
@@ -64,16 +67,16 @@ func Routes() {
 	// Authenticate
 	router.POST("/login", login)
 
-        router.LoadHTMLFiles("routes/js/build/index.html")
+	router.LoadHTMLFiles("routes/js/build/index.html")
 	router.GET("/*filename", func(c *gin.Context) {
-            if strings.HasPrefix(c.Request.URL.Path, "/client") {
-                c.HTML(http.StatusOK, "index.html", nil)
-            } else {
-                var relaPathFromPwdBuilder strings.Builder
-                relaPathFromPwdBuilder.WriteString("routes/js/build")
-                relaPathFromPwdBuilder.WriteString(c.Request.URL.Path)
-                c.File(relaPathFromPwdBuilder.String())
-            }
+		if strings.HasPrefix(c.Request.URL.Path, "/client") {
+			c.HTML(http.StatusOK, "index.html", nil)
+		} else {
+			var relaPathFromPwdBuilder strings.Builder
+			relaPathFromPwdBuilder.WriteString("routes/js/build")
+			relaPathFromPwdBuilder.WriteString(c.Request.URL.Path)
+			c.File(relaPathFromPwdBuilder.String())
+		}
 	})
 
 	// By default it serves on :8080 unless a

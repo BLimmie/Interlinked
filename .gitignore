@@ -3,6 +3,7 @@ db/data/
 of_output/
 db/dump_*
 *processed/
+intouch-health-capstone-2019
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

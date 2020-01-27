@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"image"
 	"image/jpeg"
 	"io/ioutil"
@@ -13,7 +12,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	
+
+	"github.com/BLimmie/intouch-health-capstone-2019/app"
+
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

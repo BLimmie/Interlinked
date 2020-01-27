@@ -208,6 +208,39 @@ func (ic *IntouchClient) FindLatestSession(proUsername string, patUsername strin
 	return &result, nil
 }
 
+// FindSessions uses filter to find sessions matching the filter
+// returns nil and err if it fails
+func (ic *IntouchClient) FindSessions(filter bson.D) ([]Session, error) {
+	cursor, err := ic.SesCol.Find(context.TODO(), filter)
+	ret := []Session{}
+
+	if err != nil {
+		log.Print(err)
+		defer cursor.Close(context.TODO())
+		return nil, err
+
+		// If the API call was a success
+	} else {
+		// iterate over docs using Next()
+		for cursor.Next(context.TODO()) {
+
+			// declare a result BSON object
+			var result Session
+			err := cursor.Decode(&result)
+
+			// If there is a cursor.Decode error
+			if err != nil {
+				log.Print(err)
+				return nil, err
+
+				// If there are no cursor.Decode errors
+			}
+			ret = append(ret, result)
+		}
+	}
+	return ret, nil
+}
+
 // IsUsernameInUse checks if username is already assigned to someone
 // returns true if so, false otherwise
 func (ic *IntouchClient) IsUsernameInUse(username string) bool {
