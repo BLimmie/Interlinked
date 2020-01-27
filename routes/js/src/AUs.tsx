@@ -12,7 +12,7 @@ const AU_theme = createMuiTheme({
       }
     },
     typography: {
-      fontSize: 18,
+      fontSize: 19,
     }
   });
 
@@ -67,7 +67,7 @@ function DisplayAU(props: DisplayAUProps) {
 
     return (
         <ThemeProvider theme={AU_theme}>
-            <Typography variant="body1" color={color} align="center" gutterBottom>
+            <Typography variant="body1" color={color} align="center">
                 {AUType}
             </Typography>
         </ThemeProvider>
