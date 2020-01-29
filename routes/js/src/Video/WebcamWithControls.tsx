@@ -24,16 +24,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function sendFrame(screenShot: string, cb: (result:any)=>any) {
-  httpCall(
-    'POST',
-    "http://localhost:8080/sentiment/frame",
-    screenShot.split(",")[1],
-    cb
-  )
+function sendFrame(screenShot: string, cb: (result:any)=>any,  sessionId: string) {
+  const submitFrameEndpoint = "http://localhost:8080/sentiment/frame/" + sessionId
+  httpCall( 'POST', submitFrameEndpoint, screenShot.split(",")[1], cb )
 }
 
-export function setPatienSnapshotInterval(resultCB: (result: any) => void ) : NodeJS.Timeout {
+export function setPatienSnapshotInterval(resultCB: (result: any) => void , sessionId: string) : NodeJS.Timeout {
   const id = setInterval(() => {
     const videoParentElement = document.getElementById('remote')
     const videoElement = videoParentElement && videoParentElement.lastElementChild
@@ -43,8 +39,8 @@ export function setPatienSnapshotInterval(resultCB: (result: any) => void ) : No
     const ctx = imageCanvas.getContext('2d')
     if(videoElement && ctx)
       ctx.drawImage(videoElement as CanvasImageSource, 0, 0 , 640, 480)
-      sendFrame(imageCanvas.toDataURL('image/jpeg'), (result: any) => { resultCB(result)} )
-  }, 3000)
+      sendFrame(imageCanvas.toDataURL('image/jpeg'), (result: any) => { resultCB(result)}, sessionId )
+  }, 5000)
   return id
 }
 
