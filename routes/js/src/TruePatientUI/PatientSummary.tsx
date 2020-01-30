@@ -4,15 +4,15 @@ import Image from '../TrueImages/background_Summary_16-9.png'
 import ProfileButtonImage from '../ButtonAssets/MyProfile.png'
 import AppointmentsButtonImage from '../ButtonAssets/Appointments.png'
 import SummaryButtonImage from '../ButtonAssets/SummarySelected.png'
-import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
+import { Box, WithStyles, Input } from '@material-ui/core'
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import {Line} from 'react-chartjs-2';
 import {ChartData} from 'chart.js';
 import {httpCall} from '../funcs'
+import { MultiButtonController } from '../MultiButtonController'
 
 const data: ChartData = {
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -229,56 +229,52 @@ class PatientSummary extends React.Component<PageProps, PageState> {
              </Grid>
          </div>
 
-          <div style={{ padding: 50}}>
+          <div style={{ padding: 50, marginTop: "64px"}}>
 
-                <Grid 
-                    container
-                    spacing={7}
-                    direction='column'
-                >
-                    <Grid item></Grid>
-                    <Grid item></Grid>
-                    
-                </Grid>
-
-                <Grid
-                    container
-                    spacing={5}
-                    direction='row'
-                    alignItems='flex-start'
-                    justify='space-between'
-                >
+                <Grid container spacing={2}>
+                  <Grid
+                      item
+                      id="LeftComponent"
+                      xs={4}
+                      spacing={2}
+                      direction='row'
+                      alignItems='flex-start'
+                      justify='space-between'
+                  >
                     <Grid
-                        item
-                        spacing={2}
-                        direction='column'
-                        alignItems='flex-start'
-                        justify='flex-start'
-                    >
-                        <Input
-                            id='search'
-                            placeholder='Search'
-                            fullWidth
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.search_term = e.target.value}}
-                        />
+                          item
+                          spacing={2}
+                          direction='column'
+                          alignItems='flex-start'
+                          justify='flex-start'
+                      >
+                      <Input
+                          id='search'
+                          placeholder='Search'
+                          fullWidth
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.search_term = e.target.value}}
+                      />
 
-                        <Grid item>
-                            <Button disabled>
-                            </Button>
-                        </Grid>
+                      <Grid item>
+                          <Button disabled>
+                          </Button>
+                      </Grid>
 
-                        <Grid item>
-                            <div className={this.props.classes.patient_list}>
-                                <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.state.sessions.length}>
-                                    {this.render_row}
-                                </FixedSizeList>
-                            </div>
-                        </Grid>
+                      <Grid item>
+                          <div className={this.props.classes.patient_list}>
+                              <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.state.sessions.length}>
+                                  {this.render_row}
+                              </FixedSizeList>
+                          </div>
+                      </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item xs={4} id="MiddleComponent">  
+                      <MultiButtonController />
+                  </Grid>
+                  <Grid item xs={4}id="RightComponent"></Grid>
+                </Grid>
             </div>
-
-
         </Box>
         )
     }
