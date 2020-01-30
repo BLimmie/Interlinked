@@ -6,6 +6,7 @@ import CreateAccount from './CreateAccount'
 import PrivilegedRoute from './PrivilegedRoute'
 
 import DoctorInterface from './TrueDoctorUI/DoctorInterface'
+import DoctorInterfaceSimple from './TrueDoctorUI/DoctorInterfaceSimple'
 import PatientInterface from './TruePatientUI/PatientInterface'
 
 // Once the original UI files are no longer needed, just delete them and replace them
@@ -61,6 +62,7 @@ class Server extends React.Component {
           <Route path='/client/createAccount'><CreateAccount /></Route>
           <PrivilegedRoute exact path='/'><this.MainPageRoute /></PrivilegedRoute>
           <PrivilegedRoute path='/client/DoctorInterface/:link' component={DoctorInterface} ></PrivilegedRoute>
+          <PrivilegedRoute path='/client/DoctorInterfaceSimple/:link' component={DoctorInterfaceSimple} ></PrivilegedRoute>
           <PrivilegedRoute path='/client/PatientInterface/:link' component={PatientInterface} ></PrivilegedRoute>
           
           <PrivilegedRoute path='/client/TrueDoctorMainPage'><TrueDoctorMainPage /></PrivilegedRoute>
