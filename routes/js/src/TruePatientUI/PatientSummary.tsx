@@ -4,7 +4,7 @@ import Image from '../TrueImages/background_Summary_16-9.png'
 import ProfileButtonImage from '../ButtonAssets/MyProfile.png'
 import AppointmentsButtonImage from '../ButtonAssets/Appointments.png'
 import SummaryButtonImage from '../ButtonAssets/SummarySelected.png'
-import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
+import { Box, WithStyles, Input } from '@material-ui/core'
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
@@ -14,6 +14,7 @@ import {Line} from 'react-chartjs-2';
 import {ChartData, ChartOptions} from 'chart.js';
 import {httpCall} from '../funcs'
 import 'chartjs-plugin-annotation';
+import { MultiButtonController } from '../MultiButtonController'
 
 // const data: ChartData = {
 //   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -38,8 +39,12 @@ interface PageState {
     current_selection: number;
     sessions: Session[];
     transcript: TranscriptLine[];
-    data: ChartData;
-    options: any;
+    emotiondata: ChartData;
+    textdata: ChartData;
+    audata: ChartData;
+    emotionoptions: any;
+    textoptions: any;
+    auoptions: any;
 }
 
 const styles = (_: Theme) => createStyles({
@@ -117,10 +122,10 @@ class Session {
 }
 
 class TranscriptLine {
-    timestamp: string =  "";
+    timestamp: number =  0;
     text: string = "";
 
-    constructor(timestamp: string, text: string) {
+    constructor(timestamp: number, text: string) {
         this.timestamp = timestamp;
         this.text = text;
     }
@@ -143,17 +148,31 @@ class PatientSummary extends React.Component<PageProps, PageState> {
           current_selection: props.current_selection,
           sessions: [],
           // transcript: [],
-          transcript: [new TranscriptLine("1", "hello"), new TranscriptLine("2", "world"),
-          new TranscriptLine("3", "yes"),
-          new TranscriptLine("4", "yes"),
-          new TranscriptLine("5", "yes"),
-          new TranscriptLine("6", "yes"),
-          new TranscriptLine("7", "yes"),
-          new TranscriptLine("8", "yes"),
-          new TranscriptLine("9", "yes"),
-          new TranscriptLine("10", "yes"),
+          transcript: [
+          new TranscriptLine(0, "yes"),
+            new TranscriptLine(1, "hello"), new TranscriptLine(2, "world"),
+          new TranscriptLine(3, "yes"),
+          new TranscriptLine(4, "yes"),
+          new TranscriptLine(5, "yes"),
+          new TranscriptLine(6, "yes"),
+          new TranscriptLine(7, "yes"),
+          new TranscriptLine(8, "yes"),
+          new TranscriptLine(9, "yes"),
+          new TranscriptLine(10, "yes"),
+          new TranscriptLine(11, "yes"),
+          new TranscriptLine(12, "yes"),
+          new TranscriptLine(13, "yes"),
+          new TranscriptLine(14, "yes"),
+          new TranscriptLine(15, "yes"),
+          new TranscriptLine(16, "yes"),
+          new TranscriptLine(17, "yes"),
+          new TranscriptLine(18, "yes"),
+          new TranscriptLine(19, "yes"),
+          new TranscriptLine(20, "yes"),
           ],
-          data: {labels: [], datasets: [{}]},
+          emotiondata: {labels: [], datasets: [{}]},
+          textdata: {labels: [], datasets: [{}]},
+          audata: {labels: [], datasets: [{}]},
           // data: {
           //   labels: ["1", "2", "3", "4", "5"],
           //   datasets: [
@@ -163,7 +182,9 @@ class PatientSummary extends React.Component<PageProps, PageState> {
           //     }
           //   ],
           // },
-          options: {}
+          emotionoptions: {},
+          textoptions: {},
+          auoptions: {}
         }
 
         this.createdTime = ''
@@ -178,11 +199,41 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         this.transcript_render = this.transcript_render.bind(this);
         this.getSessions = this.getSessions.bind(this);
         this.alter_transcript = this.alter_transcript.bind(this);
+        this.data_search = this.data_search.bind(this);
+        this.transcript_search = this.transcript_search.bind(this);
         this.getSessions()
 
         this.setState({
             current_selection: props.current_selection
          });
+    }
+
+    data_search(arr: number[], ll: number, rr: number, ii: number): number {
+      if (rr >= ll) {
+        let mid = ll + Math.floor((rr - ll) / 2)
+        if (arr[mid] === ii) {
+          return mid
+        }
+        if (arr[mid] > ii) {
+          return this.data_search(arr, ll, mid - 1, ii)
+        }
+        return this.data_search(arr, mid + 1, rr, ii)
+      } else if (rr < 0) { return 0 }
+      else { return rr }
+    }
+
+    transcript_search(ll: number, rr: number, ii: number): number {
+      if (rr >= ll) {
+        let mid = ll + Math.floor((rr - ll) / 2)
+        if (this.state.transcript[mid].timestamp === ii) {
+          return mid
+        }
+        if (this.state.transcript[mid].timestamp > ii) {
+          return this.transcript_search(ll, mid - 1, ii)
+        }
+        return this.transcript_search(mid + 1, rr, ii)
+      } else if (rr < 0) { return 0 }
+      else { return rr }
     }
 
     page_alter(index: any) {
@@ -200,15 +251,33 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         //     } 
         // })
         this.setState({
-          data: {
-            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+          emotiondata: {
+            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
             datasets: [
               {
                 label: 'Test',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
               }
             ],
-          }
+          },
+          textdata: {
+            labels: ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "22", "23"],
+            datasets: [
+              {
+                label: 'Test',
+                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
+              }
+            ],
+          },
+          audata: {
+            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
+            datasets: [
+              {
+                label: 'Test',
+                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
+              }
+            ],
+          },
         })
 
         return null
@@ -226,41 +295,120 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         );
     }
 
-    alter_transcript(element: any) {
-      console.log(element)
-      if (element.length > 0) {
-        this.listRef.current?.scrollToItem(element[0]._index)
-        this.setState({options: { maintainAspectRatio: false,
+    alter_transcript(chartid: number): (element: any) => void {
+      return (element: any) => {
+        console.log(element)
+        
+        if (element.length > 0) {
+          let labels, indexa, indexb, indexc, target
+          if (chartid === 0) {
+            labels = this.state.emotiondata.labels!!
+            target = +labels[element[0]._index]
+            indexa = element[0]._index
+            indexb = this.data_search(this.state.textdata.labels!!.map(Number), 0, this.state.textdata.labels!!.length as number - 1, target) 
+            indexc = this.data_search(this.state.audata.labels!!.map(Number), 0, this.state.audata.labels!!.length as number - 1, target) 
+          } else if (chartid === 1) {
+            labels = this.state.textdata.labels!!
+            target = +labels[element[0]._index]
+            indexa = this.data_search(this.state.emotiondata.labels!!.map(Number), 0, this.state.emotiondata.labels!!.length as number - 1, target) 
+            indexb = element[0]._index
+            indexc = this.data_search(this.state.audata.labels!!.map(Number), 0, this.state.audata.labels!!.length as number - 1, target) 
+          } else {
+            labels = this.state.audata.labels!!
+            target = +labels[element[0]._index]
+            indexa = this.data_search(this.state.emotiondata.labels!!.map(Number), 0, this.state.emotiondata.labels!!.length as number - 1, target) 
+            indexb = this.data_search(this.state.textdata.labels!!.map(Number), 0, this.state.textdata.labels!!.length as number - 1, target) 
+            indexc = element[0]._index
+          }
+          let index = this.transcript_search(0, this.state.transcript.length - 1, target)
+          this.listRef.current?.scrollToItem(index)
+          this.setState({emotionoptions: { maintainAspectRatio: false,
                     annotation: {
                       drawTime: 'afterDatasetsDraw',
                       annotations: [{
                           type: 'line',
                           mode: 'vertical',
                           scaleID: 'x-axis-0',
-                          value: (element[0]._index),
+                          value: indexa,
                           borderColor: 'red',
                           borderWidth: 2,
                       }]
                     }
-                }
+                },
+                    textoptions: { maintainAspectRatio: false,
+                      annotation: {
+                        drawTime: 'afterDatasetsDraw',
+                        annotations: [{
+                            type: 'line',
+                            mode: 'vertical',
+                            scaleID: 'x-axis-0',
+                            value: indexb,
+                            borderColor: 'red',
+                            borderWidth: 2,
+                        }]
+                      }
+                    },
+                    auoptions: { maintainAspectRatio: false,
+                      annotation: {
+                        drawTime: 'afterDatasetsDraw',
+                        annotations: [{
+                            type: 'line',
+                            mode: 'vertical',
+                            scaleID: 'x-axis-0',
+                            value: indexc,
+                            borderColor: 'red',
+                            borderWidth: 2,
+                        }]
+                      }
+                    }
             })
+        }
       }
     }
 
     transcript_alter(index: any) {
-      this.setState({options: { maintainAspectRatio: false,
+      let emotion_index = this.data_search(this.state.emotiondata.labels!!.map(Number), 0, this.state.emotiondata.labels!!.length as number - 1, this.state.transcript[index].timestamp)
+      let text_index = this.data_search(this.state.textdata.labels!!.map(Number), 0, this.state.textdata.labels!!.length as number - 1, this.state.transcript[index].timestamp)
+      let au_index = this.data_search(this.state.audata.labels!!.map(Number), 0, this.state.audata.labels!!.length as number - 1, this.state.transcript[index].timestamp)
+      this.setState({emotionoptions: { maintainAspectRatio: false,
                   annotation: {
                     drawTime: 'afterDatasetsDraw',
                     annotations: [{
                         type: 'line',
                         mode: 'vertical',
                         scaleID: 'x-axis-0',
-                        value: parseInt(this.state.transcript[index].timestamp) - 1,
+                        value: emotion_index,
                         borderColor: 'red',
                         borderWidth: 2,
                     }]
                   }
-              }
+              },
+                  textoptions: { maintainAspectRatio: false,
+                    annotation: {
+                      drawTime: 'afterDatasetsDraw',
+                      annotations: [{
+                          type: 'line',
+                          mode: 'vertical',
+                          scaleID: 'x-axis-0',
+                          value: text_index,
+                          borderColor: 'red',
+                          borderWidth: 2,
+                      }]
+                    }
+                  },
+                  auoptions: { maintainAspectRatio: false,
+                    annotation: {
+                      drawTime: 'afterDatasetsDraw',
+                      annotations: [{
+                          type: 'line',
+                          mode: 'vertical',
+                          scaleID: 'x-axis-0',
+                          value: au_index,
+                          borderColor: 'red',
+                          borderWidth: 2,
+                      }]
+                    }
+                  }
           })
     }
 
@@ -351,83 +499,84 @@ class PatientSummary extends React.Component<PageProps, PageState> {
              </Grid>
          </div>
 
-          <div style={{ padding: 50}}>
+          <div style={{ padding: 50, marginTop: "64px"}}>
 
-                <Grid 
-                    container
-                    spacing={7}
-                    direction='column'
-                >
-                    <Grid item></Grid>
-                    <Grid item></Grid>
-                    
-                </Grid>
-
-                <Grid
-                    container
-                    spacing={5}
-                    direction='row'
-                    alignItems='flex-start'
-                    justify='space-between'
-                >
-                    <Grid
-                        item
-                        spacing={2}
-                        direction='column'
-                        alignItems='flex-start'
-                        justify='flex-start'
-                    >
-                        <Input
-                            id='search'
-                            placeholder='Search'
-                            fullWidth
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.search_term = e.target.value}}
-                        />
-
-                        <Grid item>
-                            <Button disabled>
-                            </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <div className={this.props.classes.patient_list}>
-                                <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.state.sessions.length}>
-                                    {this.render_row}
-                                </FixedSizeList>
-                            </div>
-                        </Grid>
-                    </Grid>
-
-                    {/* <Grid
-                      container
-                      spacing={1}
+                <Grid container spacing={2}>
+                  <Grid
+                      item
+                      id="LeftComponent"
+                      xs={4}
+                      spacing={2}
                       direction='row'
                       alignItems='flex-start'
-                      justify='flex-start'
-                    > */}
+                      justify='space-between'
+                  >
+                    <Grid
+                          item
+                          spacing={2}
+                          direction='column'
+                          alignItems='flex-start'
+                          justify='flex-start'
+                      >
+                      <Input
+                          id='search'
+                          placeholder='Search'
+                          fullWidth
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {this.search_term = e.target.value}}
+                      />
+
                       <Grid item>
+                          <Button disabled>
+                          </Button>
+                      </Grid>
+
+                      <Grid item>
+                          <div className={this.props.classes.patient_list}>
+                              <FixedSizeList height={487} width={"29vw"} itemSize={50} itemCount={this.state.sessions.length}>
+                                  {this.render_row}
+                              </FixedSizeList>
+                          </div>
+                      </Grid>
+                    </Grid>
+
+                      {/* <Grid item>
                         <Line ref={this.chartRef}
                               data={this.state.data}
                               options={this.state.options}
                               width={400}
                               height={380}
                               getElementAtEvent={this.alter_transcript} /> 
-                      </Grid>
+                      </Grid> */}
 
-                      <Grid item>
+                  </Grid>
+                  <Grid item xs={4} id="MiddleComponent">  
+                      <MultiButtonController leftComponent={
+                        <Grid item>
+                        <Line ref={this.chartRef}
+                              data={this.state.emotiondata}
+                              options={this.state.emotionoptions}
+                              width={400}
+                              height={380}
+                              getElementAtEvent={this.alter_transcript(0)} />
+                        <Line 
+                              data={this.state.textdata}
+                              options={this.state.textoptions}
+                              width={400}
+                              height={380}
+                              getElementAtEvent={this.alter_transcript(1)} />
+                        </Grid>
+                        }
+                        />
+                  </Grid>
+                  <Grid item xs={4}id="RightComponent">
                           <div className={this.props.classes.transcript_list}>
                               <FixedSizeList ref={this.listRef} height={487} width={"25vw"} itemSize={30} itemCount={this.state.transcript.length}>
                                   {this.transcript_render}
                               </FixedSizeList>
                           </div>
-                      </Grid>
-
-                    {/* </Grid> */}
-
                   </Grid>
+                </Grid>
             </div>
-
-
         </Box>
         )
     }

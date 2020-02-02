@@ -62,11 +62,12 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   const [patientFrameResponse, setPatientResonse] = React.useState<serverResponse>(zeroValueResponse)
   const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
 
+  const sessionId = match.params.link
   
   const createRoom = () => {
     if (!videoRoom) {
       if (localVidStream) { 
-        getRoom(match.params.link, localVidStream.getTracks(), "Doctor")
+        getRoom(sessionId, localVidStream.getTracks(), "Doctor")
           .then((room: Room) => {
             setVideoRoom(room)
             setRemoteVideo(room, endSession)
@@ -78,18 +79,18 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
 
   createRoom()
 
-  const resultToResponse = (result: any) => {
+  const resultToResponseCB = (result: any) => {
     if(result && result === "no faces found"){
       console.log(result)
     } else {
-      const AUs: AUInterface = JSON.parse(result).AU
+      const AUs: AUInterface = JSON.parse(result).au
       const Emotions: EmotionsInterface = JSON.parse(result).Emotion
       setPatientResonse({aus: AUs, emotions: Emotions})
     }
   }
    
   React.useEffect(() => {
-   const id = setPatienSnapshotInterval(resultToResponse)
+   const id = setPatienSnapshotInterval(resultToResponseCB, sessionId)
    setIntervalId(id)
   }, [])
 
