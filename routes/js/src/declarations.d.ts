@@ -3,3 +3,5 @@
 declare module 'react-speech-recognition';
 
 declare module 'react-alert-template-oldschool-dark';
+
+declare module 'chartjs-plugin-annotation'
