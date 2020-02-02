@@ -318,6 +318,14 @@ func (ic *IntouchClient) InsertFrameMetric(id primitive.ObjectID, metric FrameMe
 	return ic.updateField(filter, update, Ses)
 }
 
+func (ic *IntouchClient) UpdateSessionSummary(session *Session) error {
+	filter := bson.D{{"_id", session.ID}}
+	update := bson.D{{"$set",
+		bson.D{{"summary", session.Summary}}}}
+	return ic.updateField(filter, update, Ses)
+
+}
+
 // DeleteEntity deletes given entity with id (patient, provider, session, etc. based on flag),
 // doesn't check if exists
 // will also update references to deleted entity

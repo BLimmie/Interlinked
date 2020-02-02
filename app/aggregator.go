@@ -3,9 +3,12 @@ package app
 import (
 	"errors"
 	"sort"
+	"strconv"
 	"time"
 )
+
 var AUTHRESHOLD float32 = 3.75
+
 func AggregatorFromSession(session *Session) (*Aggregator, error) {
 	defaultAU := make(map[string]float32)
 	for _, label := range auLabels {
@@ -64,7 +67,11 @@ func (agg *Aggregator) Run() (interface{}, error) {
 			return nil, err
 		}
 		fullRes[key] = res
+		//update session
+		agg.session.Summary = fullRes
 	}
+	//update session in database
+	ic.UpdateSessionSummary(agg.session)
 	return fullRes, nil
 }
 
@@ -115,7 +122,7 @@ func timeSpentEmotion(session *Session) (interface{}, error) {
 
 func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 	initialTime := timeFromInt(session.CreatedTime)
-	fullList := make(map[int]interface{})
+	fullList := make(map[string]interface{})
 	lastTime := timeFromInt(session.ImageMetrics[len(session.ImageMetrics)-1].Time)
 	seconds := 10
 	for currentTime := initialTime.Add(time.Second * 10); currentTime.Before(lastTime); currentTime = currentTime.Add(time.Second) {
@@ -176,7 +183,7 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 			emotions_s[e] = t.String()
 			emotions_p[e] = float32(t) / float32(totalTime)
 		}
-		fullList[seconds] = map[string]interface{}{
+		fullList[strconv.Itoa(seconds)] = map[string]interface{}{
 			"Total Time": emotions_s,
 			"Percentage": emotions_p,
 		}
@@ -187,7 +194,7 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 
 func sentimentOverTime_RunningAggregate(session *Session) (interface{}, error) {
 	initialTime := timeFromInt(session.CreatedTime)
-	fullList := make(map[int]float32)
+	fullList := make(map[string]float32)
 	lastTime := timeFromInt(session.TextMetrics[len(session.TextMetrics)-1].Time)
 	seconds := 10
 	for currentTime := initialTime.Add(time.Second * 10); currentTime.Before(lastTime); currentTime = currentTime.Add(time.Second) {
@@ -213,7 +220,7 @@ func sentimentOverTime_RunningAggregate(session *Session) (interface{}, error) {
 		t := timeFromInt(n.Time)
 		dur := t.Sub(tenSecondsAgo)
 		currentCumulativeSentiment := 0.0
-		currentCumulativeSentiment += float64(m.Sentiment)*float64(dur)/float64(time.Second*10)
+		currentCumulativeSentiment += float64(m.Sentiment) * float64(dur) / float64(time.Second*10)
 		for i := firstSegmentIdx; timeFromInt(session.TextMetrics[i].Time).Before(currentTime); i++ {
 			m := session.TextMetrics[i]
 			nextTime := timeFromInt(session.TextMetrics[i+1].Time)
@@ -221,9 +228,9 @@ func sentimentOverTime_RunningAggregate(session *Session) (interface{}, error) {
 				nextTime = currentTime
 			}
 			dur := nextTime.Sub(timeFromInt(m.Time))
-			currentCumulativeSentiment += float64(m.Sentiment)*float64(dur)/float64(time.Second*10)
+			currentCumulativeSentiment += float64(m.Sentiment) * float64(dur) / float64(time.Second*10)
 		}
-		fullList[seconds] = float32(currentCumulativeSentiment)
+		fullList[strconv.Itoa(seconds)] = float32(currentCumulativeSentiment)
 		seconds++
 	}
 
@@ -231,7 +238,7 @@ func sentimentOverTime_RunningAggregate(session *Session) (interface{}, error) {
 }
 
 func condensedAU(session *Session) (interface{}, error) {
-	fullList := make(map[int]interface{})
+	fullList := make(map[string]interface{})
 	createdTime := session.CreatedTime
 	for _, m := range session.ImageMetrics {
 		auList := make(map[string]map[string]interface{})
@@ -249,7 +256,7 @@ func condensedAU(session *Session) (interface{}, error) {
 		}
 
 		seconds := m.Time - createdTime
-		fullList[int(seconds)] = auList
+		fullList[strconv.Itoa(int(seconds))] = auList
 	}
 	return fullList, nil
 }
