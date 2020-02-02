@@ -12,7 +12,7 @@ const AU_theme = createMuiTheme({
       }
     },
     typography: {
-      fontSize: 19,
+      fontSize: 18,
     }
   });
 
@@ -33,7 +33,7 @@ export interface AUInterface {
     NoseWrinkler: number
     OuterBrowRaiser: number
     UpperLidRaiser: number
-    UpperLip: number
+    UpperLipRaiser: number
 }
 
 export const noAus: AUInterface = {
@@ -53,7 +53,7 @@ export const noAus: AUInterface = {
     NoseWrinkler: 0,
     OuterBrowRaiser: 0,
     UpperLidRaiser: 0,
-    UpperLip: 0,
+    UpperLipRaiser: 0,
 }
 
 interface DisplayAUProps {
@@ -88,22 +88,23 @@ export default function AUs(props: AUsInterface) {
 
     return (
         <Container maxWidth="lg">
-          <DisplayAU AUNumber={aus.Blink} AUType={"Blink"}/>
-          <DisplayAU AUNumber={aus.BrowLowerer} AUType={"Brow Lowerer"}/>
-          <DisplayAU AUNumber={aus.CheekRaiser} AUType={"Cheek Raiser"}/>
-          <DisplayAU AUNumber={aus.ChinRaiser} AUType={"Chin Raiser"}/>
-          <DisplayAU AUNumber={aus.Dimpler} AUType={"Dimpler"}/>
-          <DisplayAU AUNumber={aus.InnerBrowRaiser} AUType={"Inner Brow Raiser"}/>
-          <DisplayAU AUNumber={aus.JawDrop} AUType={"Jaw Drop"}/>
+          <DisplayAU AUNumber={aus.UpperLidRaiser} AUType={"Upper Lid Raiser"}/>
           <DisplayAU AUNumber={aus.LidTightener} AUType={"Lid Tightener"}/>
+          <DisplayAU AUNumber={aus.InnerBrowRaiser} AUType={"Inner Brow Raiser"}/>
+          <DisplayAU AUNumber={aus.OuterBrowRaiser} AUType={"Outer Brow Raiser"}/>
+          <DisplayAU AUNumber={aus.BrowLowerer} AUType={"Brow Lowerer"}/>
+          <DisplayAU AUNumber={aus.Blink} AUType={"Blink"}/>
+          <DisplayAU AUNumber={aus.NoseWrinkler} AUType={"Nose Wrinkler"}/>
+          <DisplayAU AUNumber={aus.CheekRaiser} AUType={"Cheek Raiser"}/>
+          <DisplayAU AUNumber={aus.Dimpler} AUType={"Dimpler"}/>
+          <DisplayAU AUNumber={aus.UpperLipRaiser} AUType={"Upper Lip Raiser"}/>
           <DisplayAU AUNumber={aus.LipCornerDepressor} AUType={"Lip Corner Depressor"}/>
           <DisplayAU AUNumber={aus.LipCornerPuller} AUType={"Lip Corner Puller"}/>
           <DisplayAU AUNumber={aus.LipStretcher} AUType={"Lip Stretcher"}/>
-          <DisplayAU AUNumber={aus.LipTightener} AUType={"Lip Tightener"}/>
-          <DisplayAU AUNumber={aus.LipsPart} AUType={"Lips Part"}/>
-          <DisplayAU AUNumber={aus.NoseWrinkler} AUType={"Nose Wrinkler"}/>
-          <DisplayAU AUNumber={aus.OuterBrowRaiser} AUType={"Outer Brow Raiser"}/>
-          <DisplayAU AUNumber={aus.UpperLidRaiser} AUType={"Upper Lip Raiser"}/>
+          <DisplayAU AUNumber={aus.LipTightener} AUType={"Lip Tightener"}/>    
+          <DisplayAU AUNumber={aus.LipsPart} AUType={"Lips Part"}/>      
+          <DisplayAU AUNumber={aus.ChinRaiser} AUType={"Chin Raiser"}/>
+          <DisplayAU AUNumber={aus.JawDrop} AUType={"Jaw Drop"}/> 
         </Container>
       );
 }
