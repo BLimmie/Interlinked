@@ -57,22 +57,22 @@ func (agg *Aggregator) init() {
 	agg.conclusions["Percent in Facial Emotion over last 10 seconds"] = emotionOverTime_RunningAggregate
 	agg.conclusions["Text sentiment over last 10 seconds"] = sentimentOverTime_RunningAggregate
 	agg.conclusions["AU Anomalies"] = condensedAU
+	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
 }
 
 func (agg *Aggregator) Run() (interface{}, error) {
-	fullRes := make(map[string]interface{})
+	agg.session.Summary = make(map[string]interface{})
 	for key, f := range agg.conclusions {
 		res, err := f(agg.session)
 		if err != nil {
 			return nil, err
 		}
-		fullRes[key] = res
+		agg.session.Summary[key] = res
 		//update session
-		agg.session.Summary = fullRes
 	}
 	//update session in database
-	ic.UpdateSessionSummary(agg.session)
-	return fullRes, nil
+	err := ic.UpdateSessionSummary(agg.session)
+	return agg.session.Summary, err
 }
 
 func isTextPositive(session *Session) (interface{}, error) {
@@ -257,6 +257,21 @@ func condensedAU(session *Session) (interface{}, error) {
 
 		seconds := m.Time - createdTime
 		fullList[strconv.Itoa(int(seconds))] = auList
+	}
+	return fullList, nil
+}
+
+func divergentSentiment(session *Session) (interface{}, error) {
+	fullList := make(map[string]interface{})
+	tm := session.Summary["Text sentiment over last 10 seconds"].(map[string]float32)
+	im := session.getPercentagesRunningAverage()
+	for s, tmet := range tm {
+		imet, ok := im[s]
+		if !ok {
+			continue
+		}
+		heuristic := tmet * (imet["joy"] + imet["surprise"] - imet["sadness"] - imet["anger"])
+		fullList[s] = heuristic < 0
 	}
 	return fullList, nil
 }
