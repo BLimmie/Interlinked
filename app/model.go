@@ -56,7 +56,7 @@ var auLabels = map[string]string{
 
 func init() {
 	client = OpenConnection()
-	ic = CreateIntouchClient("test", client)
+	ic = CreateIntouchClient("intouch", client)
 }
 
 type APIKeys struct {
@@ -112,6 +112,7 @@ type Session struct {
 	Provider     UserRef
 	TextMetrics  []TextMetrics
 	ImageMetrics []FrameMetrics
+	Summary      map[string]interface{}
 }
 
 // BlankSession for inserting new document with random id rather than our own

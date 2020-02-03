@@ -18,7 +18,7 @@ var GCPWorkers *app.WorkerHandler = nil
 
 func init() {
 	client = app.OpenConnection()
-	ic = app.CreateIntouchClient("test", client)
+	ic = app.CreateIntouchClient("intouch", client)
 }
 
 var registry = app.NewLoginHandler()

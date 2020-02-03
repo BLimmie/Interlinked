@@ -10,9 +10,10 @@ import (
 
 func TestAggregator(t *testing.T) {
 	currentTime, _ := removeMonotonicTimeFromTime(time.Now())
+	id, _ := primitive.ObjectIDFromHex("5e37440fd426d36e95f33e90")
 	s := Session{
-		ID:          primitive.NewObjectID(),
-		Link:        "/",
+		ID:          id,
+		Link:        "/session/5e37440fd426d36e95f33e90",
 		CreatedTime: currentTime.Unix(),
 		Patient:     UserRef{},
 		Provider:    UserRef{},
