@@ -38,3 +38,15 @@ func removeMonotonicTimeFromTime(t time.Time) (time.Time, error) {
 func timeFromInt(i int64) time.Time {
 	return time.Unix(i,0)
 }
+
+func (session *Session) getPercentagesRunningAverage() map[string]map[string]float32{
+	newResp := make(map[string]map[string]float32)
+	im := session.Summary["Percent in Facial Emotion over last 10 seconds"].(map[string]interface{})
+	for second, obj := range im {
+		tmp := obj.(map[string]interface{})
+		p := tmp["Percentages"].(map[string]float32)
+		newResp[second] = p
+		// "$second" : {"joy" : 0.25}
+	}
+	return newResp
+}
