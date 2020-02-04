@@ -9,27 +9,12 @@ import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { VariableSizeList, FixedSizeList, ListChildComponentProps } from 'react-window';
 import {Line} from 'react-chartjs-2';
 import {ChartData, ChartOptions} from 'chart.js';
 import {httpCall} from '../funcs'
 import 'chartjs-plugin-annotation';
 import { MultiButtonController } from '../MultiButtonController'
-
-// const data: ChartData = {
-//   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-//   datasets: [
-//     {
-//       label: 'My First dataset',
-//       fill: false,
-//       lineTension: 0.1,
-//       backgroundColor: 'rgba(75,192,192,0.4)',
-//       borderColor: 'rgba(75,192,192,1)',
-//       borderCapStyle: 'butt',
-//       data: [65, 59, 80, 81, 56, 55, 40]
-//     }
-//   ]
-// }
 
 interface PageProps extends WithStyles<typeof styles>{
     current_selection: number;
@@ -246,62 +231,159 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         this.setState({
             current_selection: index
         });
-        // httpCall('POST', "http://localhost:8080/metrics/" + this.sesId + "/aggregate", [], null, (result:any, rr:number) => {
-        //     if (rr === 200) {
-        //       let metrics = JSON.parse(result)
-        //       console.log(metrics)
-        //     } 
-        // })
-        let avgtext = Math.round((0.63 + 1) / 2.0 * 40)
-        this.setState({
-          emotiondata: {
-            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
-            datasets: [
-              {
-                label: 'Test',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13],
-              }
-            ],
-          },
-          textdata: {
-            labels: ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "22", "23"],
-            datasets: [
-              {
-                label: 'Test',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
-              }
-            ],
-          },
-          audata: {
-            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
-            datasets: [
-              {
-                label: 'Test',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
-              }
-            ],
-          },
-          avgtextoptions: { maintainAspectRatio: false,
-            annotation: {
-              drawTime: 'afterDatasetsDraw',
-              annotations: [{
-                  type: 'line',
-                  mode: 'vertical',
-                  scaleID: 'x-axis-0',
-                  value: avgtext,
-                  borderColor: 'red',
-                  borderWidth: 2,
-              }]
-            },
-            scales: {
-              yAxes: [{
-                ticks: {
-                    display: false
+        httpCall('POST', "http://localhost:8080/metrics/" + this.sesId + "/aggregate", [], null, (result:any, rr:number) => {
+            if (rr === 200) {
+              let metrics = JSON.parse(result)
+              let frameMetrics: Array<any> = metrics["Frame Metrics"]
+              let emotionLabels: string[] = []
+              let anger: number[] = []
+              let joy: number[] = []
+              let sorrow: number[] = []
+              let surprise: number[] = []
+              let baseTime = 0
+              let convStringToProb = (ss: string) => {
+                if (ss === "VERY_UNLIKELY") {
+                  return 0;
+                } else if (ss === "UNLIKELY") {
+                  return 0.25;
+                } else if (ss === "POSSIBLE") {
+                  return 0.5;
+                } else if (ss === "LIKELY") {
+                  return 0.75;
+                } else {
+                  return 1;
                 }
-              }]
-          }
-          },
+              };
+
+              if (frameMetrics.length > 0) {
+                baseTime = frameMetrics[0]!!["Time"]
+              }
+
+              frameMetrics.forEach(element => {
+                emotionLabels.push((element["Time"] as number - baseTime).toString())
+                let emotion = element["Emotion"]
+                anger.push(convStringToProb(emotion["anger"]))
+                joy.push(convStringToProb(emotion["joy"]))
+                sorrow.push(convStringToProb(emotion["sorrow"]))
+                surprise.push(convStringToProb(emotion["surprise"]))
+              });
+              let textMetrics: [] = metrics["Text Metrics"]
+              let textLabels: string[] = []
+              let transcript: TranscriptLine[] = []
+              let textSentiment: number[] = []
+              textMetrics.forEach(element => {
+                let time = element["Time"] as number - baseTime
+                textLabels.push(time.toString())
+                transcript.push(new TranscriptLine(time, element["Text"]))
+                textSentiment.push(element["Sentiment"])
+              })
+              let avgtext = Math.round((metrics["Average Text Sentiment"]["AvgTextSentiment"] + 1) / 2.0 * 40)
+              this.setState({
+                transcript: transcript,
+                emotiondata: {
+                  labels: emotionLabels,
+                  datasets: [
+                    {
+                      label: "Anger",
+                      data: anger,
+                    },
+                    {
+                      label: "Joy",
+                      data: joy,
+                    },
+                    {
+                      label: "Sorrow",
+                      data: sorrow,
+                    },
+                    {
+                      label: "Surprise",
+                      data: surprise,
+                    },
+                  ]
+                },
+                textdata: {
+                  labels: textLabels,
+                  datasets: [
+                    {
+                      label: "Text Sentiment",
+                      data: textSentiment,
+                    }
+                  ]
+                },
+                avgtextoptions: { maintainAspectRatio: false,
+                  annotation: {
+                    drawTime: 'afterDatasetsDraw',
+                    annotations: [{
+                        type: 'line',
+                        mode: 'vertical',
+                        scaleID: 'x-axis-0',
+                        value: avgtext,
+                        borderColor: 'red',
+                        borderWidth: 2,
+                    }]
+                  },
+                  scales: {
+                    yAxes: [{
+                      ticks: {
+                          display: false
+                      }
+                    }]
+                }
+                },
+              }
+              )
+            } 
         })
+        // let avgtext = Math.round((0.63 + 1) / 2.0 * 40)
+        // this.setState({
+        //   emotiondata: {
+        //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
+        //     datasets: [
+        //       {
+        //         label: 'Test',
+        //         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13],
+        //       }
+        //     ],
+        //   },
+        //   textdata: {
+        //     labels: ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "22", "23"],
+        //     datasets: [
+        //       {
+        //         label: 'Test',
+        //         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
+        //       }
+        //     ],
+        //   },
+        //   audata: {
+        //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
+        //     datasets: [
+        //       {
+        //         label: 'Test',
+        //         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
+        //       }
+        //     ],
+        //   },
+        //   avgtextoptions: { maintainAspectRatio: false,
+        //     annotation: {
+        //       drawTime: 'afterDatasetsDraw',
+        //       annotations: [{
+        //           type: 'line',
+        //           mode: 'vertical',
+        //           scaleID: 'x-axis-0',
+        //           value: avgtext,
+        //           borderColor: 'red',
+        //           borderWidth: 2,
+        //       }]
+        //     },
+        //     scales: {
+        //       yAxes: [{
+        //         ticks: {
+        //             display: false
+        //         }
+        //       }]
+        //   }
+        //   },
+        // })
 
         return null
     }
@@ -486,7 +568,6 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         httpCall('POST', "http://localhost:8080/sessions/" + this.id, [], null, (result:any, rr:number) => {
             if (rr === 200) {
               let arr = JSON.parse(result)
-              console.log(arr)
               if (arr !== null) {
                 let temp: Session[] = []
                 arr = arr.forEach((element: Object) => {
@@ -600,9 +681,15 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                   </Grid>
                   <Grid item xs={4} id="MiddleComponent">  
                       <MultiButtonController leftComponent={
-                        <FixedSizeList itemData={this.state} height={487} width={"25vw"} itemSize={380} itemCount={2}>
+                        <VariableSizeList itemData={this.state} height={487} width={"25vw"} itemSize={(index) => {
+                          if (index === 0 || index === 2) {
+                            return 380
+                          } else {
+                            return 125
+                          }
+                        }} itemCount={3}>
                           {this.render_left}
-                        </FixedSizeList>
+                        </VariableSizeList>
                         }
                         />
                   </Grid>

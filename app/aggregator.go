@@ -18,25 +18,25 @@ func AggregatorFromSession(session *Session) (*Aggregator, error) {
 		session:     session,
 		conclusions: make(map[string]func(session *Session) (interface{}, error)),
 	}
-	session.TextMetrics = append([]TextMetrics{
-		{
-			Time:      session.CreatedTime,
-			Text:      "",
-			Sentiment: 0,
-		}}, session.TextMetrics...)
-	session.ImageMetrics = append([]FrameMetrics{
-		{
-			Time:          session.CreatedTime,
-			ImageFilename: "",
-			Emotion: map[string]string{
-				"joy":      "NOT_LIKELY",
-				"sorrow":   "NOT_LIKELY",
-				"anger":    "NOT_LIKELY",
-				"surprise": "NOT_LIKELY",
-			},
-			AU: defaultAU,
-		},
-	}, session.ImageMetrics...)
+	// session.TextMetrics = append([]TextMetrics{
+	// 	{
+	// 		Time:      session.CreatedTime,
+	// 		Text:      "",
+	// 		Sentiment: 0,
+	// 	}}, session.TextMetrics...)
+	// session.ImageMetrics = append([]FrameMetrics{
+	// 	{
+	// 		Time:          session.CreatedTime,
+	// 		ImageFilename: "",
+	// 		Emotion: map[string]string{
+	// 			"joy":      "NOT_LIKELY",
+	// 			"sorrow":   "NOT_LIKELY",
+	// 			"anger":    "NOT_LIKELY",
+	// 			"surprise": "NOT_LIKELY",
+	// 		},
+	// 		AU: defaultAU,
+	// 	},
+	// }, session.ImageMetrics...)
 	sort.Slice(session.TextMetrics, func(i, j int) bool {
 		t1 := timeFromInt(session.TextMetrics[i].Time)
 		t2 := timeFromInt(session.TextMetrics[j].Time)

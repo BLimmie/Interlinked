@@ -39,14 +39,15 @@ export const MultiButtonController: React.SFC<MultiButtonControllerProps> = (pro
           </Button>
         </Grid>
         <Grid item xs={12}>
+          <div>
           {componentNum == 0 &&
-            props.leftComponent
-          }
+            props.leftComponent}
+          </div>
           {componentNum == 1 &&
-            <Typography variant="h1"> Insert Middle Component Here</Typography>
+          <div />
           }
           {componentNum == 2 &&
-            <Typography variant="h1"> Insert Right Component Here</Typography>
+          <div />
           }
         </Grid>
     </Grid>

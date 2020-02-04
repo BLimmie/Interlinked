@@ -110,9 +110,10 @@ type Session struct {
 	CreatedTime  int64
 	Patient      UserRef
 	Provider     UserRef
-	TextMetrics  []TextMetrics
-	ImageMetrics []FrameMetrics
-	Summary      map[string]interface{}
+	TextMetrics  []TextMetrics  `bson:"text_metrics"`
+	ImageMetrics []FrameMetrics `bson:"frame_metrics"`
+
+	Summary map[string]interface{}
 }
 
 // BlankSession for inserting new document with random id rather than our own
