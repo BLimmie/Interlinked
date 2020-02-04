@@ -69,19 +69,19 @@ type TimestampMetrics struct {
 	Sentiment     float32
 	ImageFilename string
 	Emotion       map[string]string
-	AU            map[string]float32
+	AU            map[string]float64
 }
 
 type TextMetrics struct {
 	Time      int64
 	Text      string
-	Sentiment float32
+	Sentiment float64
 }
 type FrameMetrics struct {
 	Time          int64
 	ImageFilename string
 	Emotion       map[string]string
-	AU            map[string]float32
+	AU            map[string]float64
 }
 type LoginHandler struct {
 	CurrentTokens map[string]UserCache

@@ -69,7 +69,7 @@ func TextSentiment(text string) (float32, error) {
 	return sentiment.DocumentSentiment.Score, nil
 }
 
-func ImageAU(imgFilename string, outputDirectory string) (map[string]float32, error){
+func ImageAU(imgFilename string, outputDirectory string) (map[string]float64, error){
 	cmd := exec.Command(path.Join(os.Getenv("OPENFACE_DIR"),"FaceLandmarkImg.exe"), "-f", imgFilename, "-out_dir", outputDirectory, "-aus")
 
 	err := RunCommand(*cmd)
@@ -89,14 +89,14 @@ func ImageAU(imgFilename string, outputDirectory string) (map[string]float32, er
 		return nil, err
 	}
 	firstResult, err := r.Read()
-	result := make(map[string]float32)
+	result := make(map[string]float64)
 	for i := 0; i < len(head); i++ {
 		val, err := strconv.ParseFloat(strings.TrimSpace(firstResult[i]), 32)
 		if err != nil {
 			return nil, err
 		}
 		if in(strings.TrimSpace(head[i]), auLabels) {
-			result[auLabels[strings.TrimSpace(head[i])]] = float32(val)
+			result[auLabels[strings.TrimSpace(head[i])]] = float64(val)
 		}
 	}
 

@@ -7,10 +7,10 @@ import (
 	"time"
 )
 
-var AUTHRESHOLD float32 = 3.75
+var AUTHRESHOLD = 3.75
 
 func AggregatorFromSession(session *Session) (*Aggregator, error) {
-	defaultAU := make(map[string]float32)
+	defaultAU := make(map[string]float64)
 	for _, label := range auLabels {
 		defaultAU[label] = 0
 	}
@@ -18,25 +18,25 @@ func AggregatorFromSession(session *Session) (*Aggregator, error) {
 		session:     session,
 		conclusions: make(map[string]func(session *Session) (interface{}, error)),
 	}
-	// session.TextMetrics = append([]TextMetrics{
-	// 	{
-	// 		Time:      session.CreatedTime,
-	// 		Text:      "",
-	// 		Sentiment: 0,
-	// 	}}, session.TextMetrics...)
-	// session.ImageMetrics = append([]FrameMetrics{
-	// 	{
-	// 		Time:          session.CreatedTime,
-	// 		ImageFilename: "",
-	// 		Emotion: map[string]string{
-	// 			"joy":      "NOT_LIKELY",
-	// 			"sorrow":   "NOT_LIKELY",
-	// 			"anger":    "NOT_LIKELY",
-	// 			"surprise": "NOT_LIKELY",
-	// 		},
-	// 		AU: defaultAU,
-	// 	},
-	// }, session.ImageMetrics...)
+	session.TextMetrics = append([]TextMetrics{
+		{
+			Time:      session.CreatedTime,
+			Text:      "",
+			Sentiment: 0,
+		}}, session.TextMetrics...)
+	session.ImageMetrics = append([]FrameMetrics{
+		{
+			Time:          session.CreatedTime,
+			ImageFilename: "",
+			Emotion: map[string]string{
+				"joy":      "NOT_LIKELY",
+				"sorrow":   "NOT_LIKELY",
+				"anger":    "NOT_LIKELY",
+				"surprise": "NOT_LIKELY",
+			},
+			AU: defaultAU,
+		},
+	}, session.ImageMetrics...)
 	sort.Slice(session.TextMetrics, func(i, j int) bool {
 		t1 := timeFromInt(session.TextMetrics[i].Time)
 		t2 := timeFromInt(session.TextMetrics[j].Time)
@@ -57,7 +57,7 @@ func (agg *Aggregator) init() {
 	agg.conclusions["Percent in Facial Emotion over last 10 seconds"] = emotionOverTime_RunningAggregate
 	agg.conclusions["Text sentiment over last 10 seconds"] = sentimentOverTime_RunningAggregate
 	agg.conclusions["AU Anomalies"] = condensedAU
-	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
+//	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
 }
 
 func (agg *Aggregator) Run() (interface{}, error) {
@@ -76,12 +76,12 @@ func (agg *Aggregator) Run() (interface{}, error) {
 }
 
 func isTextPositive(session *Session) (interface{}, error) {
-	var sum float32
+	var sum float64
 	for _, m := range session.TextMetrics {
 		sum += m.Sentiment
 	}
-	return map[string]float32{
-		"AvgTextSentiment": sum / float32(len(session.TextMetrics)),
+	return map[string]float64{
+		"AvgTextSentiment": sum / float64(len(session.TextMetrics)),
 	}, nil
 }
 

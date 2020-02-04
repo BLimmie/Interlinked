@@ -35,7 +35,7 @@ func submitSentimentText(c *gin.Context) {
 		return
 	}
 	result := <-resChan
-	res, err := result.Result.(float32), result.Err
+	res, err := result.Result.(float64), result.Err
 	if err != nil {
 		c.String(500, err.Error())
 		return
@@ -64,7 +64,7 @@ func submitSentimentText(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	c.JSON(200, map[string]float32{"sentiment": res})
+	c.JSON(200, map[string]float64{"sentiment": res})
 }
 
 func getSentimentText(c *gin.Context) {
@@ -168,7 +168,7 @@ func submitSentimentFrame(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	res2 := result.Result.(map[string]float32)
+	res2 := result.Result.(map[string]float64)
 	output["au"] = res2
 
 	metric := app.FrameMetrics{
