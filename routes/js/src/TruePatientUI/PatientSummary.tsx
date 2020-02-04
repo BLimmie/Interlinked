@@ -45,6 +45,7 @@ interface PageState {
     emotionoptions: any;
     textoptions: any;
     auoptions: any;
+    avgtextoptions: any;
 }
 
 const styles = (_: Theme) => createStyles({
@@ -140,7 +141,6 @@ class PatientSummary extends React.Component<PageProps, PageState> {
     private search_term: string = '';
     private id: string = sessionStorage.getItem('id')!
     private listRef: RefObject<FixedSizeList> = React.createRef();
-    private chartRef: RefObject<Line> = React.createRef();
   
     constructor(props: PageProps) {
         super(props);
@@ -184,7 +184,8 @@ class PatientSummary extends React.Component<PageProps, PageState> {
           // },
           emotionoptions: {},
           textoptions: {},
-          auoptions: {}
+          auoptions: {},
+          avgtextoptions: {}
         }
 
         this.createdTime = ''
@@ -201,6 +202,7 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         this.alter_transcript = this.alter_transcript.bind(this);
         this.data_search = this.data_search.bind(this);
         this.transcript_search = this.transcript_search.bind(this);
+        this.render_left = this.render_left.bind(this);
         this.getSessions()
 
         this.setState({
@@ -250,13 +252,14 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         //       console.log(metrics)
         //     } 
         // })
+        let avgtext = Math.round((0.63 + 1) / 2.0 * 40)
         this.setState({
           emotiondata: {
             labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
             datasets: [
               {
                 label: 'Test',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
+                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13],
               }
             ],
           },
@@ -277,6 +280,26 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                 data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
               }
             ],
+          },
+          avgtextoptions: { maintainAspectRatio: false,
+            annotation: {
+              drawTime: 'afterDatasetsDraw',
+              annotations: [{
+                  type: 'line',
+                  mode: 'vertical',
+                  scaleID: 'x-axis-0',
+                  value: avgtext,
+                  borderColor: 'red',
+                  borderWidth: 2,
+              }]
+            },
+            scales: {
+              yAxes: [{
+                ticks: {
+                    display: false
+                }
+              }]
+          }
           },
         })
 
@@ -424,6 +447,41 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         );
     }
 
+    render_left(props: ListChildComponentProps) {
+        const { index, style } = props;
+      
+        if (index === 0) {
+          return (
+                <Line 
+                      data={this.state.emotiondata}
+                      options={this.state.emotionoptions}
+                      width={400}
+                      height={380}
+                      getElementAtEvent={this.alter_transcript(0)} />)
+
+        } else if (index === 1) {
+          return (
+                <Line 
+                      data={{labels: Array.from(Array(41).keys()).map((ii) => {
+                        let temp = ((ii / 40.0 * 2) - 1).toFixed(2)
+                        return temp.toString()
+                      }), datasets: [{}]}}
+                      options={this.state.avgtextoptions}
+                      width={400}
+                      height={125} />)
+        } else {
+          return (
+                <Line 
+                      data={this.state.textdata}
+                      options={this.state.textoptions}
+                      width={400}
+                      height={380}
+                      getElementAtEvent={this.alter_transcript(1)} />
+
+          )
+        }
+    }
+
     getSessions() {
         httpCall('POST', "http://localhost:8080/sessions/" + this.id, [], null, (result:any, rr:number) => {
             if (rr === 200) {
@@ -539,32 +597,12 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                       </Grid>
                     </Grid>
 
-                      {/* <Grid item>
-                        <Line ref={this.chartRef}
-                              data={this.state.data}
-                              options={this.state.options}
-                              width={400}
-                              height={380}
-                              getElementAtEvent={this.alter_transcript} /> 
-                      </Grid> */}
-
                   </Grid>
                   <Grid item xs={4} id="MiddleComponent">  
                       <MultiButtonController leftComponent={
-                        <Grid item>
-                        <Line ref={this.chartRef}
-                              data={this.state.emotiondata}
-                              options={this.state.emotionoptions}
-                              width={400}
-                              height={380}
-                              getElementAtEvent={this.alter_transcript(0)} />
-                        <Line 
-                              data={this.state.textdata}
-                              options={this.state.textoptions}
-                              width={400}
-                              height={380}
-                              getElementAtEvent={this.alter_transcript(1)} />
-                        </Grid>
+                        <FixedSizeList itemData={this.state} height={487} width={"25vw"} itemSize={380} itemCount={2}>
+                          {this.render_left}
+                        </FixedSizeList>
                         }
                         />
                   </Grid>

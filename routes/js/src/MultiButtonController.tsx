@@ -40,7 +40,6 @@ export const MultiButtonController: React.SFC<MultiButtonControllerProps> = (pro
         </Grid>
         <Grid item xs={12}>
           {componentNum == 0 &&
-            // <Typography variant="h1"> Insert Left Component Here</Typography>
             props.leftComponent
           }
           {componentNum == 1 &&
