@@ -22,6 +22,7 @@ interface PageProps extends WithStyles<typeof styles>{
 
 interface PageState {
     current_selection: number;
+    component_num: number;
     sessions: Session[];
     transcript: TranscriptLine[];
     emotiondata: ChartData;
@@ -89,6 +90,10 @@ const styles = (_: Theme) => createStyles({
     width: "60vw",
     min_height: "5vh",
     height: "5vh"
+  },
+  buttonStyle :{
+    background: "#b5b3bc",
+    marginRight: "8px"
   }
 })
 
@@ -131,6 +136,7 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         super(props);
         this.state = {
           current_selection: props.current_selection,
+          component_num: 0,
           sessions: [],
           // transcript: [],
           transcript: [
@@ -240,6 +246,9 @@ class PatientSummary extends React.Component<PageProps, PageState> {
               let joy: number[] = []
               let sorrow: number[] = []
               let surprise: number[] = []
+              let auMetrics: Array<number>[] = []
+              let auTypes = ["Blink", "BrowLowerer", "CheekRaiser", "ChinRaiser", "Dimpler", "InnerBrowRaiser", "JawDrop", "LidTightener", "LipCornerDepressor", "LipCornerPuller", "LipStretcher", "LipTightener", "LipsPart", "NoseWrinkler", "OuterBrowRaiser", "UpperLidRaiser", "UpperLipRaiser"]
+              for (let ii = 0; ii < 17; ii++) { auMetrics.push(new Array<number>()) }
               let baseTime = 0
               let convStringToProb = (ss: string) => {
                 if (ss === "VERY_UNLIKELY") {
@@ -266,7 +275,19 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                 joy.push(convStringToProb(emotion["joy"]))
                 sorrow.push(convStringToProb(emotion["sorrow"]))
                 surprise.push(convStringToProb(emotion["surprise"]))
+                for (let ii = 0; ii < auMetrics.length; ii++) {
+                  auMetrics[ii].push(element["AU"][auTypes[ii]])
+                }
               });
+              let auData = []
+              for (let ii = 0; ii < auMetrics.length; ii++) {
+                auData.push({
+                  label: auTypes[ii],
+                  data: auMetrics[ii],
+                  hidden: ii >= 5,
+                })
+              }
+
               let textMetrics: [] = metrics["Text Metrics"]
               let textLabels: string[] = []
               let transcript: TranscriptLine[] = []
@@ -286,18 +307,22 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                     {
                       label: "Anger",
                       data: anger,
+                      borderColor: "red",
                     },
                     {
                       label: "Joy",
                       data: joy,
+                      borderColor: "yellow",
                     },
                     {
                       label: "Sorrow",
                       data: sorrow,
+                      borderColor: "blue",
                     },
                     {
                       label: "Surprise",
                       data: surprise,
+                      borderColor: "green",
                     },
                   ]
                 },
@@ -310,7 +335,11 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                     }
                   ]
                 },
-                avgtextoptions: { maintainAspectRatio: false,
+                audata: {
+                  labels: emotionLabels,
+                  datasets: auData
+                },
+                avgtextoptions: { 
                   annotation: {
                     drawTime: 'afterDatasetsDraw',
                     annotations: [{
@@ -334,56 +363,6 @@ class PatientSummary extends React.Component<PageProps, PageState> {
               )
             } 
         })
-        // let avgtext = Math.round((0.63 + 1) / 2.0 * 40)
-        // this.setState({
-        //   emotiondata: {
-        //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
-        //     datasets: [
-        //       {
-        //         label: 'Test',
-        //         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13],
-        //       }
-        //     ],
-        //   },
-        //   textdata: {
-        //     labels: ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "22", "23"],
-        //     datasets: [
-        //       {
-        //         label: 'Test',
-        //         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
-        //       }
-        //     ],
-        //   },
-        //   audata: {
-        //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"],
-        //     datasets: [
-        //       {
-        //         label: 'Test',
-        //         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
-        //       }
-        //     ],
-        //   },
-        //   avgtextoptions: { maintainAspectRatio: false,
-        //     annotation: {
-        //       drawTime: 'afterDatasetsDraw',
-        //       annotations: [{
-        //           type: 'line',
-        //           mode: 'vertical',
-        //           scaleID: 'x-axis-0',
-        //           value: avgtext,
-        //           borderColor: 'red',
-        //           borderWidth: 2,
-        //       }]
-        //     },
-        //     scales: {
-        //       yAxes: [{
-        //         ticks: {
-        //             display: false
-        //         }
-        //       }]
-        //   }
-        //   },
-        // })
 
         return null
     }
@@ -427,7 +406,7 @@ class PatientSummary extends React.Component<PageProps, PageState> {
           }
           let index = this.transcript_search(0, this.state.transcript.length - 1, target)
           this.listRef.current?.scrollToItem(index)
-          this.setState({emotionoptions: { maintainAspectRatio: false,
+          this.setState({emotionoptions: { 
                     annotation: {
                       drawTime: 'afterDatasetsDraw',
                       annotations: [{
@@ -440,7 +419,7 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                       }]
                     }
                 },
-                    textoptions: { maintainAspectRatio: false,
+                    textoptions: { 
                       annotation: {
                         drawTime: 'afterDatasetsDraw',
                         annotations: [{
@@ -453,7 +432,7 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                         }]
                       }
                     },
-                    auoptions: { maintainAspectRatio: false,
+                    auoptions: { 
                       annotation: {
                         drawTime: 'afterDatasetsDraw',
                         annotations: [{
@@ -537,7 +516,7 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                 <Line 
                       data={this.state.emotiondata}
                       options={this.state.emotionoptions}
-                      width={400}
+                      // width={400}
                       height={380}
                       getElementAtEvent={this.alter_transcript(0)} />)
 
@@ -549,16 +528,27 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                         return temp.toString()
                       }), datasets: [{}]}}
                       options={this.state.avgtextoptions}
-                      width={400}
-                      height={125} />)
-        } else {
+                      // width={400}
+                      height={125} 
+                      />)
+        } else if (index === 2) {
           return (
                 <Line 
                       data={this.state.textdata}
                       options={this.state.textoptions}
-                      width={400}
+                      // width={400}
                       height={380}
                       getElementAtEvent={this.alter_transcript(1)} />
+
+          )
+        } else {
+          return (
+                <Line 
+                      data={this.state.audata}
+                      options={this.state.emotionoptions}
+                      // width={400}
+                      height={380}
+                      getElementAtEvent={this.alter_transcript(2)} />
 
           )
         }
@@ -681,17 +671,94 @@ class PatientSummary extends React.Component<PageProps, PageState> {
                   </Grid>
                   <Grid item xs={4} id="MiddleComponent">  
                       <MultiButtonController leftComponent={
-                        <VariableSizeList itemData={this.state} height={487} width={"25vw"} itemSize={(index) => {
-                          if (index === 0 || index === 2) {
-                            return 380
-                          } else {
-                            return 125
+                        (<div style={{overflow: 'auto', height: 487, display: 'block', maxWidth: 380}}>
+                          <Line 
+                                data={this.state.emotiondata}
+                                options={this.state.emotionoptions}
+                                // width={400}
+                                height={380}
+                                getElementAtEvent={this.alter_transcript(0)} />
+                          <Line 
+                                data={{labels: Array.from(Array(41).keys()).map((ii) => {
+                                  let temp = ((ii / 40.0 * 2) - 1).toFixed(2)
+                                  return temp.toString()
+                                }), datasets: [{}]}}
+                                options={this.state.avgtextoptions}
+                                // width={400}
+                                height={125} 
+                                />
+                          <Line 
+                                data={this.state.textdata}
+                                options={this.state.textoptions}
+                                // width={400}
+                                height={380}
+                                getElementAtEvent={this.alter_transcript(1)} />
+                          <Line 
+                                data={this.state.audata}
+                                options={this.state.emotionoptions}
+                                // width={400}
+                                height={380}
+                                getElementAtEvent={this.alter_transcript(2)} />
+                        </div>)}
+                       />
+                    {/* <Grid container>
+                        <Grid item xs={4}>
+                          <Button className={this.props.classes.buttonStyle} onClick={() => {this.setState({component_num: 0,
+                          avgtextoptions: this.state.avgtextoptions,
+                          })
+                        }}>
+                            Left Component
+                          </Button>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Button className={this.props.classes.buttonStyle} onClick={() => {this.setState({component_num: 1})}}>
+                            Middle Component
+                          </Button>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Button className={this.props.classes.buttonStyle} onClick={() => {this.setState({component_num: 2})}}>
+                            Right Component
+                          </Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <div>
+                          {this.state.component_num == 0 &&
+                            (<div style={{overflow: 'auto', height: 487, display: 'block', maxWidth: 380}}>
+                              <Line 
+                                    data={this.state.emotiondata}
+                                    options={this.state.emotionoptions}
+                                    // width={400}
+                                    height={380}
+                                    getElementAtEvent={this.alter_transcript(0)} />
+                              <Line 
+                                    data={{labels: Array.from(Array(41).keys()).map((ii) => {
+                                      let temp = ((ii / 40.0 * 2) - 1).toFixed(2)
+                                      return temp.toString()
+                                    }), datasets: [{}]}}
+                                    options={this.state.avgtextoptions}
+                                    // width={400}
+                                    height={125} 
+                                    />
+                              <Line 
+                                    data={this.state.textdata}
+                                    options={this.state.textoptions}
+                                    // width={400}
+                                    height={380}
+                                    getElementAtEvent={this.alter_transcript(1)} />
+                              <Line 
+                                    data={this.state.audata}
+                                    options={this.state.emotionoptions}
+                                    // width={400}
+                                    height={380}
+                                    getElementAtEvent={this.alter_transcript(2)} />
+                            </div>)}
+                          {this.state.component_num == 1 && <div /> 
                           }
-                        }} itemCount={3}>
-                          {this.render_left}
-                        </VariableSizeList>
-                        }
-                        />
+                          {this.state.component_num == 2 && <div />
+                          }
+                          </div> */}
+                        {/* </Grid> */}
+                    {/* </Grid> */}
                   </Grid>
                   <Grid item xs={4}id="RightComponent">
                           <div className={this.props.classes.transcript_list}>
