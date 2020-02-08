@@ -1,18 +1,55 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core'
 
-// 0: none
-// 1: happiness (yellow)
-// 2: sadness (blue)
-// 3: anger (red)
-// 4: fear (purple)
-// 5: disgust (green)
-// 6: surprise (orange)
-// Google only gives positive or negative, but can be narrowed down to one of
-// 3 choices by analyzing owrds present (definitions mostly)
-// Like, "dying" would probably be sad, and "not dying" would be happy
-// Maybe later, just do 0 (none, primary) 1 (positive, secondary) 2 (negative, error) for now
+const positive_theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#959871',
+    },
+    secondary: {
+      main: '#b6bf6a'
+    },
+    error: {
+      main: '#ddec61'
+    }
+  },
+  typography: {
+    fontSize: 18,
+  }
+});
+
+const negative_theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#6c6a95',
+    },
+    secondary: {
+      main: '#6a69ab'
+    },
+    error: {
+      main: '#6868c6'
+    }
+  },
+  typography: {
+    fontSize: 18,
+  }
+});
+
+
+
+// 0: neutral (-0.1, 0, 0.1) (primary, default theme)
+
+// 1: slightly positive (0.2, 0.3, 0.4) (primary, positive theme)
+// 11: positive (0.5, 0.6, 0.7) (secondary, positive theme)
+// 111: very positive (0.8, 0.9, 1) (error, positive theme)
+
+// 2: slightly negative (-0.2, -0.3, -0.4) (primary, negative theme)
+// 22: negative (-0.5, -0.6, -0.7) (secondary, negative theme)
+// 222: very negative (-0.8, -0.9, -1) (error, negative theme)
+
+
 
 var globalThis = window
 function Neutral0() {
@@ -41,56 +78,201 @@ function Neutral0() {
     );
   }
   
-  function Positive0() {
+  function PositiveS0() {
     return (
-      <Typography variant="body1" color="secondary" align="left" gutterBottom>
-        {"■ " + display_words[globalThis.point_in_transcript]}
-        {" "}
-      </Typography>
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="primary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
     );
   }
   
-  function Positive1() {
+  function PositiveS1() {
     return (
-      <Typography variant="body1" color="secondary" align="left" gutterBottom>
-        {"■ " + display_words[globalThis.point_in_transcript + 1]}
-        {" "}
-      </Typography>
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="primary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 1]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
     );
   }
   
-  function Positive2() {
+  function PositiveS2() {
     return (
-      <Typography variant="body1" color="secondary" align="left" gutterBottom>
-        {"■ " + display_words[globalThis.point_in_transcript + 2]}
-      </Typography>
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="primary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 2]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+
+  function PositiveM0() {
+    return (
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="secondary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
     );
   }
   
-  
-  function Negative0() {
+  function PositiveM1() {
     return (
-      <Typography variant="body1" color="error" align="left" gutterBottom>
-        {"■ " + display_words[globalThis.point_in_transcript]}
-        {" "}
-      </Typography>
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="secondary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 1]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
     );
   }
   
-  function Negative1() {
+  function PositiveM2() {
     return (
-      <Typography variant="body1" color="error" align="left" gutterBottom>
-        {"■ " + display_words[globalThis.point_in_transcript + 1]}
-        {" "}
-      </Typography>
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="secondary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 2]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+
+  function PositiveV0() {
+    return (
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="error" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
     );
   }
   
-  function Negative2() {
+  function PositiveV1() {
     return (
-      <Typography variant="body1" color="error" align="left" gutterBottom>
-        {"■ " + display_words[globalThis.point_in_transcript + 2]}
-      </Typography>
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="error" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 1]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function PositiveV2() {
+    return (
+      <ThemeProvider theme={positive_theme}>
+        <Typography variant="body1" color="error" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 2]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function NegativeS0() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="primary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function NegativeS1() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="primary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 1]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function NegativeS2() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="primary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 2]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+
+  function NegativeM0() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="secondary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function NegativeM1() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="secondary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 1]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function NegativeM2() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="secondary" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 2]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+
+  function NegativeV0() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="error" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function NegativeV1() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="error" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 1]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
+    );
+  }
+  
+  function NegativeV2() {
+    return (
+      <ThemeProvider theme={negative_theme}>
+        <Typography variant="body1" color="error" align="left" gutterBottom>
+          {"■ " + display_words[globalThis.point_in_transcript + 2]}
+          {" "}
+        </Typography>
+      </ThemeProvider>
     );
   }
   
@@ -117,7 +299,23 @@ export default function Speech() {
       if (sentiment[globalThis.point_in_transcript] === 1) {
         return (
           <Container maxWidth="lg">
-            <Positive0 />
+            <PositiveS0 />
+          </Container>
+        );
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 11) {
+        return (
+          <Container maxWidth="lg">
+            <PositiveM0 />
+          </Container>
+        );
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 111) {
+        return (
+          <Container maxWidth="lg">
+            <PositiveV0 />
           </Container>
         );
       }
@@ -125,7 +323,23 @@ export default function Speech() {
       if (sentiment[globalThis.point_in_transcript] === 2) {
         return (
           <Container maxWidth="lg">
-            <Negative0 />
+            <NegativeS0 />
+          </Container>
+        );
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 22) {
+        return (
+          <Container maxWidth="lg">
+            <NegativeM0 />
+          </Container>
+        );
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 222) {
+        return (
+          <Container maxWidth="lg">
+            <NegativeV0 />
           </Container>
         );
       }
@@ -154,7 +368,25 @@ export default function Speech() {
           return (
             <Container maxWidth="lg">
               <Neutral0 />
-              <Positive1 />
+              <PositiveS1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) {
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <PositiveM1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) {
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <PositiveV1 />
             </Container>
           );
         }
@@ -163,7 +395,25 @@ export default function Speech() {
           return (
             <Container maxWidth="lg">
               <Neutral0 />
-              <Negative1 />
+              <NegativeS1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) {
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <NegativeM1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) {
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <NegativeV1 />
             </Container>
           );
         }
@@ -179,11 +429,11 @@ export default function Speech() {
         }
       }
 
-      if (sentiment[globalThis.point_in_transcript] === 1) { 
+      if (sentiment[globalThis.point_in_transcript] === 1) {
         if (sentiment[globalThis.point_in_transcript + 1] === 0) {
           return (
             <Container maxWidth="lg">
-              <Positive0 />
+              <PositiveS0 />
               <Neutral1 />
             </Container>
           );
@@ -192,8 +442,26 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 1) {
           return (
             <Container maxWidth="lg">
-              <Positive0 />
-              <Positive1 />
+              <PositiveS0 />
+              <PositiveS1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveS0 />
+              <PositiveM1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveS0 />
+              <PositiveV1 />
             </Container>
           );
         }
@@ -201,8 +469,26 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 2) {
           return (
             <Container maxWidth="lg">
-              <Positive0 />
-              <Negative1 />
+              <PositiveS0 />
+              <NegativeS1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveS0 />
+              <NegativeM1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveS0 />
+              <NegativeV1 />
             </Container>
           );
         }
@@ -218,11 +504,11 @@ export default function Speech() {
         }
       }
 
-      if (sentiment[globalThis.point_in_transcript] === 2) { 
+      if (sentiment[globalThis.point_in_transcript] === 11) {
         if (sentiment[globalThis.point_in_transcript + 1] === 0) {
           return (
             <Container maxWidth="lg">
-              <Negative0 />
+              <PositiveM0 />
               <Neutral1 />
             </Container>
           );
@@ -231,8 +517,26 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 1) {
           return (
             <Container maxWidth="lg">
-              <Negative0 />
-              <Positive1 />
+              <PositiveM0 />
+              <PositiveS1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveM0 />
+              <PositiveM1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveM0 />
+              <PositiveV1 />
             </Container>
           );
         }
@@ -240,8 +544,326 @@ export default function Speech() {
         if (sentiment[globalThis.point_in_transcript + 1] === 2) {
           return (
             <Container maxWidth="lg">
-              <Negative0 />
-              <Negative1 />
+              <PositiveM0 />
+              <NegativeS1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveM0 />
+              <NegativeM1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveM0 />
+              <NegativeV1 />
+            </Container>
+          );
+        }
+
+        else {
+          //Should never happen
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 111) {
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveV0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveV0 />
+              <PositiveS1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveV0 />
+              <PositiveM1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveV0 />
+              <PositiveV1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveV0 />
+              <NegativeS1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveV0 />
+              <NegativeM1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) {
+          return (
+            <Container maxWidth="lg">
+              <PositiveV0 />
+              <NegativeV1 />
+            </Container>
+          );
+        }
+
+        else {
+          //Should never happen
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 2) {
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeS0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeS0 />
+              <PositiveS1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeS0 />
+              <PositiveM1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeS0 />
+              <PositiveV1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeS0 />
+              <NegativeS1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeS0 />
+              <NegativeM1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeS0 />
+              <NegativeV1 />
+            </Container>
+          );
+        }
+
+        else {
+          //Should never happen
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 22) {
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeM0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeM0 />
+              <PositiveS1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeM0 />
+              <PositiveM1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeM0 />
+              <PositiveV1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeM0 />
+              <NegativeS1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeM0 />
+              <NegativeM1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeM0 />
+              <NegativeV1 />
+            </Container>
+          );
+        }
+
+        else {
+          //Should never happen
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+      }
+
+      if (sentiment[globalThis.point_in_transcript] === 222) {
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeV0 />
+              <Neutral1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeV0 />
+              <PositiveS1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeV0 />
+              <PositiveM1 />
+            </Container>
+          );
+        }
+            
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeV0 />
+              <PositiveV1 />
+            </Container>
+          );
+        }
+    
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeV0 />
+              <NegativeS1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeV0 />
+              <NegativeM1 />
+            </Container>
+          );
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) {
+          return (
+            <Container maxWidth="lg">
+              <NegativeV0 />
+              <NegativeV1 />
             </Container>
           );
         }
@@ -286,7 +908,27 @@ export default function Speech() {
               <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
-                <Positive2 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -296,7 +938,27 @@ export default function Speech() {
               <Container maxWidth="lg">
                 <Neutral0 />
                 <Neutral1 />
-                <Negative2 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -318,7 +980,7 @@ export default function Speech() {
             return (
               <Container maxWidth="lg">
                 <Neutral0 />
-                <Positive1 />
+                <PositiveS1 />
                 <Neutral2 />
               </Container>
             );
@@ -328,8 +990,28 @@ export default function Speech() {
             return (
               <Container maxWidth="lg">
                 <Neutral0 />
-                <Positive1 />
-                <Positive2 />
+                <PositiveS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveS1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -338,8 +1020,28 @@ export default function Speech() {
             return (
               <Container maxWidth="lg">
                 <Neutral0 />
-                <Positive1 />
-                <Negative2 />
+                <PositiveS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveS1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -355,13 +1057,179 @@ export default function Speech() {
             );
           }
         }
-    
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <PositiveV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
         if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
               <Container maxWidth="lg">
                 <Neutral0 />
-                <Negative1 />
+                <NegativeS1 />
                 <Neutral2 />
               </Container>
             );
@@ -371,8 +1239,28 @@ export default function Speech() {
             return (
               <Container maxWidth="lg">
                 <Neutral0 />
-                <Negative1 />
-                <Positive2 />
+                <NegativeS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeS1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -381,8 +1269,28 @@ export default function Speech() {
             return (
               <Container maxWidth="lg">
                 <Neutral0 />
-                <Negative1 />
-                <Negative2 />
+                <NegativeS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeS1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -399,8 +1307,174 @@ export default function Speech() {
           }
         }
 
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <NegativeV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+        
         else {
-          //Should never happen
+          
           return (
             <Container maxWidth="lg">
               <Neutral0 />
@@ -410,14 +1484,14 @@ export default function Speech() {
           );
         }
       }
-      // First 9 done
+      // First 49 done
 
       if (sentiment[globalThis.point_in_transcript] === 1) { 
         if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
+                <PositiveS0 />
                 <Neutral1 />
                 <Neutral2 />
               </Container>
@@ -427,9 +1501,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
+                <PositiveS0 />
                 <Neutral1 />
-                <Positive2 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <Neutral1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <Neutral1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -437,9 +1531,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
+                <PositiveS0 />
                 <Neutral1 />
-                <Negative2 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <Neutral1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <Neutral1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -460,8 +1574,8 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
-                <Positive1 />
+                <PositiveS0 />
+                <PositiveS1 />
                 <Neutral2 />
               </Container>
             );
@@ -470,9 +1584,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
-                <Positive1 />
-                <Positive2 />
+                <PositiveS0 />
+                <PositiveS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveS1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -480,9 +1614,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
-                <Positive1 />
-                <Negative2 />
+                <PositiveS0 />
+                <PositiveS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveS1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -498,13 +1652,179 @@ export default function Speech() {
             );
           }
         }
-    
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <PositiveV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
         if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
-                <Negative1 />
+                <PositiveS0 />
+                <NegativeS1 />
                 <Neutral2 />
               </Container>
             );
@@ -513,9 +1833,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
-                <Negative1 />
-                <Positive2 />
+                <PositiveS0 />
+                <NegativeS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeS1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -523,9 +1863,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
               <Container maxWidth="lg">
-                <Positive0 />
-                <Negative1 />
-                <Negative2 />
+                <PositiveS0 />
+                <NegativeS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeS1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -542,8 +1902,174 @@ export default function Speech() {
           }
         }
 
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveS0 />
+                <NegativeV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+        
         else {
-          //Should never happen
+          
           return (
             <Container maxWidth="lg">
               <Neutral0 />
@@ -553,14 +2079,1204 @@ export default function Speech() {
           );
         }
       }
-      // Second 9 done
+      // Second 49 done
+
+      if (sentiment[globalThis.point_in_transcript] === 11) { 
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <Neutral1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <Neutral1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <Neutral1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <Neutral1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <Neutral1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <Neutral1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <PositiveV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveM0 />
+                <NegativeV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+        
+        else {
+          
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+              <Neutral2 />
+            </Container>
+          );
+        }
+      }
+      // Third 49 done
+
+      if (sentiment[globalThis.point_in_transcript] === 111) { 
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <Neutral1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <Neutral1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <Neutral1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <Neutral1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <Neutral1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <Neutral1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <PositiveV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <PositiveV0 />
+                <NegativeV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+        
+        else {
+          
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+              <Neutral2 />
+            </Container>
+          );
+        }
+      }
+      // Fourth 49 done
 
       if (sentiment[globalThis.point_in_transcript] === 2) { 
         if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
+                <NegativeS0 />
                 <Neutral1 />
                 <Neutral2 />
               </Container>
@@ -570,9 +3286,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
+                <NegativeS0 />
                 <Neutral1 />
-                <Positive2 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <Neutral1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <Neutral1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -580,9 +3316,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
+                <NegativeS0 />
                 <Neutral1 />
-                <Negative2 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <Neutral1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <Neutral1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -603,8 +3359,8 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
-                <Positive1 />
+                <NegativeS0 />
+                <PositiveS1 />
                 <Neutral2 />
               </Container>
             );
@@ -613,9 +3369,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
-                <Positive1 />
-                <Positive2 />
+                <NegativeS0 />
+                <PositiveS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveS1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -623,9 +3399,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
-                <Positive1 />
-                <Negative2 />
+                <NegativeS0 />
+                <PositiveS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveS1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -641,13 +3437,179 @@ export default function Speech() {
             );
           }
         }
-    
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <PositiveV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
         if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
           if (sentiment[globalThis.point_in_transcript + 2] === 0) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
-                <Negative1 />
+                <NegativeS0 />
+                <NegativeS1 />
                 <Neutral2 />
               </Container>
             );
@@ -656,9 +3618,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 1) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
-                <Negative1 />
-                <Positive2 />
+                <NegativeS0 />
+                <NegativeS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeS1 />
+                <PositiveV2 />
               </Container>
             );
           }
@@ -666,9 +3648,29 @@ export default function Speech() {
           if (sentiment[globalThis.point_in_transcript + 2] === 2) {
             return (
               <Container maxWidth="lg">
-                <Negative0 />
-                <Negative1 />
-                <Negative2 />
+                <NegativeS0 />
+                <NegativeS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeS1 />
+                <NegativeV2 />
               </Container>
             );
           }
@@ -685,8 +3687,174 @@ export default function Speech() {
           }
         }
 
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeS0 />
+                <NegativeV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+        
         else {
-          //Should never happen
+          
           return (
             <Container maxWidth="lg">
               <Neutral0 />
@@ -696,7 +3864,1197 @@ export default function Speech() {
           );
         }
       }
-      // Last 9 done
+      // Fifth 49 done
+
+      if (sentiment[globalThis.point_in_transcript] === 22) { 
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <Neutral1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <Neutral1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <Neutral1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <Neutral1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <Neutral1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <Neutral1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <PositiveV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeM0 />
+                <NegativeV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+        
+        else {
+          
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+              <Neutral2 />
+            </Container>
+          );
+        }
+      }
+      // Sixth 49 done
+
+      if (sentiment[globalThis.point_in_transcript] === 222) { 
+        if (sentiment[globalThis.point_in_transcript + 1] === 0) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <Neutral1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <Neutral1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <Neutral1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <Neutral1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <Neutral1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <Neutral1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 1) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 11) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 111) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <PositiveV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 2) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeS1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeS1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeS1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeS1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeS1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeS1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeS1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 22) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeM1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeM1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeM1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeM1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeM1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeM1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeM1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+
+        if (sentiment[globalThis.point_in_transcript + 1] === 222) { 
+          if (sentiment[globalThis.point_in_transcript + 2] === 0) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeV1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 1) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeV1 />
+                <PositiveS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 11) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeV1 />
+                <PositiveM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 111) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeV1 />
+                <PositiveV2 />
+              </Container>
+            );
+          }
+      
+          if (sentiment[globalThis.point_in_transcript + 2] === 2) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeV1 />
+                <NegativeS2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 22) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeV1 />
+                <NegativeM2 />
+              </Container>
+            );
+          }
+
+          if (sentiment[globalThis.point_in_transcript + 2] === 222) {
+            return (
+              <Container maxWidth="lg">
+                <NegativeV0 />
+                <NegativeV1 />
+                <NegativeV2 />
+              </Container>
+            );
+          }
+
+          else {
+            //Should never happen
+            return (
+              <Container maxWidth="lg">
+                <Neutral0 />
+                <Neutral1 />
+                <Neutral2 />
+              </Container>
+            );
+          }
+        }
+        
+        else {
+          
+          return (
+            <Container maxWidth="lg">
+              <Neutral0 />
+              <Neutral1 />
+              <Neutral2 />
+            </Container>
+          );
+        }
+      }
+      // Seventh and Last 49 done
   
       // No sentiment labels
       else {
