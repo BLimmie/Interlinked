@@ -7,16 +7,24 @@ import { FormControl, FormControlLabel, Input, InputLabel, Button, Switch } from
 import { Snackbar } from '@material-ui/core'
 import { Box } from '@material-ui/core'
 import { httpCall } from './funcs'
+import LogInButtonImage from './ButtonAssets/LogIn.png'
+import SignUpButtonImage from './ButtonAssets/SignUp.png'
 
-import Image from './Images/background_login_16-9.png'
+import Image from './TrueImages/background_LogIn_16-9.png'
 
 const styles = (_: Theme) => createStyles({
   root: {
     flexGrow: 1,
-    background: '#cdddf7'
+    background: '#dddce7'
+  },
+  button_background: {
+    backgroundSize: 'cover'
   },
   button: {
-    background: "#ffffff"
+    min_width: "15vw",
+    width: "15vw",
+    min_height: "4vh",
+    height: "4vh"
   },
   background: {
     height: "100vh",
@@ -82,7 +90,7 @@ class Login extends React.Component<LoginProps, LoginState> {
               <InputLabel>Username</InputLabel>
               <Input
                 id='username'
-                placeholder='username'
+                placeholder='Username'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   this.setState({username: e.target.value})}
               />
@@ -96,7 +104,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   this.setState({password: e.target.value})}
                 type='password'
                 id='password'
-                placeholder='password'/>
+                placeholder='Password'/>
             </FormControl>
           </Grid>
           <Grid item>
@@ -111,17 +119,19 @@ class Login extends React.Component<LoginProps, LoginState> {
                 label={this.state.isPatient ? "Patient" : "Provider"}
             />
           </Grid>
+          <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${LogInButtonImage})` }}>
           <Button
             className={this.props.classes.button}
-            variant='contained'
             onClick={ this.authenticate }
-          >Log In</Button>
+          ></Button>
+          </Box>
           <Grid item xs={12}></Grid>
+          <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${SignUpButtonImage})` }}>
           <Button
             className={this.props.classes.button}
-            variant='contained'
             onClick={ () => this.createAccount(this) }
-          >Create Account</Button>
+          ></Button>
+          </Box>
           <Snackbar open={this.state.loginOnceFailed}
             message='invalid credentials' />
         </Grid>
@@ -148,6 +158,7 @@ class Login extends React.Component<LoginProps, LoginState> {
         }
       }
       httpCall('POST', "http://localhost:8080/login?userType=" + (this.state.isPatient ? "patient" : "provider"), [['Authorization', 'Basic ' + btoa(this.state.username + ":" + this.state.password)]], null, cb)
+
     }
   }
 

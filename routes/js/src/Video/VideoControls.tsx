@@ -92,7 +92,7 @@ export default function VideoControls(props:VideoControlsProps)  {
     >
         <Grid item >
           { avState.audio &&
-            <Box className={classes.button_box} bgcolor="#dddce7">
+            <Box className={classes.button_box} bgcolor="#cac7d6">
               <IconButton className={classes.padding} onClick={() => setMic(false)} >
                 <MicSharp
                   data-testid={"mic-on-icon"}
@@ -128,7 +128,7 @@ export default function VideoControls(props:VideoControlsProps)  {
               </Box>
             }
             { avState.video &&
-              <Box className={classes.button_box} bgcolor="#dddce7">
+              <Box className={classes.button_box} bgcolor="#cac7d6">
                 <IconButton
                   className={classes.padding}
                   onClick={() => setVidFeed(false)}
@@ -143,7 +143,7 @@ export default function VideoControls(props:VideoControlsProps)  {
         </Grid>
 
         <Grid item>
-          <Box className={classes.button_box} bgcolor="#d26363">
+          <Box className={classes.button_box} bgcolor="#cac7d6">
             <Link to={{
               pathname:'/'
             }}>

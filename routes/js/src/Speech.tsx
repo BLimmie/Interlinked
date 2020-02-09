@@ -6,13 +6,13 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core'
 const positive_theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#959871',
+      main: '#747450',
     },
     secondary: {
-      main: '#b6bf6a'
+      main: '#949547'
     },
     error: {
-      main: '#ddec61'
+      main: '#b9bb3b'
     }
   },
   typography: {
