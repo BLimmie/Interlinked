@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     height: "7vh"
   },
   buttonStyle :{
-    background: "#b5b3bc",
+    background: "#cac7d6",
     marginRight: "8px"
   }
 })
@@ -94,7 +94,7 @@ const PatientSummary = (props: PatientSummaryProps) => {
  
                  <Grid item>
                    <Box className={classes.button_background} style={{backgroundImage: `url(${AppointmentsButtonImage})` }}>
-                     <Link to='/client/TruePatientMainPage'>
+                     <Link to='/client/TruePatientAppointments'>
                          <Button className={classes.top_button}>
                          
                          </Button>
@@ -104,7 +104,7 @@ const PatientSummary = (props: PatientSummaryProps) => {
  
                  <Grid item>
                    <Box className={classes.button_background} style={{backgroundImage: `url(${SummaryButtonImage})` }}>
-                     <Link to='/client/TruePatientSummary'>
+                     <Link to='/client/TruePatientMainPage'>
                          <Button className={classes.current_top_button}>
                          
                          </Button>

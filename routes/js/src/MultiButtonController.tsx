@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
   root: {
   },
   buttonStyle :{
-    background: "#b5b3bc",
+    background: "#cac7d6",
     marginRight: "8px"
   }
 

@@ -160,7 +160,7 @@ export default function PatientProfile() {
                     <Grid item>
                         <Box
                             className={classes.profile_contents}
-                            bgcolor="#b5b3bc">
+                            bgcolor="#cac7d6">
                             <Typography variant="body1" color="primary">
                                 {profile_contents}
                             </Typography>

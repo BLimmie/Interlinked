@@ -73,13 +73,13 @@ const styles = (_: Theme) =>
         width: '100%',
         height: 487,
         maxWidth: "29vw",
-        backgroundColor: "#b5b3bc",
+        backgroundColor: "#cac7d6",
     },
     transcript_list: {
         width: '70%',
         height: 487,
         maxWidth: "25vw",
-        backgroundColor: "#b5b3bc",
+        backgroundColor: "#cac7d6",
     },
     pic: {
         width: "15vw",
@@ -106,7 +106,7 @@ const styles = (_: Theme) =>
         height: "5vh"
     },
     buttonStyle: {
-        background: "#b5b3bc",
+        background: "#cac7d6",
         marginRight: "8px"
     }
 })

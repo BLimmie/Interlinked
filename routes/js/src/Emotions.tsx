@@ -93,7 +93,7 @@ export default function Emotions(props: EmotionProps) {
 		    />
           </Grid>
           <Grid item>
-            <Box height={"63vh"} width={"23vw"} bgcolor="#b5b3bc">
+            <Box height={"63vh"} width={"23vw"} bgcolor="#cac7d6">
               <div style={{paddingTop: "2vh"}} >
                 <AUs AUs={response.aus} />
               </div>
