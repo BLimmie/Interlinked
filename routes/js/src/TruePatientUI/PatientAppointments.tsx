@@ -53,7 +53,7 @@ const styles = (_: Theme) => createStyles({
     width: '100%',
     height: 487,
     maxWidth: "29vw",
-    backgroundColor: "#b5b3bc",
+    backgroundColor: "#cac7d6",
   },
   pic: {
     width: "15vw",
@@ -329,7 +329,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
                                 <Grid item>
                                     <Box
                                         className={this.props.classes.line}
-                                        bgcolor="#6e6b7a"
+                                        bgcolor="#5f587d"
                                     />
                                 </Grid>
                                 <Grid item>
@@ -340,7 +340,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
                                 <Grid item>
                                     <Box
                                         className={this.props.classes.line}
-                                        bgcolor="#6e6b7a"
+                                        bgcolor="#5f587d"
                                     />
                                 </Grid>
 
@@ -369,7 +369,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
                         <Grid item>
                             <Box
                                 className={this.props.classes.profile_contents}
-                                bgcolor="#b5b3bc">
+                                bgcolor="#cac7d6">
                                 <Typography variant="body1" color="primary">
                                     {this.profile_contents}
                                 </Typography>
