@@ -143,7 +143,7 @@ export default function VideoControls(props:VideoControlsProps)  {
         </Grid>
 
         <Grid item>
-          <Box className={classes.button_box} bgcolor="#cac7d6">
+          <Box className={classes.button_box} bgcolor="#d26363">
             <Link to={{
               pathname:'/'
             }}>
