@@ -47,8 +47,9 @@ const PatientSummary = (props: PatientSummaryProps) => {
 
     const [AllSessionData, SetAllSessionData] = React.useState<SessionData[]>([])
     const [sessions, SetSessions] = React.useState<Session[]>([])
+    const [CompareSessions, SetCompareSessions] = React.useState<boolean>(false)
     const [CompareGraphs, SetCompareGraphs] = React.useState<boolean>(false)
-  
+
     React.useEffect(() => {
       getPatientSessions(id).then( async (patientSessions) => {
         getSessionsData(patientSessions).then((value) => {
@@ -65,6 +66,10 @@ const PatientSummary = (props: PatientSummaryProps) => {
         })
       })
     },[])
+
+    const changeCompareSessions = () => {
+      SetCompareSessions(!CompareSessions)
+    }
 
     const changeCompareGraphs = () => {
       SetCompareGraphs(!CompareGraphs)
@@ -121,23 +126,54 @@ const PatientSummary = (props: PatientSummaryProps) => {
             }
             { AllSessionData.length > 0 &&
               <Grid container>
-                <Grid xs={9} />
-                <Grid xs={3} >
-                   <FormControlLabel
-                    control={
-                      <Switch checked={CompareGraphs} onChange={changeCompareGraphs} value="CompareGraphs" />
-                    }
-                    label="Compare Graphs"
-                  />
-                </Grid>
               {
-                !CompareGraphs &&
-                  <Grid xs={12} >
-                    <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions}/>
+                !CompareSessions &&
+                  <Grid container>
+                    <Grid xs={8} />
+                    <Grid xs={2} >
+                       <FormControlLabel
+                        control={
+                          <Switch checked={CompareGraphs} onChange={changeCompareGraphs} value="CompareGraphs" />
+                        }
+                        label="Compare Graphs"
+                      />
+                    </Grid>
+                    <Grid xs={2} >
+                       <FormControlLabel
+                        control={
+                          <Switch checked={CompareSessions} onChange={changeCompareSessions} value="CompareSessions" />
+                        }
+                        label="Compare Sessions"
+                      />
+                    </Grid>
                   </Grid>
               }
               {
-                CompareGraphs &&
+                CompareSessions &&
+                <Grid container>
+                  <Grid xs={9} />
+                  <Grid xs={3} >
+                     <FormControlLabel
+                      control={
+                        <Switch checked={CompareSessions} onChange={changeCompareSessions} value="CompareSessions" />
+                      }
+                      label="Compare Sessions"
+                    />
+                  </Grid>
+                </Grid>
+              }
+              {
+                !CompareSessions &&
+                  <Grid xs={12} >
+                    <GraphSessionComponent
+                      SessionDataArr={AllSessionData}
+                      Sessions={sessions}
+                      CompareGraphs={CompareGraphs}
+                    />
+                  </Grid>
+              }
+              {
+                CompareSessions &&
                 <Grid container>
                   <Grid xs={6} >
                     <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions}/>

@@ -26,14 +26,15 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "55vh"
     },
     their_video: {
+      height: '100%',
       '& video' : {
         width: '100%',
-        height: '90%',
+        height: '100%',
       }
     },
     their_video_box: {
       width: "70vw",
-      height: "70vh"
+      height: "65vh"
     },
     textbox_box: {
       width: "70vw",
@@ -136,7 +137,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
                         borderColor = "#5f587d">
                     {
                       // videoRoom &&
-                      <Grid item className={classes.their_video}  id="remote" xs = {5} />
+                      <Grid container className={classes.their_video}  id="remote" alignItems="center" justify="center"/>
                     }
                   </Box>
                 </Grid>
@@ -171,7 +172,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
           </Grid>
 
 
-          <div style={{ zIndex: 100, position:'absolute', top: "59vh", left:"1vw"}}>
+          <div style={{ zIndex: 100, position:'absolute', top: "55vh", left:"1vw"}}>
             
             <Grid item xs={4} >
               <WebcamWithControls
@@ -183,7 +184,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
             </Grid>
           </div>
 
-          <div style={{ zIndex: 100, position:'absolute', top: "63vh", left:"54vw"}}>
+          <div style={{ zIndex: 100, position:'absolute', top: "60vh", left:"54vw"}}>
             <Grid item> 
                 <VideoControls
                   endSession={() => endSession()}

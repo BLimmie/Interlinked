@@ -12,7 +12,8 @@ import { SessionData } from './funcs';
 interface PageProps extends WithStyles<typeof styles> {
   current_selection: number;
   data: SessionData[]
-  graph_selection: number
+  graphOne: number
+  graphTwo: Number
 }
 
 interface PageState {
@@ -66,7 +67,7 @@ const styles = (_: Theme) =>
         width: '100%',
         height: 487,
         maxWidth: "29vw",
-        backgroundColor: "#cac7d6",
+        backgroundColor: "#b5b3bc",
     },
     transcript_list: {
         height: 200,
@@ -97,7 +98,7 @@ const styles = (_: Theme) =>
         height: "5vh"
     },
     buttonStyle: {
-        background: "#cac7d6",
+        background: "#b5b3bc",
         marginRight: "8px"
     }
 })
@@ -158,7 +159,7 @@ export const AUChart: React.SFC<AUChartProps> = (props) => {
 
 }
 
-class GraphTranscript extends React.Component<PageProps, PageState> {
+class TwoGraphTranscript extends React.Component<PageProps, PageState> {
   private listRef: RefObject<FixedSizeList> = React.createRef();
 
   constructor(props: PageProps) {
@@ -408,10 +409,10 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
     return (   
       <div style={{ padding: 8, marginTop: "16px" }}>
         <Grid container alignItems="center" justify="center" spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <div style={{ overflow: 'auto', height: 400, maxWidth: 900 , margin: 'auto'}}>
               {
-                this.props.graph_selection == 0 &&
+                this.props.graphOne == 0 &&
                 <Line
                   data={this.state.emotiondata}
                   options={this.state.emotionoptions}
@@ -420,7 +421,7 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
                   getElementAtEvent={this.alter_transcript(this.state.emotiondata.labels as string[])} />
               }
               {
-                this.props.graph_selection == 1 &&
+                this.props.graphOne == 1 &&
                 <Line
                   data={(canvas: any) => {
                     const gradient = canvas.getContext("2d").createLinearGradient(0, 0, canvas.width, 0)
@@ -439,7 +440,7 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
                 />
               }
               {
-                this.props.graph_selection == 2 &&
+                this.props.graphOne == 2 &&
                 <Line
                   data={this.state.textdata}
                   options={this.state.textoptions}
@@ -448,7 +449,7 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
                   getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
               }
               {
-                this.props.graph_selection == 3 &&
+                this.props.graphOne == 3 &&
                 <Line
                   data={this.state.smoothemotiondata}
                   options={this.state.smoothemotionoptions}
@@ -457,7 +458,7 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
                   getElementAtEvent={this.alter_transcript(this.state.smoothemotiondata.labels as string[])} />
               }
               {
-                this.props.graph_selection == 4 &&
+                this.props.graphOne == 4 &&
                 <Line
                   data={this.state.smoothtextdata}
                   options={this.state.smoothtextoptions}
@@ -466,7 +467,7 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
                   getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
               }
               {
-                this.props.graph_selection == 5 &&
+                this.props.graphOne == 5 &&
                 <Line
                   data={this.state.audata}
                   options={this.state.emotionoptions}
@@ -475,7 +476,85 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
                   getElementAtEvent={this.alter_transcript(this.state.audata.labels as string[])} />
               }
               {
-                this.props.graph_selection == 6 &&
+                this.props.graphOne == 6 &&
+                <AUChart
+                  auanomData={this.state.auanomdata}
+                  auanomOpts={this.state.auanomoptions}
+                  auanomPointColors={this.state.auanompointscolors}
+                  labels={this.state.auanomlabels}
+                  func={this.alter_transcript(this.state.auanomlabels)}
+                />
+              }
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div style={{ overflow: 'auto', height: 400, maxWidth: 900 , margin: 'auto'}}>
+              {
+                this.props.graphTwo == 0 &&
+                <Line
+                  data={this.state.emotiondata}
+                  options={this.state.emotionoptions}
+                  width={900}
+                  height={380}
+                  getElementAtEvent={this.alter_transcript(this.state.emotiondata.labels as string[])} />
+              }
+              {
+                this.props.graphTwo == 1 &&
+                <Line
+                  data={(canvas: any) => {
+                    const gradient = canvas.getContext("2d").createLinearGradient(0, 0, canvas.width, 0)
+                    gradient.addColorStop(0, "#47CDD5");
+                    gradient.addColorStop(1, "#E6D725");
+                    return {
+                      labels: Array.from(Array(41).keys()).map((ii) => {
+                        let temp = ((ii / 40.0 * 2) - 1).toFixed(2)
+                        return temp.toString()
+                      }), datasets: [{ data: Array.from(Array(41).keys()).map((_) => 1), backgroundColor: gradient }]
+                    }
+                  }}
+                  options={this.state.avgtextoptions}
+                  width={900}
+                  height={125}
+                />
+              }
+              {
+                this.props.graphTwo == 2 &&
+                <Line
+                  data={this.state.textdata}
+                  options={this.state.textoptions}
+                  width={900}
+                  height={380}
+                  getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
+              }
+              {
+                this.props.graphTwo == 3 &&
+                <Line
+                  data={this.state.smoothemotiondata}
+                  options={this.state.smoothemotionoptions}
+                  width={900}
+                  height={380}
+                  getElementAtEvent={this.alter_transcript(this.state.smoothemotiondata.labels as string[])} />
+              }
+              {
+                this.props.graphTwo == 4 &&
+                <Line
+                  data={this.state.smoothtextdata}
+                  options={this.state.smoothtextoptions}
+                  width={900}
+                  height={380}
+                  getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
+              }
+              {
+                this.props.graphTwo == 5 &&
+                <Line
+                  data={this.state.audata}
+                  options={this.state.emotionoptions}
+                  width={900}
+                  height={380}
+                  getElementAtEvent={this.alter_transcript(this.state.audata.labels as string[])} />
+              }
+              {
+                this.props.graphTwo == 6 &&
                 <AUChart
                   auanomData={this.state.auanomdata}
                   auanomOpts={this.state.auanomoptions}
@@ -499,4 +578,4 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(GraphTranscript)
+export default withStyles(styles, {withTheme: true})(TwoGraphTranscript)
