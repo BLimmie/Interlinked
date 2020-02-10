@@ -6,7 +6,6 @@ import (
 
 	"github.com/BLimmie/intouch-health-capstone-2019/app"
 	"github.com/gin-gonic/gin"
-	cors "github.com/rs/cors/wrapper/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -30,16 +29,6 @@ func Routes() {
 	OFWorkers = app.NewWorkerHandler(4)
 	GCPWorkers = app.NewWorkerHandler(4)
 	router := gin.Default()
-	//Allow all origin headers
-	corsOps := cors.New(cors.Options{
-		AllowOriginFunc: func(origin string) bool { return true },
-		// AllowedOrigins:   []string{"http://localhost:3000", "*"},
-		AllowedMethods:   []string{"PUT", "GET", "POST", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Origin", "Content-Type", "X-Auth-Token", "Authorization", "Name", "Username", "Password", "Provid", "Patid", "Patusername", "Provusername"},
-		AllowCredentials: true,
-		Debug:            true,
-	})
-	router.Use(corsOps)
 	// Get Object Data
 	router.POST("/patient/:user", getPatient)
 	router.POST("/provider/:user", getProvider)

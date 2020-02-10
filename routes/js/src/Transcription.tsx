@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import SpeechRecognition from "react-speech-recognition";
 import Speech from './Speech';
 
@@ -43,7 +43,6 @@ interface SpeechProps {
 // It might be more complicated than that. I wouldn't know.
 class Transcription extends React.Component<SpeechProps> {
     private i = 0;
-    private sessionId = window.location.pathname.split("/").pop()
 
     render() {
       let globalThis = window
@@ -78,16 +77,28 @@ class Transcription extends React.Component<SpeechProps> {
       }
       else if (i === limit - 2 && calledyet[i] !== true) {
         let recent_phrase: string = transcript_split.slice(12 * i, 12 * (i + 1)).join(" ");
-        httpCall('POST', "http://localhost:8080/sentiment/text/" + (this.sessionId as string), recent_phrase, interpret_sentiment, i);
+        httpCall('POST', "http://localhost:8080/sentiment/text", recent_phrase, interpret_sentiment, i);
         calledyet[i] = true;
       }
       else if (i === limit - 2 && tones[i] === true && tones2[i] !== true) {
         let tone: number = 0; // Neutral
         if (sentiment_num > 0.1) {
-          tone = 1; // Positive
+          tone = 1; // Slightly Positive
+          if (sentiment_num > 0.4) {
+            tone = 11; // Positive
+            if (sentiment_num > 0.7) {
+              tone = 111; // Very Positive
+            }
+          }
         }
         else if (sentiment_num < -0.1) {
-          tone = 2; // Negative
+          tone = 2; // Slightly Negative
+          if (sentiment_num < -0.4) {
+            tone = 22; // Negative
+            if (sentiment_num < -0.7) {
+              tone = 222; // Very Negative
+            }
+          }
         }
         let recent_phrase: string = transcript_split.slice(12 * i, 12 * (i + 1)).join(" ");
         globalThis.words.set(recent_phrase, tone);

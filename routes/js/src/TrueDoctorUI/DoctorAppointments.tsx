@@ -55,7 +55,7 @@ const styles = (_: Theme) => createStyles({
     width: '100%',
     height: 487,
     maxWidth: "29vw",
-    backgroundColor: "#b5b3bc",
+    backgroundColor: "#cac7d6",
   },
   pic: {
     width: "15vw",
@@ -344,7 +344,7 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
                                 <Grid item>
                                     <Box
                                         className={this.props.classes.line}
-                                        bgcolor="#6e6b7a"
+                                        bgcolor="#5f587d"
                                     />
                                 </Grid>
                                 <Grid item>
@@ -355,7 +355,7 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
                                 <Grid item>
                                     <Box
                                         className={this.props.classes.line}
-                                        bgcolor="#6e6b7a"
+                                        bgcolor="#5f587d"
                                     />
                                 </Grid>
 

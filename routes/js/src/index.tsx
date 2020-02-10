@@ -72,7 +72,7 @@ class Server extends React.Component {
           <PrivilegedRoute path='/client/TruePatientMainPage'><TruePatientMainPage /></PrivilegedRoute>
           <PrivilegedRoute path='/client/TruePatientProfile'><TruePatientProfile /></PrivilegedRoute>
           <PrivilegedRoute path='/client/TruePatientAppointments'><TruePatientAppointments current_selection={0}/></PrivilegedRoute>
-          <PrivilegedRoute path='/client/TruePatientSummary'><TruePatientSummary current_selection={0}/></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TruePatientSummary'><TruePatientSummary /></PrivilegedRoute>
           
         </Switch>
       </Router>

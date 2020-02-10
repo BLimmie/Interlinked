@@ -10,7 +10,7 @@ import { WebcamWithControls } from '../Video/WebcamWithControls'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      background: '#16001f'
+      background: '#dddce7'
     },
     upperHalf: {
       height: "55vh"

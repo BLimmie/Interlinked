@@ -5,10 +5,10 @@ import Typography from '@material-ui/core/Typography';
 const AU_theme = createMuiTheme({
     palette: {
       primary: {
-        main: '#6e6b7a',
+        main: '#5f587d',
       },
       secondary: {
-        main: '#c7c6ce'
+        main: '#dddce7'
       }
     },
     typography: {
