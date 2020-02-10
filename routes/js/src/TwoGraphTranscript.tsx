@@ -4,10 +4,10 @@ import { Grid } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { Scatter } from 'react-chartjs-2';
+import { Scatter, Bar } from 'react-chartjs-2';
 import { ChartData } from 'chart.js';
 import 'chartjs-plugin-annotation';
-import { SessionData, TranscriptLine, getOption, getXValues } from './funcs';
+import { SessionData, TranscriptLine, PageState, getOption, getXValues, getState } from './funcs';
 import { AUChart } from './AUChart';
 
 interface PageProps extends WithStyles<typeof styles> {
@@ -17,27 +17,6 @@ interface PageProps extends WithStyles<typeof styles> {
   graphTwo: Number
 }
 
-interface PageState {
-  current_selection: number;
-  component_num: number;
-  transcript: TranscriptLine[];
-  emotiondata: ChartData;
-  smoothemotiondata: ChartData;
-  // TODO: text needs labels as member because data is a function that returns labels if given a canvas, refactor to not need this
-  textdata: any;
-  textlabels: number[];
-  smoothtextdata: any;
-  smoothtextlabels: number[];
-  audata: ChartData;
-  // auanom uses these as props for the component au anom chart
-  auanomdata: Array<any>[];
-  auanompointscolors: Array<string>[];
-  avgtextoptions: any;
-  genoptions: any;
-
-  // ranges of x values (inclusive) that have diverging text and emotion sentiment
-  divergingranges: [number, number][];
-}
 
 const styles = (_: Theme) =>
   createStyles({
@@ -101,14 +80,6 @@ const styles = (_: Theme) =>
     }
   })
 
-interface AUChartProps {
-  auanomData: Array<number>[]
-  auanomPointColors: Array<string>[]
-  auanomOpts: any
-  labels: string[]
-  func: (any: any) => void
-}
-
 class TwoGraphTranscript extends React.Component<PageProps, PageState> {
   private listRef: RefObject<FixedSizeList> = React.createRef();
 
@@ -127,6 +98,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
       audata: { datasets: [{ data: [] }] },
       auanomdata: [[]],
       auanompointscolors: [],
+      aggremotiondata: { datasets: [{ data: [] }] },
 
       avgtextoptions: {},
       genoptions: {},
@@ -163,115 +135,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
 
   page_alter() {
     const currentSesh = this.props.data[this.props.current_selection]
-    this.setState({
-      transcript: currentSesh.transcript,
-      auanomdata: currentSesh.auanomdata,
-      auanompointscolors: currentSesh.auanompointscolors,
-      emotiondata: {
-        datasets: [
-          {
-            label: "Anger",
-            data: currentSesh.angerData,
-            borderColor: "red",
-            showLine: true,
-            lineTension: 0.22
-          },
-          {
-            label: "Joy",
-            data: currentSesh.joyData,
-            borderColor: "yellow",
-            showLine: true,
-            lineTension: 0.22
-          },
-          {
-            label: "Sorrow",
-            data: currentSesh.sorrowData,
-            borderColor: "blue",
-            showLine: true,
-            lineTension: 0.22
-          },
-          {
-            label: "Surprise",
-            data: currentSesh.supriseData,
-            borderColor: "green",
-            showLine: true,
-            lineTension: 0.22
-          },
-        ]
-      },
-      smoothemotiondata: {
-        datasets: [
-          {
-            label: "Anger",
-            data: currentSesh.smoothangerData,
-            borderColor: "red",
-            showLine: true,
-            fill: false,
-            lineTension: 0.22
-          },
-          {
-            label: "Joy",
-            data: currentSesh.smoothjoyData,
-            borderColor: "yellow",
-            showLine: true,
-            fill: false,
-            lineTension: 0.22
-          },
-          {
-            label: "Sorrow",
-            data: currentSesh.smoothsorrowData,
-            borderColor: "blue",
-            showLine: true,
-            fill: false,
-            lineTension: 0.22
-          },
-          {
-            label: "Surprise",
-            data: currentSesh.smoothsupriseData,
-            borderColor: "green",
-            showLine: true,
-            fill: false,
-            lineTension: 0.22
-          },
-        ]
-      },
-      textdata: currentSesh.textData,
-      textlabels: currentSesh.textLabels,
-      smoothtextdata: currentSesh.smoothtextData,
-      smoothtextlabels: currentSesh.smoothtextLabels,
-      audata: {
-        datasets: currentSesh.auDataSets
-      },
-      avgtextoptions: {
-        annotation:
-        {
-          drawTime: 'afterDatasetsDraw',
-          annotations: [{
-            type: 'line',
-            mode: 'vertical',
-            scaleID: 'x-axis-0',
-            value: currentSesh.avgTextAnnotationValue,
-            borderColor: 'red',
-            borderWidth: 2,
-            label: { enabled: true, content: currentSesh.avgTextAnnotationValue, position: "center" }
-          }]
-        },
-
-        scales: {
-          xAxes: [{
-            type: 'linear',
-            id: 'x-axis-0',
-          }],
-          yAxes: [{
-            ticks: {
-              display: false,
-              max: 0.9,
-              min: 0
-            }
-          }],
-        }
-      },
-    })
+    this.setState(getState(currentSesh))
     return null
   }
 
@@ -386,6 +250,13 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   func={this.alter_transcript(this.state.auanomdata[0].map(element => element.x))}
                 />
               }
+              {
+                this.props.graphOne == 7 &&
+                <Bar
+                  data={this.state.aggremotiondata}
+                  width={900}
+                  height={380} />
+              }
             </div>
           </Grid>
           <Grid item xs={6}>
@@ -461,6 +332,13 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   auanomPointColors={this.state.auanompointscolors}
                   func={this.alter_transcript(this.state.auanomdata[0].map(element => element.x))}
                 />
+              }
+              {
+                this.props.graphTwo == 7 &&
+                <Bar
+                  data={this.state.aggremotiondata}
+                  width={900}
+                  height={380} />
               }
             </div>
           </Grid>

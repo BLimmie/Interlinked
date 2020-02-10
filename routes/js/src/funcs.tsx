@@ -1,3 +1,5 @@
+import { ChartData } from 'chart.js'
+
 export function httpCall(method: string, url: string, header: Array<[string, string]>, data: any, callback: (result: any, r: number) => any) {
   var xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
@@ -31,6 +33,7 @@ export class SessionData {
   auDataSets: any = [{}]
   divergingRanges: [number, number][] = []
   avgTextAnnotationValue: number = 0
+  aggrSentiment: number[] = []
   seshId: string
 
   constructor(
@@ -52,6 +55,7 @@ export class SessionData {
     auDataSets: any,
     divergingRanges: [number, number][] = [],
     avgTextAnnotationValue: number,
+    aggrSentiment: number[],
     seshId: string
   ) {
     this.transcript = transcript
@@ -72,8 +76,32 @@ export class SessionData {
     this.auDataSets = auDataSets
     this.divergingRanges = divergingRanges
     this.avgTextAnnotationValue = avgTextAnnotationValue
+    this.aggrSentiment = aggrSentiment
     this.seshId = seshId
   }
+}
+
+export interface PageState {
+  current_selection: number;
+  component_num: number;
+  transcript: TranscriptLine[];
+  emotiondata: ChartData;
+  smoothemotiondata: ChartData;
+  // TODO: text needs labels as member because data is a function that returns labels if given a canvas, refactor to not need this
+  textdata: any;
+  textlabels: number[];
+  smoothtextdata: any;
+  smoothtextlabels: number[];
+  audata: ChartData;
+  // auanom uses these as props for the component au anom chart
+  auanomdata: Array<any>[];
+  auanompointscolors: Array<string>[];
+  avgtextoptions: any;
+  genoptions: any;
+  // final emotion data percent of total time
+  aggremotiondata: ChartData;
+  // ranges of x values (inclusive) that have diverging text and emotion sentiment
+  divergingranges: [number, number][];
 }
 
 // Session class to fill out info in list
@@ -267,11 +295,16 @@ async function getSessionData(seshId: string): Promise<SessionData | null> {
         })
         if (rightBound > -1) { divergingRanges.push([leftBound, rightBound]) }
 
+        // avg text sentiment
         let avgtext: number = metrics["Average Text Sentiment"]["AvgTextSentiment"].toPrecision(2)
+        // final percent of sentiments out of total time
+        let aggrSentimentObj = metrics["Time in Facial Emotions"]["Percentage"]
+        let aggrSentiment = [aggrSentimentObj["anger"], aggrSentimentObj["joy"], aggrSentimentObj["sorrow"], aggrSentimentObj["surprise"]]
+
         const sessionData = new SessionData(
           transcript, auanomData, auanomPointColors, anger, joy, surprise, sorrow, textLabels,
           textChartData, smoothanger, smoothjoy, smoothsurprise, smoothsorrow, smoothtextChartData, smoothtextLabels,
-          auData, divergingRanges, avgtext, seshId
+          auData, divergingRanges, avgtext, aggrSentiment, seshId
         )
         resolve(sessionData)
       } else {
@@ -348,4 +381,125 @@ export function getOption(index: number) {
 
 export function getXValues(cd: any) {
   return (cd.datasets!![0].data!! as any[]).map(element => element.x) as number[]
+}
+
+export function getState(currentSesh: SessionData) {
+  return {
+    transcript: currentSesh.transcript,
+    auanomdata: currentSesh.auanomdata,
+    auanompointscolors: currentSesh.auanompointscolors,
+    emotiondata: {
+      datasets: [
+        {
+          label: "Anger",
+          data: currentSesh.angerData,
+          borderColor: "red",
+          showLine: true,
+          lineTension: 0.22
+        },
+        {
+          label: "Joy",
+          data: currentSesh.joyData,
+          borderColor: "yellow",
+          showLine: true,
+          lineTension: 0.22
+        },
+        {
+          label: "Sorrow",
+          data: currentSesh.sorrowData,
+          borderColor: "blue",
+          showLine: true,
+          lineTension: 0.22
+        },
+        {
+          label: "Surprise",
+          data: currentSesh.supriseData,
+          borderColor: "green",
+          showLine: true,
+          lineTension: 0.22
+        },
+      ]
+    },
+    smoothemotiondata: {
+      datasets: [
+        {
+          label: "Anger",
+          data: currentSesh.smoothangerData,
+          borderColor: "red",
+          showLine: true,
+          fill: false,
+          lineTension: 0.22
+        },
+        {
+          label: "Joy",
+          data: currentSesh.smoothjoyData,
+          borderColor: "yellow",
+          showLine: true,
+          fill: false,
+          lineTension: 0.22
+        },
+        {
+          label: "Sorrow",
+          data: currentSesh.smoothsorrowData,
+          borderColor: "blue",
+          showLine: true,
+          fill: false,
+          lineTension: 0.22
+        },
+        {
+          label: "Surprise",
+          data: currentSesh.smoothsupriseData,
+          borderColor: "green",
+          showLine: true,
+          fill: false,
+          lineTension: 0.22
+        },
+      ]
+    },
+    textdata: currentSesh.textData,
+    textlabels: currentSesh.textLabels,
+    smoothtextdata: currentSesh.smoothtextData,
+    smoothtextlabels: currentSesh.smoothtextLabels,
+    audata: {
+      datasets: currentSesh.auDataSets
+    },
+    aggremotiondata: {
+      labels: ["Anger", "Joy", "Sorrow", "Surprise"],
+      datasets: [{
+        label: "Percent of Each Emotion over Session",
+        backgroundColor: ["red", "yellow", "blue", "green"],
+        data: currentSesh.aggrSentiment
+      }]
+    },
+    avgtextoptions: {
+      annotation:
+      {
+        drawTime: 'afterDatasetsDraw',
+        annotations: [{
+          type: 'line',
+          mode: 'vertical',
+          scaleID: 'x-axis-0',
+          value: currentSesh.avgTextAnnotationValue,
+          borderColor: 'red',
+          borderWidth: 2,
+          label: { enabled: true, content: currentSesh.avgTextAnnotationValue, position: "center" }
+        }]
+      },
+
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          id: 'x-axis-0',
+        }],
+        yAxes: [{
+          ticks: {
+            display: false,
+            max: 0.9,
+            min: 0
+          }
+        }],
+      }
+    },
+  }
+
 }
