@@ -10,7 +10,7 @@ import { Grid, Button } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { VariableSizeList, FixedSizeList, ListChildComponentProps } from 'react-window';
-import { Line } from 'react-chartjs-2';
+import { Line, Scatter } from 'react-chartjs-2';
 import { ChartData } from 'chart.js';
 import { httpCall } from '../funcs'
 import 'chartjs-plugin-annotation';
@@ -29,21 +29,19 @@ interface PageState {
   smoothemotiondata: ChartData;
   // TODO: text needs labels as member because data is a function that returns labels if given a canvas, refactor to not need this
   textdata: any;
-  textlabels: string[];
+  textlabels: number[];
   smoothtextdata: any;
-  smoothtextlabels: string[];
+  smoothtextlabels: number[];
   audata: ChartData;
   // auanom uses these as props for the component au anom chart
-  auanomdata: Array<number>[];
+  auanomdata: Array<any>[];
   auanompointscolors: Array<string>[];
-  auanomlabels: string[];
-  emotionoptions: any;
-  smoothemotionoptions: any;
-  textoptions: any;
-  smoothtextoptions: any;
-  auoptions: any;
-  auanomoptions: any;
   avgtextoptions: any;
+  genoptions: any;
+
+  // ranges of x values (inclusive) that have diverging text and emotion sentiment
+  divergingranges: [number, number][];
+  testemotionlabels: string[];
 }
 
 const styles = (_: Theme) => createStyles({
@@ -135,10 +133,9 @@ class TranscriptLine {
 }
 
 interface AUChartProps {
-  auanomData: Array<number>[]
+  auanomData: Array<any>[]
   auanomPointColors: Array<string>[]
   auanomOpts: any
-  labels: string[]
   func: (any: any) => void
 }
 
@@ -146,21 +143,21 @@ export const AUChart: React.SFC<AUChartProps> = (props) => {
 
   const auTypes = ["Blink", "BrowLowerer", "CheekRaiser", "ChinRaiser", "Dimpler", "InnerBrowRaiser", "JawDrop", "LidTightener", "LipCornerDepressor", "LipCornerPuller", "LipStretcher", "LipTightener", "LipsPart", "NoseWrinkler", "OuterBrowRaiser", "UpperLidRaiser", "UpperLipRaiser"]
   const charts = []
-  const getData = (data: Array<number>, pointColors: Array<string>, index: number) => {
+  const getData = (data: Array<any>, pointColors: Array<string>, index: number) => {
     return {
-      labels: props.labels,
       datasets: [
         {
           label: auTypes[index],
           data: data,
           pointBackgroundColor: pointColors,
+          showLine: true
         }
       ]
     } as ChartData
   }
   const getComponent = (index: number) => {
     return (
-      <Line
+      <Scatter
         data={getData(props.auanomData[index], props.auanomPointColors[index], index)}
         options={props.auanomOpts}
         height={100}
@@ -196,23 +193,20 @@ class PatientSummary extends React.Component<PageProps, PageState> {
       component_num: 0,
       sessions: [],
       transcript: [],
-      emotiondata: { labels: [], datasets: [{}] },
-      smoothemotiondata: { labels: [], datasets: [{}] },
-      textdata: { labels: [], datasets: [{}] },
+      emotiondata: { datasets: [{ data: [] }] },
+      smoothemotiondata: { datasets: [{ data: [] }] },
+      textdata: { datasets: [{ data: [] }] },
       textlabels: [],
-      smoothtextdata: { labels: [], datasets: [{}] },
+      smoothtextdata: { datasets: [{ data: [] }] },
       smoothtextlabels: [],
-      audata: { labels: [], datasets: [{}] },
-      auanomdata: [],
+      audata: { datasets: [{ data: [] }] },
+      auanomdata: [[]],
       auanompointscolors: [],
-      auanomlabels: [],
-      emotionoptions: {},
-      smoothemotionoptions: {},
-      textoptions: {},
-      smoothtextoptions: {},
-      auoptions: {},
-      auanomoptions: {},
-      avgtextoptions: {}
+
+      avgtextoptions: {},
+      genoptions: {},
+      divergingranges: [],
+      testemotionlabels: []
     }
 
     this.createdTime = ''
@@ -227,28 +221,14 @@ class PatientSummary extends React.Component<PageProps, PageState> {
     this.transcript_render = this.transcript_render.bind(this);
     this.getSessions = this.getSessions.bind(this);
     this.getOption = this.getOption.bind(this);
+    this.getXValues = this.getXValues.bind(this);
     this.alter_transcript = this.alter_transcript.bind(this);
-    this.data_search = this.data_search.bind(this);
     this.transcript_search = this.transcript_search.bind(this);
     this.getSessions()
 
     this.setState({
       current_selection: props.current_selection
     });
-  }
-
-  data_search(arr: number[], ll: number, rr: number, ii: number): number {
-    if (rr >= ll) {
-      let mid = ll + Math.floor((rr - ll) / 2)
-      if (arr[mid] === ii) {
-        return mid
-      }
-      if (arr[mid] > ii) {
-        return this.data_search(arr, ll, mid - 1, ii)
-      }
-      return this.data_search(arr, mid + 1, rr, ii)
-    } else if (rr < 0) { return 0 }
-    else { return rr }
   }
 
   transcript_search(ll: number, rr: number, ii: number): number {
@@ -278,11 +258,11 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         let metrics = JSON.parse(result)
         let frameMetrics: Array<any> = metrics["Frame Metrics"]
         let emotionLabels: string[] = []
-        let anger: number[] = []
-        let joy: number[] = []
-        let sorrow: number[] = []
-        let surprise: number[] = []
-        let auMetrics: Array<number>[] = []
+        let anger: any[] = []
+        let joy: any[] = []
+        let sorrow: any[] = []
+        let surprise: any[] = []
+        let auMetrics: Array<any>[] = []
         for (let ii = 0; ii < 17; ii++) { auMetrics.push(new Array<number>()) }
         let convStringToProb = (ss: string) => {
           if (ss === "VERY_UNLIKELY") {
@@ -301,14 +281,15 @@ class PatientSummary extends React.Component<PageProps, PageState> {
         // real time sentiment and au metrics
         let baseTime = metrics["Created Time"]
         frameMetrics.forEach(element => {
-          emotionLabels.push((element["Time"] as number - baseTime).toString())
+          let xval = (element["Time"] as number - baseTime)
+          emotionLabels.push(xval.toString())
           let emotion = element["Emotion"]
-          anger.push(convStringToProb(emotion["anger"]))
-          joy.push(convStringToProb(emotion["joy"]))
-          sorrow.push(convStringToProb(emotion["sorrow"]))
-          surprise.push(convStringToProb(emotion["surprise"]))
+          anger.push({ x: xval, y: convStringToProb(emotion["anger"]) })
+          joy.push({ x: xval, y: convStringToProb(emotion["joy"]) })
+          sorrow.push({ x: xval, y: convStringToProb(emotion["sorrow"]) })
+          surprise.push({ x: xval, y: convStringToProb(emotion["surprise"]) })
           for (let ii = 0; ii < auMetrics.length; ii++) {
-            auMetrics[ii].push(element["AU"][this.auTypes[ii]])
+            auMetrics[ii].push({ x: xval, y: element["AU"][this.auTypes[ii]] })
           }
         });
         let auData = []
@@ -317,22 +298,21 @@ class PatientSummary extends React.Component<PageProps, PageState> {
             label: this.auTypes[ii],
             data: auMetrics[ii],
             hidden: ii >= 5,
+            showLine: true
           })
         }
 
         // au anomaly metrics
-        let auanomLabels: string[] = []
-        let auanomData: Array<number>[] = []
+        let auanomData: Array<any>[] = []
         let auanomPointColors: Array<string>[] = []
         for (let ii = 0; ii < 17; ii++) {
-          auanomData.push(new Array<number>())
+          auanomData.push(new Array<any>())
           auanomPointColors.push(new Array<string>())
         }
         (Object.keys(metrics["AU Anomalies"])).forEach(element => {
-          auanomLabels.push(element)
           let obj = metrics["AU Anomalies"][element]
           for (let ii = 0; ii < auanomData.length; ii++) {
-            auanomData[ii].push(obj[this.auTypes[ii]]["Intensity"])
+            auanomData[ii].push({ x: +element, y: obj[this.auTypes[ii]]["Intensity"] })
             if (obj[this.auTypes[ii]]["Anomalous"]) {
               auanomPointColors[ii].push("#90cd8a")
             } else {
@@ -343,29 +323,29 @@ class PatientSummary extends React.Component<PageProps, PageState> {
 
         // smooth sentiment metrics
         let smoothsentimentLabels: string[] = []
-        let smoothanger: number[] = []
-        let smoothjoy: number[] = []
-        let smoothsorrow: number[] = []
-        let smoothsurprise: number[] = [];
+        let smoothanger: any[] = []
+        let smoothjoy: any[] = []
+        let smoothsorrow: any[] = []
+        let smoothsurprise: any[] = [];
         (Object.keys(metrics["Percent in Facial Emotion over last 10 seconds"])).forEach(element => {
           smoothsentimentLabels.push(element)
           let obj = metrics["Percent in Facial Emotion over last 10 seconds"][element]["Percentage"]
-          smoothanger.push(obj["anger"])
-          smoothjoy.push(obj["joy"])
-          smoothsorrow.push(obj["sorrow"])
-          smoothsurprise.push(obj["surprise"])
+          smoothanger.push({ x: +element, y: obj["anger"] })
+          smoothjoy.push({ x: +element, y: obj["joy"] })
+          smoothsorrow.push({ x: +element, y: obj["sorrow"] })
+          smoothsurprise.push({ x: +element, y: obj["surprise"] })
         })
 
         // text sentiment metrics
         let textMetrics: [] = metrics["Text Metrics"]
-        let textLabels: string[] = []
+        let textLabels: number[] = []
         let transcript: TranscriptLine[] = []
-        let textSentiment: number[] = []
+        let textSentiment: any[] = []
         textMetrics.forEach(element => {
           let time = element["Time"] as number - baseTime
-          textLabels.push(time.toString())
+          textLabels.push(time)
           transcript.push(new TranscriptLine(time, element["Text"]))
-          textSentiment.push(element["Sentiment"])
+          textSentiment.push({ x: time, y: element["Sentiment"] })
         })
         let textChartData = (canvas: any) => {
           const ctx = canvas.getContext("2d")
@@ -373,25 +353,25 @@ class PatientSummary extends React.Component<PageProps, PageState> {
           gradient.addColorStop(0, "#E6D725");
           gradient.addColorStop(1, "#47CDD5");
           return {
-            labels: textLabels,
             datasets: [
               {
                 label: "Text Sentiment",
                 data: textSentiment,
                 borderColor: gradient,
                 pointBorderColor: gradient,
+                showLine: true
               }
             ]
           }
         }
 
         //smooth text sentiment metrics
-        let smoothtextLabels: string[] = []
-        let smoothtext: number[] = [];
+        let smoothtextLabels: number[] = []
+        let smoothtext: any[] = [];
         (Object.keys(metrics["Text sentiment over last 10 seconds"])).forEach(element => {
-          smoothtextLabels.push(element)
+          smoothtextLabels.push(+element)
           let obj = metrics["Text sentiment over last 10 seconds"][element]
-          smoothtext.push(obj)
+          smoothtext.push({ x: +element, y: obj })
         })
         let smoothtextChartData = (canvas: any) => {
           const ctx = canvas.getContext("2d")
@@ -399,75 +379,106 @@ class PatientSummary extends React.Component<PageProps, PageState> {
           gradient.addColorStop(0, "#E6D725");
           gradient.addColorStop(1, "#47CDD5");
           return {
-            labels: smoothtextLabels,
             datasets: [
               {
                 label: "Text Sentiment",
                 data: smoothtext,
                 borderColor: gradient,
                 pointBorderColor: gradient,
+                showLine: true
               }
             ]
           }
         }
 
-        let avgtext = Math.round((metrics["Average Text Sentiment"]["AvgTextSentiment"] + 1) / 2.0 * 40)
+        //diverging sentiment ranges
+        let divergingRanges: [number, number][] = []
+        let leftBound = -1
+        let rightBound = -1;
+        (Object.keys(metrics["_Diverging Sentiment"])).forEach(element => {
+          let obj = metrics["_Diverging Sentiment"][element]
+          if (obj) {
+            if (leftBound < 0) {
+              leftBound = +element
+              rightBound = leftBound
+            } else {
+              rightBound = +element
+            }
+          } else {
+            if (rightBound > -1) {
+              divergingRanges.push([leftBound, rightBound])
+              leftBound = -1
+              rightBound = -1
+            }
+          }
+        })
+        if (rightBound > -1) { divergingRanges.push([leftBound, rightBound]) }
+
+
+        let avgtext: number = metrics["Average Text Sentiment"]["AvgTextSentiment"].toPrecision(2)
         this.setState({
+          testemotionlabels: emotionLabels,
           transcript: transcript,
           auanomdata: auanomData,
-          auanomlabels: auanomLabels,
           auanompointscolors: auanomPointColors,
           emotiondata: {
-            labels: emotionLabels,
+            // labels: emotionLabels,
             datasets: [
               {
                 label: "Anger",
                 data: anger,
                 borderColor: "red",
+                showLine: true
               },
               {
                 label: "Joy",
                 data: joy,
                 borderColor: "yellow",
+                showLine: true
               },
               {
                 label: "Sorrow",
                 data: sorrow,
                 borderColor: "blue",
+                showLine: true
               },
               {
                 label: "Surprise",
                 data: surprise,
                 borderColor: "green",
+                showLine: true
               },
             ]
           },
           smoothemotiondata: {
-            labels: smoothsentimentLabels,
             datasets: [
               {
                 label: "Anger",
                 data: smoothanger,
                 borderColor: "red",
+                showLine: true,
                 fill: false
               },
               {
                 label: "Joy",
                 data: smoothjoy,
                 borderColor: "yellow",
-                fill: false
+                fill: false,
+                showLine: true
               },
               {
                 label: "Sorrow",
                 data: smoothsorrow,
                 borderColor: "blue",
-                fill: false
+                fill: false,
+                showLine: true
               },
               {
                 label: "Surprise",
                 data: smoothsurprise,
                 borderColor: "green",
-                fill: false
+                fill: false,
+                showLine: true
               },
             ]
           },
@@ -476,19 +487,39 @@ class PatientSummary extends React.Component<PageProps, PageState> {
           smoothtextdata: smoothtextChartData,
           smoothtextlabels: smoothtextLabels,
           audata: {
-            labels: emotionLabels,
             datasets: auData
           },
           avgtextoptions: {
-            annotation: this.getOption(avgtext),
+            annotation:
+            {
+              drawTime: 'afterDatasetsDraw',
+              annotations: [{
+                type: 'line',
+                mode: 'vertical',
+                scaleID: 'x-axis-0',
+                value: avgtext,
+                borderColor: 'red',
+                borderWidth: 2,
+                label: { enabled: true, content: avgtext, position: "center" }
+              }]
+            },
+
             scales: {
+              xAxes: [{
+                type: 'linear',
+                id: 'x-axis-0',
+                // ticks: {
+                //   max: 1,
+                //   min: 0
+                // }
+              }],
               yAxes: [{
                 ticks: {
                   display: false,
                   max: 0.9,
                   min: 0
                 }
-              }]
+              }],
             }
           },
         }
@@ -513,82 +544,51 @@ class PatientSummary extends React.Component<PageProps, PageState> {
 
   getOption(index: number) {
     return {
-      drawTime: 'afterDatasetsDraw',
-      annotations: [{
-        type: 'line',
-        mode: 'vertical',
-        scaleID: 'x-axis-0',
-        value: index,
-        borderColor: 'red',
-        borderWidth: 2,
-      }]
+      annotation: {
+        drawTime: 'afterDatasetsDraw',
+        annotations: [{
+          type: 'line',
+          mode: 'vertical',
+          scaleID: 'x-axis-0',
+          value: index,
+          borderColor: 'red',
+          borderWidth: 2,
+          label: { backgroundColor: 'rgba(148, 148, 148, 0.54)', enabled: true, content: index, position: "top" },
+        }],
+      },
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          id: 'x-axis-0'
+        }]
+      }
     }
   }
 
-  alter_transcript(labels: string[]): (element: any) => void {
+  getXValues(cd: any) {
+    return (cd.datasets!![0].data!! as any[]).map(element => element.x) as number[]
+  }
+
+  alter_transcript(labels: number[]): (element: any) => void {
     return (element: any) => {
       console.log(element)
 
       if (element.length > 0) {
         let target = +labels[element[0]._index]
-        let indexa = this.data_search(this.state.emotiondata.labels!!.map(Number), 0, this.state.emotiondata.labels!!.length as number - 1, target)
-        let indexb = this.data_search(this.state.textlabels.map(Number), 0, this.state.textlabels.length as number - 1, target)
-        let indexc = this.data_search(this.state.audata.labels!!.map(Number), 0, this.state.audata.labels!!.length as number - 1, target)
-        let indexd = this.data_search(this.state.auanomlabels.map(Number), 0, this.state.auanomlabels.length as number - 1, target)
-        let indexe = this.data_search(this.state.smoothemotiondata.labels!!.map(Number), 0, this.state.smoothemotiondata.labels!!.length as number - 1, target)
-        let indexf = this.data_search(this.state.smoothtextlabels.map(Number), 0, this.state.smoothtextlabels.length as number - 1, target)
         let index = this.transcript_search(0, this.state.transcript.length - 1, target)
         this.listRef.current?.scrollToItem(index)
+        let op = this.getOption(target)
         this.setState({
-          emotionoptions: {
-            annotation: this.getOption(indexa)
-          },
-          textoptions: {
-            annotation: this.getOption(indexb)
-          },
-          auoptions: {
-            annotation: this.getOption(indexc)
-          },
-          auanomoptions: {
-            annotation: this.getOption(indexd)
-          },
-          smoothemotionoptions: {
-            annotation: this.getOption(indexe)
-          },
-          smoothtextoptions: {
-            annotation: this.getOption(indexf)
-          },
+          genoptions: op,
         })
       }
     }
   }
 
-  transcript_alter(index: any) {
-    let emotion_index = this.data_search(this.state.emotiondata.labels!!.map(Number), 0, this.state.emotiondata.labels!!.length as number - 1, this.state.transcript[index].timestamp)
-    let text_index = this.data_search(this.state.textlabels.map(Number), 0, this.state.textlabels.length as number - 1, this.state.transcript[index].timestamp)
-    let au_index = this.data_search(this.state.audata.labels!!.map(Number), 0, this.state.audata.labels!!.length as number - 1, this.state.transcript[index].timestamp)
-    let auanom_index = this.data_search(this.state.auanomlabels.map(Number), 0, this.state.auanomlabels.length as number - 1, this.state.transcript[index].timestamp)
-    let smoothemotion_index = this.data_search(this.state.smoothemotiondata.labels!!.map(Number), 0, this.state.smoothemotiondata.labels!!.length as number - 1, this.state.transcript[index].timestamp)
-    let smoothtext_index = this.data_search(this.state.smoothtextlabels.map(Number), 0, this.state.smoothtextlabels.length as number - 1, this.state.transcript[index].timestamp)
+  transcript_alter(time: any) {
+    let op = this.getOption(time)
     this.setState({
-      emotionoptions: {
-        annotation: this.getOption(emotion_index)
-      },
-      textoptions: {
-        annotation: this.getOption(text_index)
-      },
-      auoptions: {
-        annotation: this.getOption(au_index)
-      },
-      auanomoptions: {
-        annotation: this.getOption(auanom_index)
-      },
-      smoothemotionoptions: {
-        annotation: this.getOption(smoothemotion_index)
-      },
-      smoothtextoptions: {
-        annotation: this.getOption(smoothtext_index)
-      },
+      genoptions: op,
     })
   }
 
@@ -598,7 +598,7 @@ class PatientSummary extends React.Component<PageProps, PageState> {
     var tempTranscript = this.state.transcript
 
     return (
-      <ListItem button style={style} onClick={() => this.transcript_alter(index)}>
+      <ListItem button style={style} onClick={() => this.transcript_alter(tempTranscript[index].timestamp)}>
         <ListItemText primary={tempTranscript[index].text} secondary={tempTranscript[index].timestamp} />
       </ListItem>
     );
@@ -721,58 +721,57 @@ class PatientSummary extends React.Component<PageProps, PageState> {
             <Grid item xs={4} id="MiddleComponent">
               <MultiButtonController leftComponent={
                 (<div style={{ overflow: 'auto', height: 487, display: 'block', maxWidth: 380 }}>
-                  <Line
+                  <Scatter
                     data={this.state.emotiondata}
-                    options={this.state.emotionoptions}
+                    options={this.state.genoptions}
                     // width={400}
                     height={380}
-                    getElementAtEvent={this.alter_transcript(this.state.emotiondata.labels as string[])} />
-                  <Line
+                    // getElementAtEvent={this.alter_transcript(this.state.emotiondata.labels as string[])} />
+                    getElementAtEvent={this.alter_transcript(this.getXValues(this.state.emotiondata))} />
+                  <Scatter
                     data={(canvas: any) => {
                       const gradient = canvas.getContext("2d").createLinearGradient(0, 0, canvas.width, 0)
                       gradient.addColorStop(0, "#47CDD5");
                       gradient.addColorStop(1, "#E6D725");
                       return {
-                        labels: Array.from(Array(41).keys()).map((ii) => {
-                          let temp = ((ii / 40.0 * 2) - 1).toFixed(2)
-                          return temp.toString()
-                        }), datasets: [{ data: Array.from(Array(41).keys()).map((_) => 1), backgroundColor: gradient }]
+                        datasets: [{
+                          data: [{ x: 0, y: 1 }, { x: 1, y: 1 }], backgroundColor: gradient, showLine: true
+                        }]
                       }
                     }}
                     options={this.state.avgtextoptions}
                     // width={400}
                     height={125}
                   />
-                  <Line
+                  <Scatter
                     data={this.state.textdata}
-                    options={this.state.textoptions}
+                    options={this.state.genoptions}
                     // width={400}
                     height={380}
                     getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
-                  <Line
+                  <Scatter
                     data={this.state.smoothemotiondata}
-                    options={this.state.smoothemotionoptions}
+                    options={this.state.genoptions}
                     // width={400}
                     height={380}
-                    getElementAtEvent={this.alter_transcript(this.state.smoothemotiondata.labels as string[])} />
-                  <Line
+                    getElementAtEvent={this.alter_transcript(this.getXValues(this.state.smoothemotiondata))} />
+                  <Scatter
                     data={this.state.smoothtextdata}
-                    options={this.state.smoothtextoptions}
+                    options={this.state.genoptions}
                     // width={400}
                     height={380}
                     getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
-                  <Line
+                  <Scatter
                     data={this.state.audata}
-                    options={this.state.emotionoptions}
+                    options={this.state.genoptions}
                     // width={400}
                     height={380}
-                    getElementAtEvent={this.alter_transcript(this.state.audata.labels as string[])} />
+                    getElementAtEvent={this.alter_transcript(this.getXValues(this.state.audata))} />
                   <AUChart
                     auanomData={this.state.auanomdata}
-                    auanomOpts={this.state.auanomoptions}
+                    auanomOpts={this.state.genoptions}
                     auanomPointColors={this.state.auanompointscolors}
-                    labels={this.state.auanomlabels}
-                    func={this.alter_transcript(this.state.auanomlabels)}
+                    func={this.alter_transcript(this.state.auanomdata[0].map(element => element.x))}
                   />
                 </div>)}
               />
