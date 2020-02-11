@@ -203,7 +203,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                     gradient.addColorStop(1, "#E6D725");
                     return {
                       datasets: [{
-                        data: [{ x: 0, y: 1 }, { x: 1, y: 1 }], backgroundColor: gradient, showLine: true
+                        data: [{ x: -1, y: 1 }, { x: 1, y: 1 }], backgroundColor: gradient, showLine: true
                       }]
                     }
                   }}
@@ -286,7 +286,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                     gradient.addColorStop(1, "#E6D725");
                     return {
                       datasets: [{
-                        data: [{ x: 0, y: 1 }, { x: 1, y: 1 }], backgroundColor: gradient, showLine: true
+                        data: [{ x: -1, y: 1 }, { x: 1, y: 1 }], backgroundColor: gradient, showLine: true
                       }]
                     }
                   }}
