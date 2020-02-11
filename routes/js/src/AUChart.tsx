@@ -31,7 +31,7 @@ export const AUChart: React.SFC<AUChartProps> = (props) => {
             <Scatter
                 data={getData(props.auanomData[index], props.auanomPointColors[index], index)}
                 options={props.auanomOpts}
-                height={100}
+                height={70}
                 getElementAtEvent={props.func} />
         )
     }

@@ -173,12 +173,16 @@ async function getSessionData(seshId: string): Promise<SessionData | null> {
           }
         });
         let auData = []
+        let auColors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#800000', '#aaffc3', '#808000', '#000075', '#808080', '#000000']
         for (let ii = 0; ii < auMetrics.length; ii++) {
           auData.push({
+            borderColor: auColors[ii],
+            pointBorderColor: auColors[ii],
             label: auTypes[ii],
             data: auMetrics[ii],
             hidden: ii >= 5,
-            showLine: true
+            showLine: true,
+            fill: false
           })
         }
 

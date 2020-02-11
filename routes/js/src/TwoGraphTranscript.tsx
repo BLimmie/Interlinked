@@ -189,7 +189,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.emotiondata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.emotiondata))} />
               }
               {
@@ -216,7 +216,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.textdata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
               }
               {
@@ -225,7 +225,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.smoothemotiondata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.smoothemotiondata))} />
               }
               {
@@ -234,7 +234,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.smoothtextdata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
               }
               {
@@ -243,7 +243,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.audata}
                   options={this.state.genoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.audata))} />
               }
               {
@@ -260,7 +260,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 <Bar
                   data={this.state.aggremotiondata}
                   width={900}
-                  height={380} />
+                  height={400} />
               }
             </div>
           </Grid>
@@ -272,7 +272,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.emotiondata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.emotiondata))} />
               }
               {
@@ -299,7 +299,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.textdata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
               }
               {
@@ -308,7 +308,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.smoothemotiondata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.smoothemotiondata))} />
               }
               {
@@ -317,7 +317,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.smoothtextdata}
                   options={this.state.divergingoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
               }
               {
@@ -326,7 +326,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                   data={this.state.audata}
                   options={this.state.genoptions}
                   width={900}
-                  height={380}
+                  height={400}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.audata))} />
               }
               {
@@ -343,7 +343,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 <Bar
                   data={this.state.aggremotiondata}
                   width={900}
-                  height={380} />
+                  height={400} />
               }
             </div>
           </Grid>
