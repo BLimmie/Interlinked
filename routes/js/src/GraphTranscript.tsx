@@ -45,7 +45,9 @@ const styles = (_: Theme) =>
       backgroundColor: "#cac7d6",
     },
     transcript_list: {
-      height: 200,
+      width: '100%',
+      height: 220,
+      maxWidth: "100vw",
       backgroundColor: "#b5b3bc",
     },
     pic: {
@@ -264,7 +266,7 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
           </Grid>
           <Grid item xs={12}>
             <div className={this.props.classes.transcript_list}>
-              <FixedSizeList ref={this.listRef} height={487} width={"25vw"} itemSize={100} itemCount={this.state.transcript.length}>
+              <FixedSizeList ref={this.listRef} height={220} width={"100vw"} itemSize={60} itemCount={this.state.transcript.length}>
                 {this.transcript_render}
               </FixedSizeList>
             </div>

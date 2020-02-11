@@ -361,6 +361,29 @@ export async function getPatientSessions(id: string): Promise<Session[]> {
   })
 }
 
+export async function getAssociatedSessions(proid: string, patun: string): Promise<Session[]> {
+  return new Promise<Session[]>(async (resolve) => {
+    await httpCall('POST', "http://localhost:8080/associatedsessions/" + proid + "/" + patun, [], null, (result: any, rr: number) => {
+      if (rr === 200) {
+        let arr = JSON.parse(result)
+        if (arr !== null) {
+          let Sessions: Session[] = []
+          arr = arr.forEach((element: Object) => {
+            let vals = Object.values(element)
+            let date = new Date(+vals[2] * 1e3)
+            let createdTime = date.toLocaleDateString("en-US") + " " + date.toLocaleTimeString("en-US")
+            let providerName = Object.values(vals[4])[1]
+            let providerUsername = Object.values(vals[4])[2]
+            let id = vals[0]
+            Sessions.push(new Session(createdTime as string, providerName as string, providerUsername as string, id as string))
+          });
+          resolve(Sessions)
+        }
+      }
+    })
+  })
+}
+
 export function getOption(index: number) {
   return {
     annotation: {

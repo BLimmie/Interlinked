@@ -127,6 +127,9 @@ func getAssociatedSessions(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
+	for ii := 0; ii < len(sessions); ii++ {
+		sessions[ii].Summary = make(map[string]interface{})
+	}
 	c.JSON(200, sessions)
 }
 

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import ReactDom from 'react-dom'
-import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import Login from './Login'
 import CreateAccount from './CreateAccount'
 import PrivilegedRoute from './PrivilegedRoute'
@@ -19,6 +19,7 @@ import PatientInterface from './TruePatientUI/PatientInterface'
 import TrueDoctorMainPage from './TrueDoctorUI/DoctorMainPage'
 import TrueDoctorProfile from './TrueDoctorUI/DoctorProfile'
 import TrueDoctorAppointments from './TrueDoctorUI/DoctorAppointments'
+import TrueDoctorSummary from './TrueDoctorUI/DoctorSummary'
 
 import TruePatientMainPage from './TruePatientUI/PatientMainPage'
 import TruePatientProfile from './TruePatientUI/PatientProfile'
@@ -37,8 +38,8 @@ import AlertTemplate from 'react-alert-template-oldschool-dark'
 // Initializing global variables
 var globalThis = window
 globalThis.words = new Map();
-globalThis.display_words = Array.from( globalThis.words.keys() );
-globalThis.sentiment = Array.from( globalThis.words.values() ); 
+globalThis.display_words = Array.from(globalThis.words.keys());
+globalThis.sentiment = Array.from(globalThis.words.values());
 globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
 globalThis.AU_exists = [true, true, true];
@@ -48,9 +49,9 @@ class Server extends React.Component {
   MainPageRoute: FunctionComponent<{}> = (props: {}) => {
     let userType = sessionStorage.getItem("userType")
     if (userType === "patient") {
-      return (<Redirect to='/client/TruePatientMainPage'/>)
+      return (<Redirect to='/client/TruePatientMainPage' />)
     } else {
-      return (<Redirect to='/client/TrueDoctorMainPage'/>)
+      return (<Redirect to='/client/TrueDoctorMainPage' />)
     }
   }
 
@@ -64,16 +65,17 @@ class Server extends React.Component {
           <PrivilegedRoute path='/client/DoctorInterface/:link' component={DoctorInterface} ></PrivilegedRoute>
           <PrivilegedRoute path='/client/DoctorInterfaceSimple/:link' component={DoctorInterfaceSimple} ></PrivilegedRoute>
           <PrivilegedRoute path='/client/PatientInterface/:link' component={PatientInterface} ></PrivilegedRoute>
-          
+
           <PrivilegedRoute path='/client/TrueDoctorMainPage'><TrueDoctorMainPage /></PrivilegedRoute>
           <PrivilegedRoute path='/client/TrueDoctorProfile'><TrueDoctorProfile /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/TrueDoctorAppointments'><TrueDoctorAppointments current_selection={0}/></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TrueDoctorAppointments'><TrueDoctorAppointments current_selection={0} /></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TrueDoctorSummary/:patun' component={TrueDoctorSummary} ></PrivilegedRoute>
 
           <PrivilegedRoute path='/client/TruePatientMainPage'><TruePatientMainPage /></PrivilegedRoute>
           <PrivilegedRoute path='/client/TruePatientProfile'><TruePatientProfile /></PrivilegedRoute>
-          <PrivilegedRoute path='/client/TruePatientAppointments'><TruePatientAppointments current_selection={0}/></PrivilegedRoute>
+          <PrivilegedRoute path='/client/TruePatientAppointments'><TruePatientAppointments current_selection={0} /></PrivilegedRoute>
           <PrivilegedRoute path='/client/TruePatientSummary'><TruePatientSummary /></PrivilegedRoute>
-          
+
         </Switch>
       </Router>
     )

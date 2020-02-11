@@ -47,7 +47,9 @@ const styles = (_: Theme) =>
       backgroundColor: "#b5b3bc",
     },
     transcript_list: {
-      height: 200,
+      width: '100%',
+      height: 220,
+      maxWidth: "100vw",
       backgroundColor: "#b5b3bc",
     },
     pic: {
@@ -349,7 +351,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
           </Grid>
           <Grid item xs={12}>
             <div className={this.props.classes.transcript_list}>
-              <FixedSizeList ref={this.listRef} height={487} width={"25vw"} itemSize={30} itemCount={this.state.transcript.length}>
+              <FixedSizeList ref={this.listRef} height={220} width={"100vw"} itemSize={50} itemCount={this.state.transcript.length}>
                 {this.transcript_render}
               </FixedSizeList>
             </div>
