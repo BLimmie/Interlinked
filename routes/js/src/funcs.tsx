@@ -97,11 +97,12 @@ export interface PageState {
   auanomdata: Array<any>[];
   auanompointscolors: Array<string>[];
   avgtextoptions: any;
-  genoptions: any;
   // final emotion data percent of total time
   aggremotiondata: ChartData;
   // ranges of x values (inclusive) that have diverging text and emotion sentiment
-  divergingranges: [number, number][];
+  divergingannotations: any[];
+  genoptions: any;
+  divergingoptions: any;
 }
 
 // Session class to fill out info in list
@@ -379,11 +380,48 @@ export function getOption(index: number) {
   }
 }
 
+export function getDivergingOption(da: any[], index: number) {
+  return {
+    annotation: {
+      drawTime: 'afterDatasetsDraw',
+      annotations: [{
+        type: 'line',
+        mode: 'vertical',
+        scaleID: 'x-axis-0',
+        value: index,
+        borderColor: 'red',
+        borderWidth: 2,
+        label: { backgroundColor: 'rgba(148, 148, 148, 0.54)', enabled: true, content: index, position: "top" },
+      }, ...da],
+    },
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        id: 'x-axis-0'
+      }]
+    }
+  }
+}
+
 export function getXValues(cd: any) {
   return (cd.datasets!![0].data!! as any[]).map(element => element.x) as number[]
 }
 
 export function getState(currentSesh: SessionData) {
+  let divergingAnnotations: any[] = []
+  currentSesh.divergingRanges.map(element => {
+    let obj = {
+      type: 'box',
+      drawTime: 'beforeDatasetsDraw',
+      xScaleID: 'x-axis-0',
+      xMin: element[0],
+      xMax: element[1],
+      // borderColor: 'blue',
+      borderWidth: 0,
+      backgroundColor: 'rgba(135, 206, 250, 0.2)'
+    }
+    divergingAnnotations.push(obj)
+  })
   return {
     transcript: currentSesh.transcript,
     auanomdata: currentSesh.auanomdata,
@@ -471,6 +509,19 @@ export function getState(currentSesh: SessionData) {
         data: currentSesh.aggrSentiment
       }]
     },
+    divergingannotations: divergingAnnotations,
+    divergingoptions: {
+      annotation: {
+        drawTime: 'afterDatasetsDraw',
+        annotations: divergingAnnotations
+      },
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          id: 'x-axis-0'
+        }]
+      }
+    },
     avgtextoptions: {
       annotation:
       {
@@ -501,5 +552,4 @@ export function getState(currentSesh: SessionData) {
       }
     },
   }
-
 }

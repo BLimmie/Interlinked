@@ -7,7 +7,7 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Scatter, Bar } from 'react-chartjs-2';
 import { ChartData } from 'chart.js';
 import 'chartjs-plugin-annotation';
-import { SessionData, TranscriptLine, PageState, getOption, getXValues, getState } from './funcs';
+import { SessionData, TranscriptLine, PageState, getOption, getXValues, getState, getDivergingOption } from './funcs';
 import { AUChart } from './AUChart';
 
 interface PageProps extends WithStyles<typeof styles> {
@@ -102,7 +102,8 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
 
       avgtextoptions: {},
       genoptions: {},
-      divergingranges: [],
+      divergingoptions: {},
+      divergingannotations: [],
     }
 
     // If you're having problems with callbacks and "this is undefined", then use these types of lines
@@ -146,8 +147,10 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
         let index = this.transcript_search(0, this.state.transcript.length - 1, target)
         this.listRef.current?.scrollToItem(index)
         let op = getOption(target)
+        let dop = getDivergingOption(this.state.divergingannotations, target)
         this.setState({
           genoptions: op,
+          divergingoptions: dop,
         })
       }
     }
@@ -155,8 +158,10 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
 
   transcript_alter(time: any) {
     let op = getOption(time)
+    let dop = getDivergingOption(this.state.divergingannotations, time)
     this.setState({
       genoptions: op,
+      divergingoptions: dop,
     })
   }
 
@@ -182,7 +187,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphOne == 0 &&
                 <Scatter
                   data={this.state.emotiondata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.emotiondata))} />
@@ -209,7 +214,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphOne == 2 &&
                 <Scatter
                   data={this.state.textdata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
@@ -218,7 +223,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphOne == 3 &&
                 <Scatter
                   data={this.state.smoothemotiondata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.smoothemotiondata))} />
@@ -227,7 +232,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphOne == 4 &&
                 <Scatter
                   data={this.state.smoothtextdata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
@@ -265,7 +270,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphTwo == 0 &&
                 <Scatter
                   data={this.state.emotiondata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.emotiondata))} />
@@ -292,7 +297,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphTwo == 2 &&
                 <Scatter
                   data={this.state.textdata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
@@ -301,7 +306,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphTwo == 3 &&
                 <Scatter
                   data={this.state.smoothemotiondata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(getXValues(this.state.smoothemotiondata))} />
@@ -310,7 +315,7 @@ class TwoGraphTranscript extends React.Component<PageProps, PageState> {
                 this.props.graphTwo == 4 &&
                 <Scatter
                   data={this.state.smoothtextdata}
-                  options={this.state.genoptions}
+                  options={this.state.divergingoptions}
                   width={900}
                   height={380}
                   getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
