@@ -29,10 +29,10 @@ func AggregatorFromSession(session *Session) (*Aggregator, error) {
 			Time:          session.CreatedTime,
 			ImageFilename: "",
 			Emotion: map[string]string{
-				"joy":      "NOT_LIKELY",
-				"sorrow":   "NOT_LIKELY",
-				"anger":    "NOT_LIKELY",
-				"surprise": "NOT_LIKELY",
+				"joy":      "VERY_UNLIKELY",
+				"sorrow":   "VERY_UNLIKELY",
+				"anger":    "VERY_UNLIKELY",
+				"surprise": "VERY_UNLIKELY",
 			},
 			AU: defaultAU,
 		},
@@ -57,7 +57,7 @@ func (agg *Aggregator) init() {
 	agg.conclusions["Percent in Facial Emotion over last 10 seconds"] = emotionOverTime_RunningAggregate
 	agg.conclusions["Text sentiment over last 10 seconds"] = sentimentOverTime_RunningAggregate
 	agg.conclusions["AU Anomalies"] = condensedAU
-//	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
+	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
 }
 
 func (agg *Aggregator) Run() (interface{}, error) {
@@ -109,10 +109,10 @@ func timeSpentEmotion(session *Session) (interface{}, error) {
 	}
 	var emotions_s = make(map[string]string)
 	totalTime := lastTime.Sub(startTime)
-	var emotions_p = make(map[string]float32)
+	var emotions_p = make(map[string]float64)
 	for e, t := range emotions {
 		emotions_s[e] = t.String()
-		emotions_p[e] = float32(t) / float32(totalTime)
+		emotions_p[e] = float64(t) / float64(totalTime)
 	}
 	return map[string]interface{}{
 		"Total Time": emotions_s,
@@ -178,10 +178,10 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 		}
 		var emotions_s = make(map[string]string)
 		totalTime := time.Second * 10
-		var emotions_p = make(map[string]float32)
+		var emotions_p = make(map[string]float64)
 		for e, t := range emotions {
 			emotions_s[e] = t.String()
-			emotions_p[e] = float32(t) / float32(totalTime)
+			emotions_p[e] = float64(t) / float64(totalTime)
 		}
 		fullList[strconv.Itoa(seconds)] = map[string]interface{}{
 			"Total Time": emotions_s,
@@ -194,7 +194,7 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 
 func sentimentOverTime_RunningAggregate(session *Session) (interface{}, error) {
 	initialTime := timeFromInt(session.CreatedTime)
-	fullList := make(map[string]float32)
+	fullList := make(map[string]float64)
 	lastTime := timeFromInt(session.TextMetrics[len(session.TextMetrics)-1].Time)
 	seconds := 10
 	for currentTime := initialTime.Add(time.Second * 10); currentTime.Before(lastTime); currentTime = currentTime.Add(time.Second) {
@@ -230,7 +230,7 @@ func sentimentOverTime_RunningAggregate(session *Session) (interface{}, error) {
 			dur := nextTime.Sub(timeFromInt(m.Time))
 			currentCumulativeSentiment += float64(m.Sentiment) * float64(dur) / float64(time.Second*10)
 		}
-		fullList[strconv.Itoa(seconds)] = float32(currentCumulativeSentiment)
+		fullList[strconv.Itoa(seconds)] = float64(currentCumulativeSentiment)
 		seconds++
 	}
 
@@ -263,7 +263,7 @@ func condensedAU(session *Session) (interface{}, error) {
 
 func divergentSentiment(session *Session) (interface{}, error) {
 	fullList := make(map[string]interface{})
-	tm := session.Summary["Text sentiment over last 10 seconds"].(map[string]float32)
+	tm := session.Summary["Text sentiment over last 10 seconds"].(map[string]float64)
 	im := session.getPercentagesRunningAverage()
 	for s, tmet := range tm {
 		imet, ok := im[s]

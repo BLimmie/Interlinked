@@ -7,20 +7,28 @@ import { FormControl, FormControlLabel, Input, InputLabel, Button, Switch } from
 import { Snackbar } from '@material-ui/core'
 import { Box } from '@material-ui/core'
 import { httpCall } from './funcs'
+import CreateAccountButtonImage from './ButtonAssets/CreateAccount.png'
 
-import Image from './Images/background_login_16-9.png'
+import Image from './TrueImages/background_LogIn_16-9.png'
 
 const styles = (_: Theme) => createStyles({
   root: {
     flexGrow: 1,
-    background: '#cdddf7'
+    background: '#dddce7'
+  },
+  button_background: {
+    backgroundSize: 'cover'
   },
   button: {
-    background: "#ffffff"
+    min_width: "15vw",
+    width: "15vw",
+    min_height: "4vh",
+    height: "4vh"
   },
   background: {
     height: "100vh",
     width: "100vw",
+    backgroundSize: 'cover'
   },
 })
 
@@ -57,6 +65,7 @@ class CreateAccount extends React.Component<CreateAccountProps, CreateAccountSta
       <Box justifyContent="center"
            className={this.props.classes.background}
            style={{backgroundImage: `url(${Image})` }}>
+             <div style={{ padding: 40 }}>
         <Grid
           container
           spacing={5}
@@ -70,14 +79,13 @@ class CreateAccount extends React.Component<CreateAccountProps, CreateAccountSta
           <Grid item xs={12}></Grid>
           <Grid item xs={12}></Grid>
           <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
+
           <Grid item>
             <FormControl required>
               <InputLabel>Full Name</InputLabel>
               <Input
                 id='name'
-                placeholder='full name'
+                placeholder='Full Name'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   this.setState({name: e.target.value})}
               />
@@ -88,7 +96,7 @@ class CreateAccount extends React.Component<CreateAccountProps, CreateAccountSta
               <InputLabel>Username</InputLabel>
               <Input
                 id='username'
-                placeholder='username'
+                placeholder='Username'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   this.setState({username: e.target.value})}
               />
@@ -101,7 +109,7 @@ class CreateAccount extends React.Component<CreateAccountProps, CreateAccountSta
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   this.setState({password: e.target.value})}
                 id='password'
-                placeholder='password'/>
+                placeholder='Password'/>
             </FormControl>
           </Grid>
           <Grid item>
@@ -116,14 +124,16 @@ class CreateAccount extends React.Component<CreateAccountProps, CreateAccountSta
                 label={this.state.isPatient ? "Patient" : "Provider"}
             />
           </Grid>
+          <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${CreateAccountButtonImage})` }}>
                     <Button
             className={this.props.classes.button}
-            variant='contained'
             onClick={ this.applyForCreation }
-          >Create Account</Button>
+          ></Button>
+          </Box>
           <Snackbar open={this.state.invalidUsername}
-            message='invalid username' />
+            message='Invalid Username' />
         </Grid>
+        </div>
       </Box>
     )
   }

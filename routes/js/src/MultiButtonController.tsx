@@ -1,12 +1,13 @@
-import React, { ReactComponentElement } from 'react';
+import React, { ReactComponentElement, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Grid, Typography } from '@material-ui/core'
+import { VariableSizeList } from 'react-window';
 
 const useStyles = makeStyles(theme => ({
   root: {
   },
   buttonStyle :{
-    background: "#b5b3bc",
+    background: "#cac7d6",
     marginRight: "8px"
   }
 
@@ -41,14 +42,12 @@ export const MultiButtonController: React.SFC<MultiButtonControllerProps> = (pro
         <Grid item xs={12}>
           <div>
           {componentNum == 0 &&
-            props.leftComponent}
+             props.leftComponent}
+          {componentNum == 1 && <div /> 
+          }
+          {componentNum == 2 && <div />
+          }
           </div>
-          {componentNum == 1 &&
-          <div />
-          }
-          {componentNum == 2 &&
-          <div />
-          }
         </Grid>
     </Grid>
   )

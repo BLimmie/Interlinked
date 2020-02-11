@@ -92,7 +92,7 @@ export default function VideoControls(props:VideoControlsProps)  {
     >
         <Grid item >
           { avState.audio &&
-            <Box className={classes.button_box} bgcolor="#c7c6ce">
+            <Box className={classes.button_box} bgcolor="#cac7d6">
               <IconButton className={classes.padding} onClick={() => setMic(false)} >
                 <MicSharp
                   data-testid={"mic-on-icon"}
@@ -102,7 +102,7 @@ export default function VideoControls(props:VideoControlsProps)  {
             </Box>
           }
           { avState.audio === false &&
-            <Box className={classes.button_box} bgcolor="#6e6b7a" justifyContent="center">
+            <Box className={classes.button_box} bgcolor="#5f587d" justifyContent="center">
               <IconButton className={classes.padding} onClick={() => setMic(true)} >
                 <MicOffSharp
                   data-testid={"mic-off-icon"}
@@ -115,7 +115,7 @@ export default function VideoControls(props:VideoControlsProps)  {
 
         <Grid item>
             { avState.video === false &&
-              <Box className={classes.button_box} bgcolor="#6e6b7a">
+              <Box className={classes.button_box} bgcolor="#5f587d">
                 <IconButton
                   className={classes.padding}
                   onClick={() => setVidFeed(true)}
@@ -128,7 +128,7 @@ export default function VideoControls(props:VideoControlsProps)  {
               </Box>
             }
             { avState.video &&
-              <Box className={classes.button_box} bgcolor="#c7c6ce">
+              <Box className={classes.button_box} bgcolor="#cac7d6">
                 <IconButton
                   className={classes.padding}
                   onClick={() => setVidFeed(false)}

@@ -15,7 +15,7 @@ import TextboxImage from '../TrueImages/background_textbox_simple.png'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      background: '#16001f'
+      background: '#dddce7'
     },
     background: {
       height: "100vh",
@@ -115,9 +115,9 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
              style={{backgroundImage: `url(${Image})` }}>
     
                       <Box className={classes.their_video_box}
-                            bgcolor="#6e6b7a"               
+                            bgcolor="#5f587d"               
                             border = {2}
-                            borderColor = "#6e6b7a">
+                            borderColor = "#5f587d">
                         {
                           // videoRoom &&
                           <Grid item className={classes.their_video}  id="remote" xs = {5} />
