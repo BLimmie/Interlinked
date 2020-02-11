@@ -48,7 +48,7 @@ func ImageMetrics(imgFilename string) (map[string]string, error) {
 	}, nil
 }
 
-func TextSentiment(text string) (float32, error) {
+func TextSentiment(text string) (float64, error) {
 	ctx := context.Background()
 	client, err := language.NewClient(ctx)
 	if err != nil {
@@ -66,7 +66,7 @@ func TextSentiment(text string) (float32, error) {
 	if err != nil {
 		return 0, err
 	}
-	return sentiment.DocumentSentiment.Score, nil
+	return float64(sentiment.DocumentSentiment.Score), nil
 }
 
 func ImageAU(imgFilename string, outputDirectory string) (map[string]float64, error){

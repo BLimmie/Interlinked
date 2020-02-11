@@ -54,14 +54,23 @@ class Transcription extends React.Component<SpeechProps> {
 
     // Dynamically updating transcript
     const transcript_split = the_props.transcript.split(' ');
+    let sentences: string[] = [];
+    var j = 0;
+    for (var i = 0; i < transcript_split.length; i++) {
+      if (transcript_split.slice(j, i).join(" ").length > 100) {
+        sentences.push(transcript_split.slice(j, i - 1).join(" "));
+        j = i - 1;
+        i = i - 2;
+      }
+      else if (i === transcript_split.length - 1) {
+        sentences.push(transcript_split.slice(j, i).join(" "));
+      }
+    }
     let temp = Array.from( globalThis.words.values() );
 
     globalThis.words = new Map();
 
-    let limit = Math.floor(transcript_split.length / 12);
-    if (transcript_split.length % 12 !== 0) {
-      limit++;
-    }
+    let limit = sentences.length;
     if (tones.length < limit) {
       tones.length = limit;
     }
@@ -73,10 +82,10 @@ class Transcription extends React.Component<SpeechProps> {
     }
     for (var i = 0; i < limit; i++) {
       if (i !== limit - 1 && i !== limit - 2) {
-        globalThis.words.set(transcript_split.slice(12 * i, 12 * (i + 1)).join(" "), temp[i]);
+        globalThis.words.set(sentences[i], temp[i]);
       }
       else if (i === limit - 2 && calledyet[i] !== true) {
-        let recent_phrase: string = transcript_split.slice(12 * i, 12 * (i + 1)).join(" ");
+        let recent_phrase: string = sentences[i];
         httpCall('POST', "http://localhost:8080/sentiment/text", recent_phrase, interpret_sentiment, i);
         calledyet[i] = true;
       }
@@ -100,15 +109,15 @@ class Transcription extends React.Component<SpeechProps> {
             }
           }
         }
-        let recent_phrase: string = transcript_split.slice(12 * i, 12 * (i + 1)).join(" ");
+        let recent_phrase: string = sentences[i];
         globalThis.words.set(recent_phrase, tone);
         tones2[i] = true;
       }
       else if (i === limit - 1) {
-        globalThis.words.set(transcript_split.slice(12 * i).join(" "), 0);
+        globalThis.words.set(sentences[i], 0);
       }
       else {
-        globalThis.words.set(transcript_split.slice(12 * i, 12 * (i + 1)).join(" "), temp[i]);
+        globalThis.words.set(sentences[i], temp[i]);
       }
     }
 
