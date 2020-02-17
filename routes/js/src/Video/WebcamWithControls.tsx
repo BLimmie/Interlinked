@@ -31,8 +31,7 @@ function sendFrame(screenShot: string, cb: (result:any)=>any,  sessionId: string
 
 export function setPatienSnapshotInterval(resultCB: (result: any) => void , sessionId: string) : NodeJS.Timeout {
   const id = setInterval(() => {
-    const videoParentElement = document.getElementById('remote')
-    const videoElement = videoParentElement && videoParentElement.lastElementChild
+    const videoElement = document.querySelector('video')
     const imageCanvas = document.createElement('canvas')
     imageCanvas.width = 640
     imageCanvas.height = 480

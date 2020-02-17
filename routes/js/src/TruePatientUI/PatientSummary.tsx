@@ -7,7 +7,7 @@ import SummaryButtonImage from '../ButtonAssets/SummarySelected.png'
 import { Box, CircularProgress, FormControlLabel, Switch } from '@material-ui/core'
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
-import { SessionData, Session, getPatientSessions, getSessionsData } from '../funcs'
+import { SessionData, getPatientSessions, getSessionsData } from '../funcs'
 import GraphSessionComponent from '../GraphSessionComponent'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -46,7 +46,6 @@ const PatientSummary = (props: PatientSummaryProps) => {
   const classes = useStyles();
 
   const [AllSessionData, SetAllSessionData] = React.useState<SessionData[]>([])
-  const [sessions, SetSessions] = React.useState<Session[]>([])
   const [CompareSessions, SetCompareSessions] = React.useState<boolean>(false)
   const [CompareGraphs, SetCompareGraphs] = React.useState<boolean>(false)
 
@@ -54,15 +53,6 @@ const PatientSummary = (props: PatientSummaryProps) => {
     getPatientSessions(id).then(async (patientSessions) => {
       getSessionsData(patientSessions).then((value) => {
         SetAllSessionData(value)
-        const sessionsWithData: Session[] = []
-        patientSessions.forEach((sesh) => {
-          value.forEach((validSesh) => {
-            if (validSesh.seshId === sesh.sesId) {
-              sessionsWithData.push(sesh)
-            }
-          })
-        })
-        SetSessions(sessionsWithData)
       })
     })
   }, [])
@@ -119,7 +109,7 @@ const PatientSummary = (props: PatientSummaryProps) => {
         </Grid>
       </div>
 
-      <div style={{ padding: 16, marginTop: "64px" }}>
+      <div style={{ padding: 16, marginTop: "88px" }}>
         {
           AllSessionData.length == 0 &&
           <CircularProgress />
@@ -167,7 +157,6 @@ const PatientSummary = (props: PatientSummaryProps) => {
               <Grid xs={12} >
                 <GraphSessionComponent
                   SessionDataArr={AllSessionData}
-                  Sessions={sessions}
                   CompareGraphs={CompareGraphs}
                 />
               </Grid>
@@ -176,10 +165,10 @@ const PatientSummary = (props: PatientSummaryProps) => {
               CompareSessions &&
               <Grid container>
                 <Grid xs={6} >
-                  <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions} />
+                  <GraphSessionComponent SessionDataArr={AllSessionData} />
                 </Grid>
                 <Grid xs={6} >
-                  <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions} />
+                  <GraphSessionComponent SessionDataArr={AllSessionData} />
                 </Grid>
               </Grid>
             }

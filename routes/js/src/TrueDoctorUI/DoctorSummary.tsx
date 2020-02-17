@@ -7,7 +7,7 @@ import SummaryButtonImage from '../ButtonAssets/SummarySelected.png'
 import { Box, CircularProgress, FormControlLabel, Switch } from '@material-ui/core'
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
-import { SessionData, Session, getAssociatedSessions, getSessionsData } from '../funcs'
+import { SessionData, getAssociatedSessions, getSessionsData } from '../funcs'
 import GraphSessionComponent from '../GraphSessionComponent'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -45,7 +45,6 @@ const DoctorSummary = ({ match }: RouteComponentProps<PatunParams>) => {
   const classes = useStyles();
 
   const [AllSessionData, SetAllSessionData] = React.useState<SessionData[]>([])
-  const [sessions, SetSessions] = React.useState<Session[]>([])
   const [CompareSessions, SetCompareSessions] = React.useState<boolean>(false)
   const [CompareGraphs, SetCompareGraphs] = React.useState<boolean>(false)
 
@@ -53,15 +52,6 @@ const DoctorSummary = ({ match }: RouteComponentProps<PatunParams>) => {
     getAssociatedSessions(id, match.params.patun).then(async (patientSessions) => {
       getSessionsData(patientSessions).then((value) => {
         SetAllSessionData(value)
-        const sessionsWithData: Session[] = []
-        patientSessions.forEach((sesh) => {
-          value.forEach((validSesh) => {
-            if (validSesh.seshId === sesh.sesId) {
-              sessionsWithData.push(sesh)
-            }
-          })
-        })
-        SetSessions(sessionsWithData)
       })
     })
   }, [])
@@ -166,7 +156,6 @@ const DoctorSummary = ({ match }: RouteComponentProps<PatunParams>) => {
               <Grid xs={12} >
                 <GraphSessionComponent
                   SessionDataArr={AllSessionData}
-                  Sessions={sessions}
                   CompareGraphs={CompareGraphs}
                 />
               </Grid>
@@ -175,10 +164,10 @@ const DoctorSummary = ({ match }: RouteComponentProps<PatunParams>) => {
               CompareSessions &&
               <Grid container>
                 <Grid xs={6} >
-                  <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions} />
+                  <GraphSessionComponent SessionDataArr={AllSessionData}/>
                 </Grid>
                 <Grid xs={6} >
-                  <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions} />
+                  <GraphSessionComponent SessionDataArr={AllSessionData}/>
                 </Grid>
               </Grid>
             }
