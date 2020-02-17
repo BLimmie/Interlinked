@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core'
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
 import { Theme } from '@material-ui/core/styles'
 import { Redirect } from 'react-router-dom'
+import { Link } from '@material-ui/core'
 import { FormControl, FormControlLabel, Input, InputLabel, Button } from '@material-ui/core'
 import { Radio, RadioGroup } from '@material-ui/core'
 import { Snackbar } from '@material-ui/core'
@@ -44,7 +45,6 @@ type LoginState = {
   password: string,
   loggedIn: boolean,
   loginOnceFailed: boolean,
-  createAccount: boolean,
   isPatient: boolean,
 }
 
@@ -59,7 +59,6 @@ class Login extends React.Component<LoginProps, LoginState> {
       password: '',
       loggedIn: false,
       loginOnceFailed: false,
-      createAccount: false,
       isPatient: true,
     }
     this.authenticate = this.authenticate.bind(this)
@@ -68,75 +67,79 @@ class Login extends React.Component<LoginProps, LoginState> {
   // The "div style" line is a necessary workaround for a bug in Material UI Grid that causes it to extend too far,
   // resulting in the scrollbars you may have seen. The aforementioned line fixes that.
   render() {
-    return this.state.loggedIn ? (this.state.isPatient ? (<Redirect to='/client/TruePatientMainPage' />) : (<Redirect to='/client/TrueDoctorMainPage' />)) : (this.state.createAccount ? (<Redirect to='/client/createAccount' />) : (
-      <Box padding={ 10 } >
-        <Grid
-          container
-          wrap='nowrap'
-          direction='column'
-          alignItems='center'
-          spacing={ 1 }
-          justify='center'
-        >
-          <Grid item>
-            <Typography variant='h5'>Log in to Interlinked</Typography>
-          </Grid>
-          <Grid item>
-            <FormControl required>
-              <InputLabel>Username</InputLabel>
-              <Input
-                id='username'
-                placeholder='Username'
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  this.setState({username: e.target.value})}
+    return this.state.loggedIn
+      ? (this.state.isPatient
+          ? (<Redirect to='/client/TruePatientMainPage' />)
+          : (<Redirect to='/client/TrueDoctorMainPage' />)
+        )
+      : (
+        <Box padding="10%">
+          <Grid
+            container
+            direction='column'
+            alignItems='center'
+            spacing={3}
+          >
+            <Grid item>
+              <Typography variant='h5'>Log in to Interlinked</Typography>
+            </Grid>
+            <Grid item>
+              <FormControl required>
+                <InputLabel>Username</InputLabel>
+                <Input
+                  id='username'
+                  placeholder='username'
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    this.setState({username: e.target.value})}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <FormControl required>
+                <InputLabel>Password</InputLabel>
+                <Input
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    this.setState({password: e.target.value})}
+                  type='password'
+                  id='password'
+                  placeholder='password'/>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <FormControl required>
+                <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  this.setState({
+                    isPatient: (e.target.value == 'Patient') ? true : false
+                  })}
+                >
+                  <FormControlLabel 
+                    control={ <Radio /> } value='Patient' label="I'm a patient"
+                  />
+                  <FormControlLabel 
+                    control={ <Radio /> } value='Doctor' label="I'm a doctor"
+                  />
+                </ RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <Button
+                variant='outlined'
+                onClick={ this.authenticate }
+              >Log In</Button>
+            </Grid>
+            <Grid item>
+              <Link
+                href='/client/createAccount'
+              >Don't have an account?</Link>
+            </Grid>
+            <Grid item>
+              <Snackbar open={this.state.loginOnceFailed}
+                message='invalid credentials'
               />
-            </FormControl>
+            </Grid>
           </Grid>
-          <Grid item>
-            <FormControl required>
-              <InputLabel>Password</InputLabel>
-              <Input
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  this.setState({password: e.target.value})}
-                type='password'
-                id='password'
-                placeholder='Password'/>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl required>
-              <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                this.setState({
-                  isPatient: (e.target.value == 'Patient') ? true : false
-                })}
-              >
-                <FormControlLabel 
-                  control={ <Radio /> } value='Patient' label="I'm a patient"
-                />
-                <FormControlLabel 
-                  control={ <Radio /> } value='Doctor' label="I'm a doctor"
-                />
-              </ RadioGroup>
-            </FormControl>
-          </Grid>
-          <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${LogInButtonImage})` }}>
-          <Button
-            className={this.props.classes.button}
-            onClick={ this.authenticate }
-          ></Button>
-          </Box>
-          <Grid item xs={12}></Grid>
-          <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${SignUpButtonImage})` }}>
-          <Button
-            className={this.props.classes.button}
-            onClick={ () => this.createAccount(this) }
-          ></Button>
-          </Box>
-          <Snackbar open={this.state.loginOnceFailed}
-            message='invalid credentials' />
-        </Grid>
-      </Box>
-    ))
+        </Box>
+      )
   }
 
   authenticate() {
@@ -159,10 +162,6 @@ class Login extends React.Component<LoginProps, LoginState> {
       httpCall('POST', "http://localhost:8080/login?userType=" + (this.state.isPatient ? "patient" : "provider"), [['Authorization', 'Basic ' + btoa(this.state.username + ":" + this.state.password)]], null, cb)
 
     }
-  }
-
-  createAccount(context: Login) {
-    context.setState({createAccount: true})
   }
 }
 
