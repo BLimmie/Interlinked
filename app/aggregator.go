@@ -265,9 +265,21 @@ func divergentSentiment(session *Session) (interface{}, error) {
 	fullList := make(map[string]interface{})
 	tm := session.Summary["Text sentiment over last 10 seconds"].(map[string]float64)
 	im := session.getPercentagesRunningAverage()
-	for s, tmet := range tm {
-		imet, ok := im[s]
-		if !ok {
+	allKeys := make(map[string]bool,0)
+	for s := range tm {
+		allKeys[s] = true
+	}
+	for s := range im {
+		_, in := allKeys[s]
+		if !in {
+			allKeys[s] = true
+		}
+	}
+	for s := range allKeys {
+		tmet, tok := tm[s]
+		imet, iok := im[s]
+		if !tok || !iok {
+			fullList[s] = false
 			continue
 		}
 		heuristic := tmet * (imet["joy"] + imet["surprise"] - imet["sadness"] - imet["anger"])
