@@ -3,9 +3,11 @@ import { Grid } from '@material-ui/core'
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
 import { Theme } from '@material-ui/core/styles'
 import { Redirect } from 'react-router-dom'
-import { FormControl, FormControlLabel, Input, InputLabel, Button, Switch } from '@material-ui/core'
+import { FormControl, FormControlLabel, Input, InputLabel, Button } from '@material-ui/core'
+import { Radio, RadioGroup } from '@material-ui/core'
 import { Snackbar } from '@material-ui/core'
 import { Box } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import { httpCall } from './funcs'
 import LogInButtonImage from './ButtonAssets/LogIn.png'
 import SignUpButtonImage from './ButtonAssets/SignUp.png'
@@ -13,6 +15,7 @@ import SignUpButtonImage from './ButtonAssets/SignUp.png'
 import Image from './TrueImages/background_LogIn_16-9.png'
 
 const styles = (_: Theme) => createStyles({
+  /*
   root: {
     flexGrow: 1,
     background: '#dddce7'
@@ -31,6 +34,7 @@ const styles = (_: Theme) => createStyles({
     width: "100vw",
     backgroundSize: 'cover'
   },
+   */
 })
 
 interface LoginProps extends WithStyles<typeof styles> { }
@@ -65,26 +69,18 @@ class Login extends React.Component<LoginProps, LoginState> {
   // resulting in the scrollbars you may have seen. The aforementioned line fixes that.
   render() {
     return this.state.loggedIn ? (this.state.isPatient ? (<Redirect to='/client/TruePatientMainPage' />) : (<Redirect to='/client/TrueDoctorMainPage' />)) : (this.state.createAccount ? (<Redirect to='/client/createAccount' />) : (
-      <Box justifyContent="center"
-           className={this.props.classes.background}
-           style={{backgroundImage: `url(${Image})` }}>     
-        <div style={{ padding: 15 }}>
+      <Box padding={ 10 } >
         <Grid
           container
-          spacing={3}
           wrap='nowrap'
           direction='column'
           alignItems='center'
+          spacing={ 1 }
           justify='center'
         >
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
+          <Grid item>
+            <Typography variant='h5'>Log in to Interlinked</Typography>
+          </Grid>
           <Grid item>
             <FormControl required>
               <InputLabel>Username</InputLabel>
@@ -108,16 +104,20 @@ class Login extends React.Component<LoginProps, LoginState> {
             </FormControl>
           </Grid>
           <Grid item>
-            <FormControlLabel 
-              control={
-              <Switch
-                classes={this.props.classes}
-                checked={this.state.isPatient}
-                onClick={ () => this.changeUserType(this) }
-              />}
-                labelPlacement="start"
-                label={this.state.isPatient ? "Patient" : "Provider"}
-            />
+            <FormControl required>
+              <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                this.setState({
+                  isPatient: (e.target.value == 'Patient') ? true : false
+                })}
+              >
+                <FormControlLabel 
+                  control={ <Radio /> } value='Patient' label="I'm a patient"
+                />
+                <FormControlLabel 
+                  control={ <Radio /> } value='Doctor' label="I'm a doctor"
+                />
+              </ RadioGroup>
+            </FormControl>
           </Grid>
           <Box className={this.props.classes.button_background} style={{backgroundImage: `url(${LogInButtonImage})` }}>
           <Button
@@ -135,7 +135,6 @@ class Login extends React.Component<LoginProps, LoginState> {
           <Snackbar open={this.state.loginOnceFailed}
             message='invalid credentials' />
         </Grid>
-        </div>
       </Box>
     ))
   }
@@ -164,10 +163,6 @@ class Login extends React.Component<LoginProps, LoginState> {
 
   createAccount(context: Login) {
     context.setState({createAccount: true})
-  }
-
-  changeUserType = (context: Login) => {
-    context.setState({isPatient: !this.state.isPatient})
   }
 }
 

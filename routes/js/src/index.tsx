@@ -32,9 +32,6 @@ import theme from './theme';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-oldschool-dark'
 
-
-
-
 // Initializing global variables
 var globalThis = window
 globalThis.words = new Map();
@@ -43,7 +40,6 @@ globalThis.sentiment = Array.from(globalThis.words.values());
 globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
 globalThis.AU_exists = [true, true, true];
-
 
 class Server extends React.Component {
   MainPageRoute: FunctionComponent<{}> = (props: {}) => {
