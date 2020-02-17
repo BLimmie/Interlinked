@@ -28,7 +28,11 @@ func getSessionMetricsAggregate(c *gin.Context) {
 		return
 	}
 	if !(session.Summary == nil || recalculate) {
-		c.JSON(200, session.Summary)
+		response := session.Summary
+		response["Created Time"] = session.CreatedTime
+		response["Text Metrics"] = session.TextMetrics
+		response["Frame Metrics"] = session.ImageMetrics
+		c.JSON(200, response)
 		return
 	}
 	aggregator, err := app.AggregatorFromSession(session)
