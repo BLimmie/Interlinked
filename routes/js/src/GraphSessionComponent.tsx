@@ -59,13 +59,12 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
               onChange={selectGraph}
             >
               <MenuItem value={0}>Emotion Graph</MenuItem>
-              <MenuItem value={1}>Avg Text Sentiment</MenuItem>
+              <MenuItem value={1}>Aggregate Emotion/Text Sentiment</MenuItem>
               <MenuItem value={2}>Text Sentiment Graph</MenuItem>
               <MenuItem value={3}>Smooth Emotion Graph</MenuItem>
               <MenuItem value={4}>Smooth Text Graph</MenuItem>
               <MenuItem value={5}>Smooth AU Graph</MenuItem>
               <MenuItem value={6}>AU Charts</MenuItem>
-              <MenuItem value={7}>Final Percentage of Time for Sentiment</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -94,13 +93,12 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
               onChange={selectSecondGraph}
             >
               <MenuItem value={0}>Emotion Graph</MenuItem>
-              <MenuItem value={1}>Avg Text Sentiment</MenuItem>
+              <MenuItem value={1}>Aggregate Emotion/Text Sentiment</MenuItem>
               <MenuItem value={2}>Text Sentiment Graph</MenuItem>
               <MenuItem value={3}>Smooth Emotion Graph</MenuItem>
               <MenuItem value={4}>Smooth Text Graph</MenuItem>
               <MenuItem value={5}>Smooth AU Graph</MenuItem>
               <MenuItem value={6}>AU Charts</MenuItem>
-              <MenuItem value={7}>Final Percentage of Time for Sentiment</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -128,13 +126,12 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
             onChange={selectGraph}
           >
             <MenuItem value={0}>Emotion Graph</MenuItem>
-            <MenuItem value={1}>Avg Text Sentiment</MenuItem>
+            <MenuItem value={1}>Aggregate Emotion/Text Sentiment</MenuItem>
             <MenuItem value={2}>Text Sentiment Graph</MenuItem>
             <MenuItem value={3}>Smooth Emotion Graph</MenuItem>
             <MenuItem value={4}>Smooth Text Graph</MenuItem>
             <MenuItem value={5}>Smooth AU Graph</MenuItem>
             <MenuItem value={6}>AU Charts</MenuItem>
-            <MenuItem value={7}>Final Percentage of Time for Sentiment</MenuItem>
           </Select>
         </FormControl>
       </Grid>

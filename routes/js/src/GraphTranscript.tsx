@@ -7,8 +7,9 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Scatter, Bar } from 'react-chartjs-2';
 import { ChartData } from 'chart.js';
 import 'chartjs-plugin-annotation';
-import { SessionData, TranscriptLine, PageState, getOption, getXValues, getState, getDivergingOption } from './funcs';
-import { AUChart } from './AUChart';
+import 'chartjs-plugin-zoom';
+import { SessionData, TranscriptLine, PageState, getOption, getXValues, getState, getDivergingOption, getScales } from './funcs';
+import { SessionSummaryCharts } from './SessionSummaryCharts';
 
 interface PageProps extends WithStyles<typeof styles> {
   current_selection: number;
@@ -182,87 +183,24 @@ class GraphTranscript extends React.Component<PageProps, PageState> {
       <div style={{ padding: 8, marginTop: "16px" }}>
         <Grid container alignItems="center" justify="center" spacing={2}>
           <Grid item xs={12}>
-            <div style={{ overflow: 'auto', height: 400, maxWidth: 900, margin: 'auto' }}>
-              {
-                this.props.graph_selection == 0 &&
-                <Scatter
-                  data={this.state.emotiondata}
-                  options={this.state.divergingoptions}
-                  width={900}
-                  height={400}
-                  getElementAtEvent={this.alter_transcript(getXValues(this.state.emotiondata))} />
-              }
-              {
-                this.props.graph_selection == 1 &&
-                <Scatter
-                  data={(canvas: any) => {
-                    const gradient = canvas.getContext("2d").createLinearGradient(0, 0, canvas.width, 0)
-                    gradient.addColorStop(0, "#47CDD5");
-                    gradient.addColorStop(1, "#E6D725");
-                    return {
-                      datasets: [{
-                        data: [{ x: -1, y: 1 }, { x: 1, y: 1 }], backgroundColor: gradient, showLine: true
-                      }]
-                    }
-                  }}
-                  options={this.state.avgtextoptions}
-                  width={900}
-                  height={125}
-                />
-              }
-              {
-                this.props.graph_selection == 2 &&
-                <Scatter
-                  data={this.state.textdata}
-                  options={this.state.divergingoptions}
-                  width={900}
-                  height={400}
-                  getElementAtEvent={this.alter_transcript(this.state.textlabels)} />
-              }
-              {
-                this.props.graph_selection == 3 &&
-                <Scatter
-                  data={this.state.smoothemotiondata}
-                  options={this.state.divergingoptions}
-                  width={900}
-                  height={400}
-                  getElementAtEvent={this.alter_transcript(getXValues(this.state.smoothemotiondata))} />
-              }
-              {
-                this.props.graph_selection == 4 &&
-                <Scatter
-                  data={this.state.smoothtextdata}
-                  options={this.state.divergingoptions}
-                  width={900}
-                  height={400}
-                  getElementAtEvent={this.alter_transcript(this.state.smoothtextlabels)} />
-              }
-              {
-                this.props.graph_selection == 5 &&
-                <Scatter
-                  data={this.state.audata}
-                  options={this.state.genoptions}
-                  width={900}
-                  height={400}
-                  getElementAtEvent={this.alter_transcript(getXValues(this.state.audata))} />
-              }
-              {
-                this.props.graph_selection == 6 &&
-                <AUChart
-                  auanomData={this.state.auanomdata}
-                  auanomOpts={this.state.genoptions}
-                  auanomPointColors={this.state.auanompointscolors}
-                  func={this.alter_transcript(this.state.auanomdata[0].map(element => element.x))}
-                />
-              }
-              {
-                this.props.graph_selection == 7 &&
-                <Bar
-                  data={this.state.aggremotiondata}
-                  width={900}
-                  height={400} />
-              }
-            </div>
+            <SessionSummaryCharts
+              emotiondata={this.state.emotiondata}
+              aggremotiondata={this.state.aggremotiondata}
+              textdata={this.state.textdata}
+              smoothemotiondata={this.state.smoothemotiondata}
+              smoothtextdata={this.state.smoothtextdata}
+              audata={this.state.audata}
+              auanomdata={this.state.auanomdata}
+              genoptions={this.state.genoptions}
+              divergingoptions={this.state.divergingoptions}
+              avgtextoptions={this.state.avgtextoptions}
+              textlabels={this.state.textlabels}
+              smoothtextlabels={this.state.smoothtextlabels}
+              auanompointscolors={this.state.auanompointscolors}
+              selection={this.props.graph_selection}
+              alter_transcript={this.alter_transcript}
+            />
+
           </Grid>
           <Grid item xs={12}>
             <div className={this.props.classes.transcript_list}>

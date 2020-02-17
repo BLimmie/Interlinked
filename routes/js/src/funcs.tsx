@@ -16,18 +16,18 @@ export function httpCall(method: string, url: string, header: Array<[string, str
 
 export class SessionData {
   transcript: TranscriptLine[] = []
-  auanomdata: number[][]
+  auanomdata: any[][]
   auanompointscolors: string[][]
-  angerData: number[] = []
-  joyData: number[] = []
-  supriseData: number[] = []
-  sorrowData: number[] = []
+  angerData: any[] = []
+  joyData: any[] = []
+  supriseData: any[] = []
+  sorrowData: any[] = []
   textLabels: number[] = []
   textData: any
-  smoothangerData: number[] = []
-  smoothjoyData: number[] = []
-  smoothsupriseData: number[] = []
-  smoothsorrowData: number[] = []
+  smoothangerData: any[] = []
+  smoothjoyData: any[] = []
+  smoothsupriseData: any[] = []
+  smoothsorrowData: any[] = []
   smoothtextData: any
   smoothtextLabels: number[]
   auDataSets: any = [{}]
@@ -38,18 +38,18 @@ export class SessionData {
 
   constructor(
     transcript: TranscriptLine[],
-    auanomdata: number[][],
+    auanomdata: any[][],
     auanompointscolors: string[][],
-    angerData: number[],
-    joyData: number[],
-    supriseData: number[],
-    sorrowData: number[],
+    angerData: any[],
+    joyData: any[],
+    supriseData: any[],
+    sorrowData: any[],
     textLabels: number[],
     textData: any,
-    smoothangerData: number[] = [],
-    smoothjoyData: number[] = [],
-    smoothsupriseData: number[] = [],
-    smoothsorrowData: number[] = [],
+    smoothangerData: any[] = [],
+    smoothjoyData: any[] = [],
+    smoothsupriseData: any[] = [],
+    smoothsorrowData: any[] = [],
     smoothtextData: any,
     smoothtextLabels: number[],
     auDataSets: any,
@@ -148,13 +148,13 @@ async function getSessionData(seshId: string): Promise<SessionData | null> {
           if (ss === "VERY_UNLIKELY") {
             return 0;
           } else if (ss === "UNLIKELY") {
-            return 0.25;
+            return 25;
           } else if (ss === "POSSIBLE") {
-            return 0.5;
+            return 50;
           } else if (ss === "LIKELY") {
-            return 0.75;
+            return 75;
           } else {
-            return 1;
+            return 100;
           }
         };
 
@@ -198,9 +198,9 @@ async function getSessionData(seshId: string): Promise<SessionData | null> {
           for (let ii = 0; ii < auanomData.length; ii++) {
             auanomData[ii].push({ x: +element, y: obj[auTypes[ii]]["Intensity"] })
             if (obj[auTypes[ii]]["Anomalous"]) {
-              auanomPointColors[ii].push("#90cd8a")
+              auanomPointColors[ii].push("rgba(236, 123, 16, 1)")
             } else {
-              auanomPointColors[ii].push("rgba(148, 148, 148, 0.54)")
+              auanomPointColors[ii].push("#21A1FF")
             }
           }
         })
@@ -214,10 +214,10 @@ async function getSessionData(seshId: string): Promise<SessionData | null> {
         (Object.keys(metrics["Percent in Facial Emotion over last 10 seconds"])).forEach(element => {
           smoothsentimentLabels.push(+element)
           let obj = metrics["Percent in Facial Emotion over last 10 seconds"][element]["Percentage"]
-          smoothanger.push({ x: +element, y: obj["anger"] })
-          smoothjoy.push({ x: +element, y: obj["joy"] })
-          smoothsorrow.push({ x: +element, y: obj["sorrow"] })
-          smoothsurprise.push({ x: +element, y: obj["surprise"] })
+          smoothanger.push({ x: +element, y: 100 * obj["anger"] })
+          smoothjoy.push({ x: +element, y: 100 * obj["joy"] })
+          smoothsorrow.push({ x: +element, y: 100 * obj["sorrow"] })
+          smoothsurprise.push({ x: +element, y: 100 * obj["surprise"] })
         })
 
         // text sentiment metrics
@@ -304,7 +304,7 @@ async function getSessionData(seshId: string): Promise<SessionData | null> {
         let avgtext: number = metrics["Average Text Sentiment"]["AvgTextSentiment"].toPrecision(2)
         // final percent of sentiments out of total time
         let aggrSentimentObj = metrics["Time in Facial Emotions"]["Percentage"]
-        let aggrSentiment = [aggrSentimentObj["anger"], aggrSentimentObj["joy"], aggrSentimentObj["sorrow"], aggrSentimentObj["surprise"]]
+        let aggrSentiment = [aggrSentimentObj["anger"] * 100, 100 * aggrSentimentObj["joy"], 100 * aggrSentimentObj["sorrow"], 100 * aggrSentimentObj["surprise"]]
 
         const sessionData = new SessionData(
           transcript, auanomData, auanomPointColors, anger, joy, surprise, sorrow, textLabels,
@@ -384,6 +384,8 @@ export async function getAssociatedSessions(proid: string, patun: string): Promi
   })
 }
 
+// x used for boundaries for zoom/pan
+var xmax: number = 0
 export function getOption(index: number) {
   return {
     annotation: {
@@ -400,9 +402,33 @@ export function getOption(index: number) {
     },
     scales: {
       xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: "Time (sec)"
+        },
         type: 'linear',
         id: 'x-axis-0'
       }]
+    },
+    pan: {
+      enabled: true,
+      mode: 'x',
+      rangeMin: {
+        x: 0,
+      },
+      rangeMax: {
+        x: xmax,
+      }
+    },
+    zoom: {
+      enabled: true,
+      mode: 'x',
+      rangeMin: {
+        x: 0,
+      },
+      rangeMax: {
+        x: xmax,
+      }
     }
   }
 }
@@ -423,10 +449,57 @@ export function getDivergingOption(da: any[], index: number) {
     },
     scales: {
       xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: "Time (sec)"
+        },
         type: 'linear',
         id: 'x-axis-0'
       }]
+    },
+    pan: {
+      enabled: true,
+      mode: 'x',
+      rangeMin: {
+        x: 0,
+      },
+      rangeMax: {
+        x: xmax,
+      }
+    },
+    zoom: {
+      enabled: true,
+      mode: 'x',
+      rangeMin: {
+        x: 0,
+      },
+      rangeMax: {
+        x: xmax,
+      }
     }
+  }
+}
+
+export function getScales(ylabel: string, ymin: number | undefined = undefined, ymax: number | undefined = undefined) {
+  return {
+    xAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: "Time (sec)"
+      },
+      type: 'linear',
+      id: 'x-axis-0'
+    }],
+    yAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: ylabel
+      },
+      ticks: {
+        min: ymin,
+        max: ymax
+      }
+    }]
   }
 }
 
@@ -436,6 +509,7 @@ export function getXValues(cd: any) {
 
 export function getState(currentSesh: SessionData) {
   let divergingAnnotations: any[] = []
+  xmax = currentSesh.angerData[currentSesh.angerData.length - 1].x + 30
   currentSesh.divergingRanges.map(element => {
     let obj = {
       type: 'box',
@@ -544,9 +618,65 @@ export function getState(currentSesh: SessionData) {
       },
       scales: {
         xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: "Time (sec)"
+          },
           type: 'linear',
           id: 'x-axis-0'
         }]
+      },
+      pan: {
+        enabled: true,
+        mode: 'x',
+        rangeMin: {
+          x: 0,
+        },
+        rangeMax: {
+          x: xmax,
+        }
+      },
+      zoom: {
+        enabled: true,
+        mode: 'x',
+        rangeMin: {
+          x: 0,
+        },
+        rangeMax: {
+          x: xmax,
+        }
+      }
+    },
+    genoptions: {
+      scales: {
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: "Time (sec)"
+          },
+          type: 'linear',
+          id: 'x-axis-0'
+        }]
+      },
+      pan: {
+        enabled: true,
+        mode: 'x',
+        rangeMin: {
+          x: 0,
+        },
+        rangeMax: {
+          x: xmax,
+        }
+      },
+      zoom: {
+        enabled: true,
+        mode: 'x',
+        rangeMin: {
+          x: 0,
+        },
+        rangeMax: {
+          x: xmax,
+        }
       }
     },
     avgtextoptions: {
@@ -566,6 +696,10 @@ export function getState(currentSesh: SessionData) {
 
       scales: {
         xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: "Negative to Positive Text Sentiment"
+          },
           type: 'linear',
           id: 'x-axis-0',
         }],

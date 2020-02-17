@@ -21,6 +21,9 @@ export const AUChart: React.SFC<AUChartProps> = (props) => {
                     label: auTypes[index],
                     data: data,
                     pointBackgroundColor: pointColors,
+                    pointBorderColor: pointColors,
+                    borderColor: "rgba(33, 161, 255, 1)",
+                    backgroundColor: "rgba(33, 161, 255, 0.4)",
                     showLine: true
                 }
             ]

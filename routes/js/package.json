@@ -15,6 +15,7 @@
     "@types/twilio-video": "^2.0.10",
     "chart.js": "^2.9.2",
     "chartjs-plugin-annotation": "^0.5.7",
+    "chartjs-plugin-zoom": "^0.7.5",
     "ibm-watson": "^5.1.0",
     "react": "latest",
     "react-alert": "^6.0.0",
