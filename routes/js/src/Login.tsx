@@ -4,7 +4,7 @@ import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
 import { Theme } from '@material-ui/core/styles'
 import { Redirect } from 'react-router-dom'
 import { Link } from '@material-ui/core'
-import { FormControl, FormControlLabel, Input, InputLabel, Button } from '@material-ui/core'
+import { FormControl, FormControlLabel, Input, InputLabel, ButtonBase } from '@material-ui/core'
 import { Radio, RadioGroup } from '@material-ui/core'
 import { Snackbar } from '@material-ui/core'
 import { Box } from '@material-ui/core'
@@ -13,29 +13,27 @@ import { httpCall } from './funcs'
 import LogInButtonImage from './ButtonAssets/LogIn.png'
 import SignUpButtonImage from './ButtonAssets/SignUp.png'
 
-import Image from './TrueImages/background_LogIn_16-9.png'
+import BackgroundImage from './TrueImages/background_LogIn_16-9.png'
 
 const styles = (_: Theme) => createStyles({
-  /*
   root: {
     flexGrow: 1,
-    background: '#dddce7'
-  },
-  button_background: {
-    backgroundSize: 'cover'
+    background: '#dddce7',
   },
   button: {
     min_width: "15vw",
     width: "15vw",
     min_height: "4vh",
-    height: "4vh"
+    height: "4vh",
+    backgroundSize: 'cover',
+    backgroundImage: `url(${LogInButtonImage})`,
   },
   background: {
     height: "100vh",
     width: "100vw",
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
+    backgroundImage: `url(${BackgroundImage})`,
   },
-   */
 })
 
 interface LoginProps extends WithStyles<typeof styles> { }
@@ -73,7 +71,10 @@ class Login extends React.Component<LoginProps, LoginState> {
           : (<Redirect to='/client/TrueDoctorMainPage' />)
         )
       : (
-        <Box padding="10%">
+        <Box
+          padding="10%"
+          className={ this.props.classes.background }
+        >
           <Grid
             container
             direction='column'
@@ -122,10 +123,10 @@ class Login extends React.Component<LoginProps, LoginState> {
               </FormControl>
             </Grid>
             <Grid item>
-              <Button
-                variant='outlined'
+              <ButtonBase
+                className={ this.props.classes.button }
                 onClick={ this.authenticate }
-              >Log In</Button>
+              ></ButtonBase>
             </Grid>
             <Grid item>
               <Link
