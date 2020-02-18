@@ -4,7 +4,6 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { Grid, FormControl, InputLabel, Select, MenuItem, Typography } from '@material-ui/core'
 import { SessionData, Session } from './funcs'
 import GraphTranscript from './GraphTranscript';
-import TwoGraphTranscript from './TwoGraphTranscript'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,17 +15,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface GraphSessionProps extends React.HTMLAttributes<HTMLElement> {
   SessionDataArr: SessionData[]
-  Sessions: Session[]
   CompareGraphs?: boolean
 }
 
 // This function is what arranges all of the individual elements into the complete UI
 export default function GraphSessionComponent(props: GraphSessionProps) {
-  const { SessionDataArr, Sessions, CompareGraphs } = props
+  const { SessionDataArr, CompareGraphs } = props
 
   const [activeGraph, setActiveGraph] = React.useState<number>(0)
   const [activeSession, setActiveSession] = React.useState<number>(0)
-
+  const [currentSesh, setCurrentSesh] = React.useState<SessionData>(SessionDataArr[0])
   const [secondGraph, setSecondGraph] = React.useState<number>(0)
 
   const classes = useStyles();
@@ -39,14 +37,9 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
     setSecondGraph(event.target.value as number)
   }
 
-
   const selectSession = (event: React.ChangeEvent<{ value: unknown }>) => {
-    let i = 0
-    for (i; i < SessionDataArr.length; i++) {
-      if (SessionDataArr[i].seshId == (event.target.value as string))
-        break
-    }
-    setActiveSession(i)
+    setActiveSession(event.target.value as number)
+    setCurrentSesh(SessionDataArr[event.target.value as number])
   }
   if (CompareGraphs != undefined && CompareGraphs) {
     return (
@@ -73,12 +66,12 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
           <FormControl className={classes.width}>
             <InputLabel> Select Session </InputLabel>
             <Select
-              value={SessionDataArr[activeSession].seshId}
+              value={activeSession}
               onChange={selectSession}
             >
               {
-                Sessions.map((session) => {
-                  return <MenuItem value={session.sesId}>{session.createdTime}</MenuItem>
+                SessionDataArr.map((session,index) => {
+                  return <MenuItem value={index}>{session.seshDate }</MenuItem>
                 })
               }
             </Select>
@@ -105,11 +98,10 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
         <Grid item xs={1} />
         <Grid item xs={3} />
         <Grid item xs={12}>
-          <TwoGraphTranscript
-            current_selection={activeSession}
-            data={SessionDataArr}
-            graphOne={activeGraph}
-            graphTwo={secondGraph}
+          <GraphTranscript
+            currentSesh={currentSesh}
+            graph_selection={activeGraph}
+            graph_selection_two = {secondGraph}
           />
         </Grid>
       </Grid>
@@ -139,12 +131,12 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
         <FormControl className={classes.width}>
           <InputLabel> Select Session </InputLabel>
           <Select
-            value={SessionDataArr[activeSession].seshId}
+            value={activeSession}
             onChange={selectSession}
           >
             {
-              Sessions.map((session) => {
-                return <MenuItem value={session.sesId}>{session.createdTime}</MenuItem>
+              SessionDataArr.map((session,index) => {
+                return <MenuItem value={index}>{session.seshDate }</MenuItem>
               })
             }
           </Select>
@@ -153,9 +145,9 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
       <Grid item xs={3} />
       <Grid item xs={12}>
         <GraphTranscript
-          current_selection={activeSession}
-          data={SessionDataArr}
+          currentSesh={currentSesh}
           graph_selection={activeGraph}
+          graph_selection_two = {-1}
         />
       </Grid>
     </Grid>

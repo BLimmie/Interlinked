@@ -1,23 +1,21 @@
 import React, { RefObject } from 'react';
-import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles'
+import { createStyles, Theme, makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { Scatter, Bar } from 'react-chartjs-2';
-import { ChartData } from 'chart.js';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
-import { SessionData, TranscriptLine, PageState, getOption, getXValues, getState, getDivergingOption, getScales } from './funcs';
+import { SessionData, TranscriptLine, getOption, getDivergingOption, getState, PageState } from './funcs';
 import { SessionSummaryCharts } from './SessionSummaryCharts';
 
-interface PageProps extends WithStyles<typeof styles> {
-  current_selection: number;
-  data: SessionData[]
+interface PageProps {
+  currentSesh: SessionData
   graph_selection: number
+  graph_selection_two: number
 }
 
-const styles = (_: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     background: {
       height: "100vh",
@@ -80,139 +78,140 @@ const styles = (_: Theme) =>
       marginRight: "8px"
     }
   })
+ )
 
-class GraphTranscript extends React.Component<PageProps, PageState> {
-  private listRef: RefObject<FixedSizeList> = React.createRef();
+export default function GraphTranscript(props: PageProps) {
+  const {currentSesh, graph_selection, graph_selection_two} = props
+  const classes = useStyles();
 
-  constructor(props: PageProps) {
-    super(props);
-    this.state = {
-      current_selection: props.current_selection,
-      component_num: 0,
-      transcript: [],
-      emotiondata: { datasets: [{ data: [] }] },
-      smoothemotiondata: { datasets: [{ data: [] }] },
-      textdata: { datasets: [{ data: [] }] },
-      textlabels: [],
-      smoothtextdata: { datasets: [{ data: [] }] },
-      smoothtextlabels: [],
-      audata: { datasets: [{ data: [] }] },
-      auanomdata: [[]],
-      auanompointscolors: [],
-      aggremotiondata: { datasets: [{ data: [] }] },
 
-      avgtextoptions: {},
-      genoptions: {},
-      divergingoptions: {},
-      divergingannotations: [],
-    }
+  const listRef: RefObject<FixedSizeList> = React.createRef();
+  const transcript: TranscriptLine[] = currentSesh.transcript
+  
+  const pageState: PageState = getState(currentSesh)
 
-    // If you're having problems with callbacks and "this is undefined", then use these types of lines
-    this.page_alter = this.page_alter.bind(this);
-    this.transcript_alter = this.transcript_alter.bind(this);
-    this.transcript_render = this.transcript_render.bind(this);
-    this.alter_transcript = this.alter_transcript.bind(this);
-    this.transcript_search = this.transcript_search.bind(this);
-  }
-  componentDidMount() {
-    this.page_alter()
-  }
-  componentWillReceiveProps() {
-    this.page_alter()
-  }
+  const [divergingoptions, setDivergingoptions] = React.useState(pageState.divergingoptions)
+  const [genoptions, setGenOptions] = React.useState(pageState.genoptions)
 
-  transcript_search(ll: number, rr: number, ii: number): number {
+  const transcript_search = (ll: number, rr: number, ii: number): number => {
     if (rr >= ll) {
       let mid = ll + Math.floor((rr - ll) / 2)
-      if (this.state.transcript[mid].timestamp === ii) {
+      if (transcript[mid].timestamp === ii) {
         return mid
       }
-      if (this.state.transcript[mid].timestamp > ii) {
-        return this.transcript_search(ll, mid - 1, ii)
+      if (transcript[mid].timestamp > ii) {
+        return transcript_search(ll, mid - 1, ii)
       }
-      return this.transcript_search(mid + 1, rr, ii)
+      return transcript_search(mid + 1, rr, ii)
     } else if (rr < 0) { return 0 }
     else { return rr }
   }
 
-  page_alter() {
-    const currentSesh = this.props.data[this.props.current_selection]
-    this.setState(getState(currentSesh))
-    return null
-  }
-
-  alter_transcript(labels: number[]): (element: any) => void {
+  const alter_transcript = (labels: number[]): (element: any) => void => {
     return (element: any) => {
       if (element.length > 0) {
         let target = +labels[element[0]._index]
-        let index = this.transcript_search(0, this.state.transcript.length - 1, target)
-        this.listRef.current?.scrollToItem(index)
+        let index = transcript_search(0, transcript.length - 1, target)
+        listRef.current?.scrollToItem(index)
         let op = getOption(target)
-        let dop = getDivergingOption(this.state.divergingannotations, target)
-        this.setState({
-          genoptions: op,
-          divergingoptions: dop,
-        })
+        let dop = getDivergingOption(pageState.divergingannotations, target)
+        setGenOptions(op)
+        setDivergingoptions(dop)
       }
     }
   }
 
-  transcript_alter(time: any) {
+  const transcript_alter = (time: any) => {
     let op = getOption(time)
-    let dop = getDivergingOption(this.state.divergingannotations, time)
-    this.setState({
-      genoptions: op,
-      divergingoptions: dop,
-    })
+    let dop = getDivergingOption(pageState.divergingannotations, time)
+    setGenOptions(op)
+    setDivergingoptions(dop)
   }
 
-  transcript_render(props: ListChildComponentProps) {
+  const transcript_render = (props: ListChildComponentProps) => {
     const { index, style } = props;
 
-    var tempTranscript = this.state.transcript
-
     return (
-      <ListItem button style={style} onClick={() => this.transcript_alter(tempTranscript[index].timestamp)}>
-        <ListItemText primary={tempTranscript[index].text} secondary={tempTranscript[index].timestamp} />
+      <ListItem button style={style} onClick={() => transcript_alter(currentSesh.transcript[index].timestamp)}>
+        <ListItemText primary={currentSesh.transcript[index].text} />
       </ListItem>
     );
   }
 
-  render() {
     return (
       <div style={{ padding: 8, marginTop: "16px" }}>
         <Grid container alignItems="center" justify="center" spacing={2}>
+          { graph_selection_two == -1 &&
+            <Grid item xs={12}>
+              <SessionSummaryCharts
+                emotiondata={pageState.emotiondata}
+                aggremotiondata={pageState.aggremotiondata}
+                textdata={pageState.textdata}
+                smoothemotiondata={pageState.smoothemotiondata}
+                smoothtextdata={pageState.smoothtextdata}
+                audata={pageState.audata}
+                auanomdata={pageState.auanomdata}
+                genoptions={genoptions}
+                divergingoptions={divergingoptions}
+                avgtextoptions={pageState.avgtextoptions}
+                textlabels={pageState.textlabels}
+                smoothtextlabels={pageState.smoothtextlabels}
+                auanompointscolors={pageState.auanompointscolors}
+                selection={graph_selection}
+                alter_transcript={alter_transcript}
+              />
+            </Grid>
+          }
+          { graph_selection_two >= 0 &&
+            <Grid container>
+              <Grid item xs={6}>
+                <SessionSummaryCharts
+                  emotiondata={pageState.emotiondata}
+                  aggremotiondata={pageState.aggremotiondata}
+                  textdata={pageState.textdata}
+                  smoothemotiondata={pageState.smoothemotiondata}
+                  smoothtextdata={pageState.smoothtextdata}
+                  audata={pageState.audata}
+                  auanomdata={pageState.auanomdata}
+                  genoptions={genoptions}
+                  divergingoptions={divergingoptions}
+                  avgtextoptions={pageState.avgtextoptions}
+                  textlabels={pageState.textlabels}
+                  smoothtextlabels={pageState.smoothtextlabels}
+                  auanompointscolors={pageState.auanompointscolors}
+                  selection={graph_selection}
+                  alter_transcript={alter_transcript}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <SessionSummaryCharts
+                  emotiondata={pageState.emotiondata}
+                  aggremotiondata={pageState.aggremotiondata}
+                  textdata={pageState.textdata}
+                  smoothemotiondata={pageState.smoothemotiondata}
+                  smoothtextdata={pageState.smoothtextdata}
+                  audata={pageState.audata}
+                  auanomdata={pageState.auanomdata}
+                  genoptions={genoptions}
+                  divergingoptions={divergingoptions}
+                  avgtextoptions={pageState.avgtextoptions}
+                  textlabels={pageState.textlabels}
+                  smoothtextlabels={pageState.smoothtextlabels}
+                  auanompointscolors={pageState.auanompointscolors}
+                  selection={graph_selection_two}
+                  alter_transcript={alter_transcript}
+                />
+               </Grid>
+            </Grid>
+          }
           <Grid item xs={12}>
-            <SessionSummaryCharts
-              emotiondata={this.state.emotiondata}
-              aggremotiondata={this.state.aggremotiondata}
-              textdata={this.state.textdata}
-              smoothemotiondata={this.state.smoothemotiondata}
-              smoothtextdata={this.state.smoothtextdata}
-              audata={this.state.audata}
-              auanomdata={this.state.auanomdata}
-              genoptions={this.state.genoptions}
-              divergingoptions={this.state.divergingoptions}
-              avgtextoptions={this.state.avgtextoptions}
-              textlabels={this.state.textlabels}
-              smoothtextlabels={this.state.smoothtextlabels}
-              auanompointscolors={this.state.auanompointscolors}
-              selection={this.props.graph_selection}
-              alter_transcript={this.alter_transcript}
-            />
-
-          </Grid>
-          <Grid item xs={12}>
-            <div className={this.props.classes.transcript_list}>
-              <FixedSizeList ref={this.listRef} height={220} width={"100vw"} itemSize={60} itemCount={this.state.transcript.length}>
-                {this.transcript_render}
+            <div className={classes.transcript_list }>
+              <FixedSizeList ref={listRef} height={220} width={"100vw"} itemSize={60} itemCount={transcript.length}>
+                {transcript_render}
               </FixedSizeList>
             </div>
           </Grid>
         </Grid>
       </div>
     )
-  }
 }
-
-export default withStyles(styles, { withTheme: true })(GraphTranscript)
