@@ -14,6 +14,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { httpCall } from '../funcs'
+import { UserAppBar, UserInterfaceRole } from '../UserAppBar'
 
 interface PageProps extends WithStyles<typeof styles> {
     current_selection: number;
@@ -196,46 +197,8 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
             <Box justifyContent="center"
                 className={this.props.classes.background}
                 style={{ backgroundImage: `url(${Image})` }}>
-                <div style={{ padding: 20 }}>
-                    <Grid
-                        container
-                        spacing={1}
-                        direction='row'
-                        alignItems='flex-start'
-                        justify='space-around'
-                    >
 
-                        <Grid item>
-                            <Box className={this.props.classes.button_background} style={{ backgroundImage: `url(${ProfileButtonImage})` }}>
-                                <Link to='/client/TruePatientProfile'>
-                                    <Button className={this.props.classes.top_button}>
-
-                                    </Button>
-                                </Link>
-                            </Box>
-                        </Grid>
-
-                        <Grid item>
-                            <Box className={this.props.classes.button_background} style={{ backgroundImage: `url(${AppointmentsButtonImage})` }}>
-                                <Link to='/client/TruePatientMainPage'>
-                                    <Button className={this.props.classes.current_top_button}>
-
-                                    </Button>
-                                </Link>
-                            </Box>
-                        </Grid>
-
-                        <Grid item>
-                            <Box className={this.props.classes.button_background} style={{ backgroundImage: `url(${SummaryButtonImage})` }}>
-                                <Link to='/client/TruePatientSummary'>
-                                    <Button className={this.props.classes.top_button}>
-
-                                    </Button>
-                                </Link>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                </div>
+                <UserAppBar in={UserInterfaceRole.Appointments}/>
 
                 <div style={{ padding: 50 }}>
 
