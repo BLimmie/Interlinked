@@ -2,9 +2,6 @@ import React from 'react';
 import { withStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Image from '../TrueImages/background_Appointments_16-9.png'
 import DefaultImage from '../TrueImages/default.png'
-import ProfileButtonImage from '../ButtonAssets/MyProfile.png'
-import AppointmentsButtonImage from '../ButtonAssets/AppointmentsSelected.png'
-import SummaryButtonImage from '../ButtonAssets/Summary.png'
 import ViewProfileButtonImage from '../ButtonAssets/ViewProfile.png'
 import StartAppointmentButtonImage from '../ButtonAssets/StartAppointment.png'
 import { Box, Typography, CardMedia, WithStyles, Input } from '@material-ui/core';
