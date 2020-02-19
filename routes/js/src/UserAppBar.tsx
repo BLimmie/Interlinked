@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, ButtonBase, Grid } from '@material-ui/core'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import MyProfileButtonSelectedImage from '../ButtonAssets/MyProfileSelected.png'
-import AppointmentsButtonSelectedImage from '../ButtonAssets/AppointmentsSelected.png'
-import SummaryButtonSelectedImage from '../ButtonAssets/SummarySelected.png'
-import AppointmentsButtonImage from '../ButtonAssets/Appointments.png'
-import SummaryButtonImage from '../ButtonAssets/Summary.png'
-import MyProfileButtonImage from '../ButtonAssets/MyProfile.png'
+import MyProfileButtonSelectedImage from './ButtonAssets/MyProfileSelected.png'
+import AppointmentsButtonSelectedImage from './ButtonAssets/AppointmentsSelected.png'
+import SummaryButtonSelectedImage from './ButtonAssets/SummarySelected.png'
+import AppointmentsButtonImage from './ButtonAssets/Appointments.png'
+import SummaryButtonImage from './ButtonAssets/Summary.png'
+import MyProfileButtonImage from './ButtonAssets/MyProfile.png'
 
 const useStyles = makeStyles((theme: Theme) => {
   const top_button_base = {

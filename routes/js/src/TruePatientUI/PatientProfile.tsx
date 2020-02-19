@@ -9,7 +9,7 @@ import ChangePhotoButtonImage from '../ButtonAssets/ChangePhoto.png'
 import { Box, Typography, CardMedia } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
-import { UserAppBar, UserInterfaceRole } from './UserAppBar'
+import { UserAppBar, UserInterfaceRole } from '../UserAppBar'
 
 
 const useStyles = makeStyles((theme: Theme) =>
