@@ -5,15 +5,7 @@ import ProfileButtonImage from '../ButtonAssets/MyProfileSelected.png'
 import AppointmentsButtonImage from '../ButtonAssets/Appointments.png'
 import SummaryButtonImage from '../ButtonAssets/Summary.png'
 
-import Image from '../TrueImages/background_MyProfile_16-9.png'
-
 const useStyles = makeStyles((theme: Theme) => createStyles({
-  background: {
-    height: "100vh",
-    width: "100vw",
-    backgroundSize: 'cover',
-    backgroundImage: `url(${Image})`
-  },
   top_button: {
     min_width: "17vw",
     width: "17vw",
@@ -32,42 +24,43 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 export default function UserAppBar(props: {role: string}) {
   const classes = useStyles();
-  return     <Box
-  height="50px"
-    padding="10px"
-    className={classes.background}
-  >
-    <Grid
-      container
-      spacing={1}
-      direction='row'
-      alignItems='flex-start'
-      justify='space-around'
+  return (
+    <Box
+      height="65px"
+      padding="15px"
     >
-      <Grid item>
-        <ButtonBase
-          href='/client/TruePatientMainPage'
-          style={{backgroundImage: `url(${ProfileButtonImage})`}}
-          className={classes.top_button}
-        />
-      </Grid>
+      <Grid
+        container
+        spacing={1}
+        direction='row'
+        alignItems='flex-start'
+        justify='space-around'
+      >
+        <Grid item>
+          <ButtonBase
+            href='/client/TruePatientMainPage'
+            style={{backgroundImage: `url(${ProfileButtonImage})`}}
+            className={classes.top_button}
+          />
+        </Grid>
 
-      <Grid item>
-        <ButtonBase
-          href='/client/TruePatientAppointments'
-          style={{backgroundImage: `url(${AppointmentsButtonImage})`}}
-          className={classes.top_button}
-        />
-      </Grid>
+        <Grid item>
+          <ButtonBase
+            href='/client/TruePatientAppointments'
+            style={{backgroundImage: `url(${AppointmentsButtonImage})`}}
+            className={classes.top_button}
+          />
+        </Grid>
 
-      <Grid item>
-        <ButtonBase
-          href='/client/TruePatientSummary'
-          style={{backgroundImage: `url(${SummaryButtonImage})`}}
-          className={classes.top_button}
-        />
+        <Grid item>
+          <ButtonBase
+            href='/client/TruePatientSummary'
+            style={{backgroundImage: `url(${SummaryButtonImage})`}}
+            className={classes.top_button}
+          />
+        </Grid>              
       </Grid>              
-    </Grid>              
-  </Box>
+    </Box>
+  )
 }
 
