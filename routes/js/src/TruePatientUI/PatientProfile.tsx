@@ -9,6 +9,7 @@ import ChangePhotoButtonImage from '../ButtonAssets/ChangePhoto.png'
 import { Box, Typography, CardMedia } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
+import UserAppBar from './UserAppBar'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,36 +17,37 @@ createStyles({
   background: {
     height: "100vh",
     width: "100vw",
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
+    backgroundImage: `url(${Image})`
   },
   button_background: {
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
   },
   top_button: {
     min_width: "17vw",
     width: "17vw",
     min_height: "5vh",
-    height: "5vh"
+    height: "5vh",
   },
   current_top_button: {
     min_width: "17vw",
     width: "17vw",
     min_height: "7vh",
-    height: "7vh"
+    height: "7vh",
   },
   profile_pic: {
     height: "56vh",
-    width: "29vw"
+    width: "29vw",
   },
   change_pic: {
     min_width: "29vw",
     width: "29vw",
     min_height: "5vh",
-    height: "5vh"
+    height: "5vh",
   },
   profile_contents: {
     height: "64vh",
-    width: "60vw"
+    width: "60vw",
   }
 }),
 );
@@ -58,118 +60,44 @@ export default function PatientProfile() {
 
     return (
         <Box justifyContent="center"
-           className={classes.background}
-           style={{backgroundImage: `url(${Image})` }}>
-        <div style={{ padding: 20 }}>
-            <Grid
-                container
-                spacing={1}
-                direction='row'
-                alignItems='flex-start'
-                justify='space-around'
-            >
-
-                <Grid item>
-                  <Box className={classes.button_background} style={{backgroundImage: `url(${ProfileButtonImage})` }}>
-                    <Link to='/client/TruePatientMainPage'>
-                        <Button className={classes.current_top_button}>
-                        
-                        </Button>
-                    </Link>
-                  </Box>
-                </Grid>
-
-                <Grid item>
-                  <Box className={classes.button_background} style={{backgroundImage: `url(${AppointmentsButtonImage})` }}>
-                    <Link to='/client/TruePatientAppointments'>
-                        <Button className={classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                  </Box>
-                </Grid>
-
-                <Grid item>
-                  <Box className={classes.button_background} style={{backgroundImage: `url(${SummaryButtonImage})` }}>
-                    <Link to='/client/TruePatientSummary'>
-                        <Button className={classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                  </Box>
-                </Grid>              
-            </Grid>
-        </div>
-
-        <div style={{ padding: 50}}>
-
-            <Grid 
-                container
-                spacing={7}
-                direction='column'
-            >
-                <Grid item></Grid>
-                <Grid item></Grid>
-                
+          className={classes.background}
+        >
+          <UserAppBar role="profile" />
+          <Grid
+              container
+              spacing={5}
+              direction='row'
+              alignItems='flex-start'
+              justify='space-between'
+          >
+            <Grid item>
+                <CardMedia
+                    className={classes.profile_pic}
+                    image={DefaultPic}
+                />
             </Grid>
 
-            <Grid
-                container
-                spacing={5}
-                direction='row'
-                alignItems='flex-start'
-                justify='space-between'
-            >
-                <Grid
-                    item
-                    spacing={2}
-                    direction='column'
-                    alignItems='flex-start'
-                    justify='flex-start'
-                >
-                    <Grid item>
-                        <CardMedia
-                            className={classes.profile_pic}
-                            image={DefaultPic}
-                        />
-                    </Grid>
-
-                    <Grid item>
-                        <Button disabled>
-                        </Button>
-                    </Grid>
-
-                    <Grid item>
-                        <Box className={classes.button_background} style={{backgroundImage: `url(${ChangePhotoButtonImage})` }}>
-                            <Button className={classes.change_pic}>
-                            
-                            </Button>
-                        </Box>
-                    </Grid>
-                </Grid>
-
-
-                <Grid
-                    item
-                    spacing={0}
-                    direction='column'
-                    alignItems='flex-start'
-                    justify='flex-start'
-                >
-
-                    <Grid item>
-                        <Box
-                            className={classes.profile_contents}
-                            bgcolor="#cac7d6">
-                            <Typography variant="body1" color="primary">
-                                {profile_contents}
-                            </Typography>
-                        </Box>
-                    </Grid>
-                </Grid>
+            <Grid item>
+                <Button disabled>
+                </Button>
             </Grid>
-        </div>
 
-      </Box>
-    )
+            <Grid item>
+              <Box className={classes.button_background} style={{backgroundImage: `url(${ChangePhotoButtonImage})` }}>
+                <Button className={classes.change_pic}/>
+              </Box>
+            </Grid>
+
+            <Grid item>
+              <Box
+                  className={classes.profile_contents}
+                  bgcolor="#cac7d6">
+                  <Typography variant="body1" color="primary">
+                      {profile_contents}
+                  </Typography>
+              </Box>
+            </Grid>
+          </Grid>              
+        </Box>
+      )
 }
