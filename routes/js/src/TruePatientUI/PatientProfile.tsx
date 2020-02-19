@@ -9,7 +9,7 @@ import ChangePhotoButtonImage from '../ButtonAssets/ChangePhoto.png'
 import { Box, Typography, CardMedia } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
-import UserAppBar from './UserAppBar'
+import { UserAppBar, UserInterfaceRole } from './UserAppBar'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,7 +62,7 @@ export default function PatientProfile() {
         <Box justifyContent="center"
           className={classes.background}
         >
-          <UserAppBar role="profile" />
+          <UserAppBar in={ UserInterfaceRole.MyProfile } />
           <Grid
               container
               spacing={5}
