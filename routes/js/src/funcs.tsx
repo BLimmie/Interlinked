@@ -35,6 +35,7 @@ export class SessionData {
   avgTextAnnotationValue: number = 0
   aggrSentiment: number[] = []
   seshId: string
+  seshDate: string
 
   constructor(
     transcript: TranscriptLine[],
@@ -56,7 +57,8 @@ export class SessionData {
     divergingRanges: [number, number][] = [],
     avgTextAnnotationValue: number,
     aggrSentiment: number[],
-    seshId: string
+    seshId: string,
+    seshDate: string
   ) {
     this.transcript = transcript
     this.auanomdata = auanomdata
@@ -78,13 +80,11 @@ export class SessionData {
     this.avgTextAnnotationValue = avgTextAnnotationValue
     this.aggrSentiment = aggrSentiment
     this.seshId = seshId
+    this.seshDate = seshDate
   }
 }
 
 export interface PageState {
-  current_selection: number;
-  component_num: number;
-  transcript: TranscriptLine[];
   emotiondata: ChartData;
   smoothemotiondata: ChartData;
   // TODO: text needs labels as member because data is a function that returns labels if given a canvas, refactor to not need this
@@ -131,7 +131,7 @@ export class TranscriptLine {
 }
 const auTypes = ["Blink", "BrowLowerer", "CheekRaiser", "ChinRaiser", "Dimpler", "InnerBrowRaiser", "JawDrop", "LidTightener", "LipCornerDepressor", "LipCornerPuller", "LipStretcher", "LipTightener", "LipsPart", "NoseWrinkler", "OuterBrowRaiser", "UpperLidRaiser", "UpperLipRaiser"]
 
-async function getSessionData(seshId: string): Promise<SessionData | null> {
+async function getSessionData(seshId: string, seshDate: string): Promise<SessionData | null> {
   return new Promise<SessionData | null>(async (resolve) => {
     httpCall('POST', "http://localhost:8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
       if (rr === 200) {
@@ -309,7 +309,7 @@ async function getSessionData(seshId: string): Promise<SessionData | null> {
         const sessionData = new SessionData(
           transcript, auanomData, auanomPointColors, anger, joy, surprise, sorrow, textLabels,
           textChartData, smoothanger, smoothjoy, smoothsurprise, smoothsorrow, smoothtextChartData, smoothtextLabels,
-          auData, divergingRanges, avgtext, aggrSentiment, seshId
+          auData, divergingRanges, avgtext, aggrSentiment, seshId, seshDate
         )
         resolve(sessionData)
       } else {
@@ -324,8 +324,8 @@ export async function getSessionsData(sessions: Session[]) {
     const seshdata: SessionData[] = []
     let sessionsLeft = sessions.length
     sessions.forEach((sesh) => {
-      getSessionData(sesh.sesId).then((value) => {
-        if (value != null) {
+      getSessionData(sesh.sesId, sesh.createdTime).then((value) => {
+        if (value != null && value.transcript.length > 1) {
           seshdata.push(value)
         }
         sessionsLeft = sessionsLeft - 1
@@ -507,7 +507,7 @@ export function getXValues(cd: any) {
   return (cd.datasets!![0].data!! as any[]).map(element => element.x) as number[]
 }
 
-export function getState(currentSesh: SessionData) {
+export function getState(currentSesh: SessionData) : PageState {
   let divergingAnnotations: any[] = []
   xmax = currentSesh.angerData[currentSesh.angerData.length - 1].x + 30
   currentSesh.divergingRanges.map(element => {
@@ -524,7 +524,6 @@ export function getState(currentSesh: SessionData) {
     divergingAnnotations.push(obj)
   })
   return {
-    transcript: currentSesh.transcript,
     auanomdata: currentSesh.auanomdata,
     auanompointscolors: currentSesh.auanompointscolors,
     emotiondata: {

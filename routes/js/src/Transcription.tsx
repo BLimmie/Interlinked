@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import SpeechRecognition from "react-speech-recognition";
 import Speech from './Speech';
 
@@ -43,6 +43,7 @@ interface SpeechProps {
 // It might be more complicated than that. I wouldn't know.
 class Transcription extends React.Component<SpeechProps> {
     private i = 0;
+    private sessionId = window.location.pathname.split("/").pop()
 
     render() {
       let globalThis = window
@@ -86,7 +87,7 @@ class Transcription extends React.Component<SpeechProps> {
       }
       else if (i === limit - 2 && calledyet[i] !== true) {
         let recent_phrase: string = sentences[i];
-        httpCall('POST', "http://localhost:8080/sentiment/text", recent_phrase, interpret_sentiment, i);
+        httpCall('POST', "http://localhost:8080/sentiment/text/" + (this.sessionId as string), recent_phrase, interpret_sentiment, i);
         calledyet[i] = true;
       }
       else if (i === limit - 2 && tones[i] === true && tones2[i] !== true) {

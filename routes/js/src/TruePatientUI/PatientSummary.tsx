@@ -1,35 +1,17 @@
 import React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles'
 import Image from '../TrueImages/background_Summary_16-9.png'
-import ProfileButtonImage from '../ButtonAssets/MyProfile.png'
-import AppointmentsButtonImage from '../ButtonAssets/Appointments.png'
-import SummaryButtonImage from '../ButtonAssets/SummarySelected.png'
 import { Box, CircularProgress, FormControlLabel, Switch } from '@material-ui/core'
-import { Link } from 'react-router-dom';
-import { Grid, Button } from '@material-ui/core'
-import { SessionData, Session, getPatientSessions, getSessionsData } from '../funcs'
+import { Grid } from '@material-ui/core'
+import { SessionData, getPatientSessions, getSessionsData } from '../funcs'
 import GraphSessionComponent from '../GraphSessionComponent'
+import { UserAppBar, UserInterfaceRole, UserType } from '../UserAppBar'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   background: {
     height: "100vh",
     width: "100vw",
     backgroundSize: 'cover'
-  },
-  button_background: {
-    backgroundSize: 'cover'
-  },
-  top_button: {
-    min_width: "17vw",
-    width: "17vw",
-    min_height: "5vh",
-    height: "5vh"
-  },
-  current_top_button: {
-    min_width: "17vw",
-    width: "17vw",
-    min_height: "7vh",
-    height: "7vh"
   },
   buttonStyle: {
     background: "#cac7d6",
@@ -46,7 +28,6 @@ const PatientSummary = (props: PatientSummaryProps) => {
   const classes = useStyles();
 
   const [AllSessionData, SetAllSessionData] = React.useState<SessionData[]>([])
-  const [sessions, SetSessions] = React.useState<Session[]>([])
   const [CompareSessions, SetCompareSessions] = React.useState<boolean>(false)
   const [CompareGraphs, SetCompareGraphs] = React.useState<boolean>(false)
 
@@ -54,15 +35,6 @@ const PatientSummary = (props: PatientSummaryProps) => {
     getPatientSessions(id).then(async (patientSessions) => {
       getSessionsData(patientSessions).then((value) => {
         SetAllSessionData(value)
-        const sessionsWithData: Session[] = []
-        patientSessions.forEach((sesh) => {
-          value.forEach((validSesh) => {
-            if (validSesh.seshId === sesh.sesId) {
-              sessionsWithData.push(sesh)
-            }
-          })
-        })
-        SetSessions(sessionsWithData)
       })
     })
   }, [])
@@ -78,48 +50,11 @@ const PatientSummary = (props: PatientSummaryProps) => {
   return (
     <Box justifyContent="center"
       className={classes.background}
-      style={{ backgroundImage: `url(${Image})` }}>
-      <div style={{ padding: 20 }}>
-        <Grid
-          container
-          spacing={1}
-          direction='row'
-          alignItems='flex-start'
-          justify='space-around'
-        >
-          <Grid item>
-            <Box className={classes.button_background} style={{ backgroundImage: `url(${ProfileButtonImage})` }}>
-              <Link to='/client/TruePatientProfile'>
-                <Button className={classes.top_button}>
+      style={{ backgroundImage: `url(${Image})` }}
+    >
+      <UserAppBar in={ UserInterfaceRole.Summary } for={ UserType.Patient } />
 
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-
-          <Grid item>
-            <Box className={classes.button_background} style={{ backgroundImage: `url(${AppointmentsButtonImage})` }}>
-              <Link to='/client/TruePatientAppointments'>
-                <Button className={classes.top_button}>
-
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-
-          <Grid item>
-            <Box className={classes.button_background} style={{ backgroundImage: `url(${SummaryButtonImage})` }}>
-              <Link to='/client/TruePatientMainPage'>
-                <Button className={classes.current_top_button}>
-
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-        </Grid>
-      </div>
-
-      <div style={{ padding: 16, marginTop: "64px" }}>
+      <div style={{ padding: 16, marginTop: "88px" }}>
         {
           AllSessionData.length == 0 &&
           <CircularProgress />
@@ -167,7 +102,6 @@ const PatientSummary = (props: PatientSummaryProps) => {
               <Grid xs={12} >
                 <GraphSessionComponent
                   SessionDataArr={AllSessionData}
-                  Sessions={sessions}
                   CompareGraphs={CompareGraphs}
                 />
               </Grid>
@@ -176,10 +110,10 @@ const PatientSummary = (props: PatientSummaryProps) => {
               CompareSessions &&
               <Grid container>
                 <Grid xs={6} >
-                  <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions} />
+                  <GraphSessionComponent SessionDataArr={AllSessionData} />
                 </Grid>
                 <Grid xs={6} >
-                  <GraphSessionComponent SessionDataArr={AllSessionData} Sessions={sessions} />
+                  <GraphSessionComponent SessionDataArr={AllSessionData} />
                 </Grid>
               </Grid>
             }
