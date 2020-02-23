@@ -1,10 +1,11 @@
 import React from 'react';
 import { Scatter, Bar } from 'react-chartjs-2'
-import { ChartData } from 'chart.js';
+import { ChartData, Chart } from 'chart.js';
 import { getXValues, getScales } from './funcs';
 import { AUChart } from './AUChart';
 import 'chartjs-plugin-annotation';
 
+Chart.defaults.global.defaultFontSize = 22
 interface SessionSummaryChartsProps {
     emotiondata: ChartData
     aggremotiondata: ChartData
