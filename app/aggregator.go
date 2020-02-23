@@ -60,7 +60,7 @@ func (agg *Aggregator) init() {
 	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
 }
 
-func (agg *Aggregator) Run() (interface{}, error) {
+func (agg *Aggregator) Run() (map[string]interface{}, error) {
 	agg.session.Summary = make(map[string]interface{})
 	for key, f := range agg.conclusions {
 		res, err := f(agg.session)

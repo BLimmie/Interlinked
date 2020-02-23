@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 
 	"image"
@@ -27,38 +28,44 @@ func submitSentimentText(c *gin.Context) {
 		return
 	}
 	resChan := app.NewResultChannel()
-	err = GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
-		return app.TextSentiment(string(text))
-	})
-	if err != nil {
-		c.String(500, "All workers busy")
-		return
-	}
-	result := <-resChan
-	res, err := result.Result.(float64), result.Err
-	if err != nil {
-		c.String(500, err.Error())
-		return
-	}
-	metric := app.TextMetrics{
-		Time:      time.Now().Unix(),
-		Sentiment: res,
-		Text:      string(text),
-	}
-	for ok := true; ok; ok = err != nil {
-		err = DBWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
-			id, err := primitive.ObjectIDFromHex(c.Param("id"))
-			if err != nil {
-				return nil, err
-			}
-			err = ic.InsertTextMetric(id, metric)
+	res := 0.0
+
+	err = DBWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
+		gcpResChan := app.NewResultChannel()
+
+		err = GCPWorkers.SubmitJob(gcpResChan, func(idx int) (interface{}, error) {
+			var err error
+			res, err = app.TextSentiment(string(text))
 			if err != nil {
 				return nil, err
 			}
 			return nil, nil
 		})
-	}
-	result = <-resChan
+		if err != nil {
+			return nil, errors.New("gcp workers busy")
+		}
+		result := <-gcpResChan
+		if result.Err != nil {
+			return nil, result.Err
+		}
+
+		id, err := primitive.ObjectIDFromHex(c.Param("id"))
+		if err != nil {
+			return nil, err
+		}
+		metric := app.TextMetrics{
+			Time:      time.Now().Unix(),
+			Sentiment: res,
+			Text:      string(text),
+		}
+		err = ic.InsertTextMetric(id, metric)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
+	})
+
+	result := <-resChan
 	err = result.Err
 	if err != nil {
 		c.String(500, err.Error())
@@ -106,43 +113,61 @@ func submitSentimentFrame(c *gin.Context) {
 	var maxFrame = &t
 	dir := filepath.Join("session", sessionID)
 	filename := &t2
-	openfaceResChan := app.NewResultChannel()
+	output := make(map[string]interface{})
 	resChan := app.NewResultChannel()
-	err = OFWorkers.SubmitJob(openfaceResChan, func(idx int) (interface{}, error) {
-		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
-			return nil, err
-		}
-		files, err := ioutil.ReadDir(dir)
-		if err != nil {
-			return nil, err
-		}
-		for _, file := range files {
-			if filepath.Ext(file.Name()) == ".jpg" {
-				fileIdx, err := strconv.ParseInt(strings.TrimSuffix(filepath.Base(file.Name()), ".jpg"), 10, 64)
+
+	err = DBWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
+		gcpResChan := app.NewResultChannel()
+		res2 := make(map[string]float64)
+		res := make(map[string]string)
+		var err error
+		err = GCPWorkers.SubmitJob(gcpResChan, func(idx int) (interface{}, error) {
+			openfaceResChan := app.NewResultChannel()
+			var err error
+			err = OFWorkers.SubmitJob(openfaceResChan, func(idx int) (interface{}, error) {
+				var err error
+				if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+					return nil, err
+				}
+				files, err := ioutil.ReadDir(dir)
 				if err != nil {
 					return nil, err
 				}
-				if int(fileIdx) > *maxFrame {
-					*maxFrame = int(fileIdx)
+				for _, file := range files {
+					if filepath.Ext(file.Name()) == ".jpg" {
+						fileIdx, err := strconv.ParseInt(strings.TrimSuffix(filepath.Base(file.Name()), ".jpg"), 10, 64)
+						if err != nil {
+							return nil, err
+						}
+						if int(fileIdx) > *maxFrame {
+							*maxFrame = int(fileIdx)
+						}
+					}
 				}
+				nextFileIdx := (*maxFrame) + 1
+				*filename = filepath.Join("session", sessionID, strconv.Itoa(nextFileIdx)+".jpg")
+				f, err := os.Create(*filename)
+				if err != nil {
+					return nil, err
+				}
+				defer f.Close()
+				jpeg.Encode(f, m, nil)
+				res2, err = app.ImageAU(*filename, "of_output")
+				if err != nil {
+					return nil, err
+				}
+				output["au"] = res2
+				return nil, nil
+			})
+			if err != nil {
+				return nil, errors.New("all openface workers busy")
 			}
-		}
-		nextFileIdx := (*maxFrame) + 1
-		*filename = filepath.Join("session", sessionID, strconv.Itoa(nextFileIdx)+".jpg")
-		f, err := os.Create(*filename)
-		if err != nil {
-			return nil, err
-		}
-		defer f.Close()
-		jpeg.Encode(f, m, nil)
-		return app.ImageAU(*filename, "of_output")
-	})
-	if err != nil {
-		c.String(500, "All workers busy")
-		return
-	}
-	for ok := true; ok; ok = err != nil {
-		err = GCPWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
+			result := <-openfaceResChan
+			err = result.Err
+			if err != nil {
+				return nil, err
+			}
+
 			filename := fmt.Sprintf("tmp%d.jpg", idx)
 			f, err := os.Create(filename)
 			if err != nil {
@@ -151,45 +176,50 @@ func submitSentimentFrame(c *gin.Context) {
 			defer f.Close()
 			jpeg.Encode(f, m, nil)
 
-			return app.ImageMetrics(filename)
-		})
-	}
-	output := make(map[string]interface{})
-	result := <-resChan
-	res, err := result.Result.(map[string]string), result.Err
-	if err != nil {
-		c.String(500, err.Error())
-		return
-	}
-	output["Emotion"] = res
-	result = <-openfaceResChan
-	err = result.Err
-	if err != nil {
-		c.String(500, err.Error())
-		return
-	}
-	res2 := result.Result.(map[string]float64)
-	output["au"] = res2
-
-	metric := app.FrameMetrics{
-		Time:          time.Now().Unix(),
-		ImageFilename: filepath.ToSlash(*filename),
-		Emotion:       res,
-		AU:            res2,
-	}
-	for ok := true; ok; ok = err != nil {
-		err = DBWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
-			id, err := primitive.ObjectIDFromHex(sessionID)
+			res, err = app.ImageMetrics(filename)
 			if err != nil {
 				return nil, err
 			}
-			err = ic.InsertFrameMetric(id, metric)
-			if err != nil {
-				return nil, err
-			}
+			output["Emotion"] = res
 			return nil, nil
 		})
+		if err != nil {
+			return nil, errors.New("all gcp workers busy")
+		}
+
+		result := <-gcpResChan
+		err = result.Err
+		if err != nil {
+			return nil, err
+		}
+		id, err := primitive.ObjectIDFromHex(sessionID)
+		if err != nil {
+			return nil, err
+		}
+		metric := app.FrameMetrics{
+			Time:          time.Now().Unix(),
+			ImageFilename: filepath.ToSlash(*filename),
+			Emotion:       res,
+			AU:            res2,
+		}
+		err = ic.InsertFrameMetric(id, metric)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
+	})
+	if err != nil {
+		c.JSON(500, "All Workers busy")
+		return
 	}
+
+	result := <-resChan
+	err = result.Err
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+
 	c.JSON(200, output)
 }
 
