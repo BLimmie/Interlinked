@@ -2,13 +2,10 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Image from '../TrueImages/background_MyProfile_16-9.png'
 import DefaultPic from '../TrueImages/default.png'
-import ProfileButtonImage from '../ButtonAssets/MyProfileSelected.png'
-import FindPatientsButtonImage from '../ButtonAssets/FindPatients.png'
-import AppointmentsButtonImage from '../ButtonAssets/Appointments.png'
 import ChangePhotoButtonImage from '../ButtonAssets/ChangePhoto.png'
 import { Box, Typography, CardMedia } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
+import { UserAppBar, UserInterfaceRole, UserType } from '../UserAppBar'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,36 +57,8 @@ export default function DoctorProfile() {
         <Box justifyContent="center"
            className={classes.background}
            style={{backgroundImage: `url(${Image})` }}>
-        <div style={{ padding: 20 }}>
-            <Grid
-                container
-                spacing={1}
-                direction='row'
-                alignItems='flex-start'
-                justify='space-around'
-            >
 
-                <Grid item>
-                  <Box className={classes.button_background} style={{backgroundImage: `url(${ProfileButtonImage})` }}>
-                    <Link to='/client/TrueDoctorMainPage'>
-                        <Button className={classes.current_top_button}>
-                        
-                        </Button>
-                    </Link>
-                  </Box>
-                </Grid>
-
-                <Grid item>
-                  <Box className={classes.button_background} style={{backgroundImage: `url(${AppointmentsButtonImage})` }}>
-                    <Link to='/client/TrueDoctorAppointments'>
-                        <Button className={classes.top_button}>
-                        
-                        </Button>
-                    </Link>
-                  </Box>
-                </Grid>                
-            </Grid>
-        </div>
+        <UserAppBar in={ UserInterfaceRole.MyProfile } for={ UserType.Doctor } />
 
         <div style={{ padding: 50}}>
 

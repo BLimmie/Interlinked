@@ -55,7 +55,12 @@ export enum UserInterfaceRole {
   Summary,
 }
 
-export function UserAppBar(props: {in: UserInterfaceRole}) {
+export enum UserType {
+  Doctor,
+  Patient,
+}
+
+export function UserAppBar(props: {in: UserInterfaceRole, for: UserType}) {
   const classes = useStyles();
   return (
     <Box
@@ -71,7 +76,10 @@ export function UserAppBar(props: {in: UserInterfaceRole}) {
       >
         <Grid item>
           <ButtonBase
-            href='/client/TruePatientMainPage'
+            href={
+              props.for === UserType.Patient
+              ? '/client/TruePatientMainPage' : '/client/TrueDoctorMainPage'
+            }
             className={
               props.in === UserInterfaceRole.MyProfile
               ? classes.MyProfileButtonSelected : classes.MyProfileButton
@@ -81,7 +89,11 @@ export function UserAppBar(props: {in: UserInterfaceRole}) {
 
         <Grid item>
           <ButtonBase
-            href='/client/TruePatientAppointments'
+            href={
+              props.for === UserType.Patient
+              ? '/client/TruePatientAppointments'
+              : '/client/TrueDoctorAppointments'
+            }
             className={
               props.in === UserInterfaceRole.Appointments
               ? classes.AppointmentsButtonSelected : classes.AppointmentsButton
@@ -89,15 +101,21 @@ export function UserAppBar(props: {in: UserInterfaceRole}) {
           />
         </Grid>
 
-        <Grid item>
-          <ButtonBase
-            href='/client/TruePatientSummary'
-            className={
-              props.in === UserInterfaceRole.Summary
-              ? classes.SummaryButtonSelected : classes.SummaryButton
-            }
-          />
-        </Grid>              
+        {
+          props.for === UserType.Patient &&
+          <Grid item>
+            <ButtonBase
+              href={
+                props.for === UserType.Patient
+                ? '/client/TruePatientSummary' : '/client/TrueDoctorSummary'
+              }
+              className={
+                props.in === UserInterfaceRole.Summary
+                ? classes.SummaryButtonSelected : classes.SummaryButton
+              }
+            />
+          </Grid>
+        }
       </Grid>              
     </Box>
   )

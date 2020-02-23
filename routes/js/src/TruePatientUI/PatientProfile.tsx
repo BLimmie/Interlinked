@@ -5,7 +5,7 @@ import DefaultPic from '../TrueImages/default.png'
 import ChangePhotoButtonImage from '../ButtonAssets/ChangePhoto.png'
 import { Box, Typography, CardMedia } from '@material-ui/core';
 import { Grid, Button } from '@material-ui/core'
-import { UserAppBar, UserInterfaceRole } from '../UserAppBar'
+import { UserAppBar, UserInterfaceRole, UserType } from '../UserAppBar'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,7 +43,7 @@ export default function PatientProfile() {
       <Box
         className={classes.background}
       >
-        <UserAppBar in={ UserInterfaceRole.MyProfile } />
+        <UserAppBar in={ UserInterfaceRole.MyProfile } for={ UserType.Patient } />
         <Box padding="10%">
           <Grid
             container

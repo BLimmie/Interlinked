@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { httpCall } from '../funcs'
-import { UserAppBar, UserInterfaceRole } from '../UserAppBar'
+import { UserAppBar, UserInterfaceRole, UserType } from '../UserAppBar'
 
 interface PageProps extends WithStyles<typeof styles> {
     current_selection: number;
@@ -195,7 +195,10 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
                 className={this.props.classes.background}
                 style={{ backgroundImage: `url(${Image})` }}>
 
-                <UserAppBar in={UserInterfaceRole.Appointments}/>
+                <UserAppBar
+                    in={ UserInterfaceRole.Appointments }
+                    for={ UserType.Patient }
+                />
 
                 <div style={{ padding: 50 }}>
 

@@ -5,7 +5,7 @@ import { Box, CircularProgress, FormControlLabel, Switch } from '@material-ui/co
 import { Grid } from '@material-ui/core'
 import { SessionData, getPatientSessions, getSessionsData } from '../funcs'
 import GraphSessionComponent from '../GraphSessionComponent'
-import { UserAppBar, UserInterfaceRole } from '../UserAppBar'
+import { UserAppBar, UserInterfaceRole, UserType } from '../UserAppBar'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   background: {
@@ -52,7 +52,7 @@ const PatientSummary = (props: PatientSummaryProps) => {
       className={classes.background}
       style={{ backgroundImage: `url(${Image})` }}
     >
-      <UserAppBar in={ UserInterfaceRole.Summary } />
+      <UserAppBar in={ UserInterfaceRole.Summary } for={ UserType.Patient } />
 
       <div style={{ padding: 16, marginTop: "88px" }}>
         {

@@ -9,6 +9,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core'
 import { SessionData, getAssociatedSessions, getSessionsData } from '../funcs'
 import GraphSessionComponent from '../GraphSessionComponent'
+import { UserAppBar, UserInterfaceRole, UserType } from '../UserAppBar'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   background: {
@@ -68,45 +69,8 @@ const DoctorSummary = ({ match }: RouteComponentProps<PatunParams>) => {
     <Box justifyContent="center"
       className={classes.background}
       style={{ backgroundImage: `url(${Image})` }}>
-      <div style={{ padding: 20 }}>
-        <Grid
-          container
-          spacing={1}
-          direction='row'
-          alignItems='flex-start'
-          justify='space-around'
-        >
-          <Grid item>
-            <Box className={classes.button_background} style={{ backgroundImage: `url(${ProfileButtonImage})` }}>
-              <Link to='/client/TrueDoctorProfile'>
-                <Button className={classes.top_button}>
 
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-
-          <Grid item>
-            <Box className={classes.button_background} style={{ backgroundImage: `url(${AppointmentsButtonImage})` }}>
-              <Link to='/client/TrueDoctorAppointments'>
-                <Button className={classes.top_button}>
-
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-
-          <Grid item>
-            <Box className={classes.button_background} style={{ backgroundImage: `url(${SummaryButtonImage})` }}>
-              <Link to='/client/TrueDoctorMainPage'>
-                <Button className={classes.current_top_button}>
-
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-        </Grid>
-      </div>
+      <UserAppBar in={ UserInterfaceRole.Summary } for={ UserType.Doctor } />
 
       <div style={{ padding: 16, marginTop: "64px" }}>
         {
