@@ -76,18 +76,21 @@ const useStyles = makeStyles((theme: Theme) =>
     buttonStyle: {
       background: "#cac7d6",
       marginRight: "8px"
-    }
+    },
+    primaryListFontSize: {
+      '& span': { fontSize: "38px" }
+    },
   })
- )
+)
 
 export default function GraphTranscript(props: PageProps) {
-  const {currentSesh, graph_selection, graph_selection_two} = props
+  const { currentSesh, graph_selection, graph_selection_two } = props
   const classes = useStyles();
 
 
   const listRef: RefObject<FixedSizeList> = React.createRef();
   const transcript: TranscriptLine[] = currentSesh.transcript
-  
+
   const pageState: PageState = getState(currentSesh)
 
   const [divergingoptions, setDivergingoptions] = React.useState(pageState.divergingoptions)
@@ -133,16 +136,40 @@ export default function GraphTranscript(props: PageProps) {
 
     return (
       <ListItem button style={style} onClick={() => transcript_alter(currentSesh.transcript[index].timestamp)}>
-        <ListItemText primary={currentSesh.transcript[index].text} />
+        <ListItemText className={classes.primaryListFontSize} primary={currentSesh.transcript[index].text}
+          secondary={currentSesh.transcript[index].timestamp}
+        />
       </ListItem>
     );
   }
 
-    return (
-      <div style={{ padding: 8, marginTop: "16px" }}>
-        <Grid container alignItems="center" justify="center" spacing={2}>
-          { graph_selection_two == -1 &&
-            <Grid item xs={12}>
+  return (
+    <div style={{ padding: 8, marginTop: "16px" }}>
+      <Grid container alignItems="center" justify="center" spacing={2}>
+        {graph_selection_two == -1 &&
+          <Grid item xs={12}>
+            <SessionSummaryCharts
+              emotiondata={pageState.emotiondata}
+              aggremotiondata={pageState.aggremotiondata}
+              textdata={pageState.textdata}
+              smoothemotiondata={pageState.smoothemotiondata}
+              smoothtextdata={pageState.smoothtextdata}
+              audata={pageState.audata}
+              auanomdata={pageState.auanomdata}
+              genoptions={genoptions}
+              divergingoptions={divergingoptions}
+              avgtextoptions={pageState.avgtextoptions}
+              textlabels={pageState.textlabels}
+              smoothtextlabels={pageState.smoothtextlabels}
+              auanompointscolors={pageState.auanompointscolors}
+              selection={graph_selection}
+              alter_transcript={alter_transcript}
+            />
+          </Grid>
+        }
+        {graph_selection_two >= 0 &&
+          <Grid container>
+            <Grid item xs={6}>
               <SessionSummaryCharts
                 emotiondata={pageState.emotiondata}
                 aggremotiondata={pageState.aggremotiondata}
@@ -161,57 +188,35 @@ export default function GraphTranscript(props: PageProps) {
                 alter_transcript={alter_transcript}
               />
             </Grid>
-          }
-          { graph_selection_two >= 0 &&
-            <Grid container>
-              <Grid item xs={6}>
-                <SessionSummaryCharts
-                  emotiondata={pageState.emotiondata}
-                  aggremotiondata={pageState.aggremotiondata}
-                  textdata={pageState.textdata}
-                  smoothemotiondata={pageState.smoothemotiondata}
-                  smoothtextdata={pageState.smoothtextdata}
-                  audata={pageState.audata}
-                  auanomdata={pageState.auanomdata}
-                  genoptions={genoptions}
-                  divergingoptions={divergingoptions}
-                  avgtextoptions={pageState.avgtextoptions}
-                  textlabels={pageState.textlabels}
-                  smoothtextlabels={pageState.smoothtextlabels}
-                  auanompointscolors={pageState.auanompointscolors}
-                  selection={graph_selection}
-                  alter_transcript={alter_transcript}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <SessionSummaryCharts
-                  emotiondata={pageState.emotiondata}
-                  aggremotiondata={pageState.aggremotiondata}
-                  textdata={pageState.textdata}
-                  smoothemotiondata={pageState.smoothemotiondata}
-                  smoothtextdata={pageState.smoothtextdata}
-                  audata={pageState.audata}
-                  auanomdata={pageState.auanomdata}
-                  genoptions={genoptions}
-                  divergingoptions={divergingoptions}
-                  avgtextoptions={pageState.avgtextoptions}
-                  textlabels={pageState.textlabels}
-                  smoothtextlabels={pageState.smoothtextlabels}
-                  auanompointscolors={pageState.auanompointscolors}
-                  selection={graph_selection_two}
-                  alter_transcript={alter_transcript}
-                />
-               </Grid>
+            <Grid item xs={6}>
+              <SessionSummaryCharts
+                emotiondata={pageState.emotiondata}
+                aggremotiondata={pageState.aggremotiondata}
+                textdata={pageState.textdata}
+                smoothemotiondata={pageState.smoothemotiondata}
+                smoothtextdata={pageState.smoothtextdata}
+                audata={pageState.audata}
+                auanomdata={pageState.auanomdata}
+                genoptions={genoptions}
+                divergingoptions={divergingoptions}
+                avgtextoptions={pageState.avgtextoptions}
+                textlabels={pageState.textlabels}
+                smoothtextlabels={pageState.smoothtextlabels}
+                auanompointscolors={pageState.auanompointscolors}
+                selection={graph_selection_two}
+                alter_transcript={alter_transcript}
+              />
             </Grid>
-          }
-          <Grid item xs={12}>
-            <div className={classes.transcript_list }>
-              <FixedSizeList ref={listRef} height={220} width={"100vw"} itemSize={60} itemCount={transcript.length}>
-                {transcript_render}
-              </FixedSizeList>
-            </div>
           </Grid>
+        }
+        <Grid item xs={12}>
+          <div className={classes.transcript_list}>
+            <FixedSizeList ref={listRef} height={220} width={"100vw"} itemSize={80} itemCount={transcript.length}>
+              {transcript_render}
+            </FixedSizeList>
+          </div>
         </Grid>
-      </div>
-    )
+      </Grid>
+    </div>
+  )
 }

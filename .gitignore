@@ -1,4 +1,5 @@
 *~
+ignore
 db/data/
 of_output/
 db/dump_*
