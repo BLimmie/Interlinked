@@ -35,6 +35,9 @@ func submitSentimentText(c *gin.Context) {
 
 		err = GCPWorkers.SubmitJob(gcpResChan, func(idx int) (interface{}, error) {
 			var err error
+			if (string(text) == "") {
+				return nil, errors.New("tried submitting empty string")
+			}
 			res, err = app.TextSentiment(string(text))
 			if err != nil {
 				return nil, err
