@@ -31,11 +31,12 @@ func submitSentimentText(c *gin.Context) {
 	res := 0.0
 
 	err = DBWorkers.SubmitJob(resChan, func(idx int) (interface{}, error) {
+		var err error
 		gcpResChan := app.NewResultChannel()
 
 		err = GCPWorkers.SubmitJob(gcpResChan, func(idx int) (interface{}, error) {
 			var err error
-			if (string(text) == "") {
+			if strings.TrimSpace(string(text)) == "" {
 				return nil, errors.New("tried submitting empty string")
 			}
 			res, err = app.TextSentiment(string(text))
