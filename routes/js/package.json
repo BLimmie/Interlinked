@@ -30,6 +30,7 @@
     "recharts": "^1.8.5",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
+    "rfdc": "^1.1.4",
     "twilio-video": "^2.0.0",
     "typescript": "^3.6.4"
   },

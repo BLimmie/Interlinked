@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, useEffect } from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
@@ -7,10 +7,11 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
 import { SessionData, TranscriptLine, getOption, getDivergingOption, getState, PageState } from './funcs';
-import { SessionSummaryCharts } from './SessionSummaryCharts';
+import SessionSummaryCharts from './SessionSummaryCharts';
 
 interface PageProps {
-  currentSesh: SessionData
+  transcript: TranscriptLine[]
+  pageState: PageState
   graph_selection: number
   graph_selection_two: number
 }
@@ -84,17 +85,19 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function GraphTranscript(props: PageProps) {
-  const { currentSesh, graph_selection, graph_selection_two } = props
+  const { transcript, pageState, graph_selection, graph_selection_two } = props
   const classes = useStyles();
 
 
   const listRef: RefObject<FixedSizeList> = React.createRef();
-  const transcript: TranscriptLine[] = currentSesh.transcript
-
-  const pageState: PageState = getState(currentSesh)
 
   const [divergingoptions, setDivergingoptions] = React.useState(pageState.divergingoptions)
   const [genoptions, setGenOptions] = React.useState(pageState.genoptions)
+
+  useEffect(() => {
+    setGenOptions(pageState.genoptions)
+    setDivergingoptions(pageState.divergingoptions)
+  })
 
   const transcript_search = (ll: number, rr: number, ii: number): number => {
     if (rr >= ll) {
@@ -116,8 +119,8 @@ export default function GraphTranscript(props: PageProps) {
         let target = +labels[element[0]._index]
         let index = transcript_search(0, transcript.length - 1, target)
         listRef.current?.scrollToItem(index)
-        let op = getOption(target)
-        let dop = getDivergingOption(pageState.divergingannotations, target)
+        let op = getOption(pageState.xmax, target)
+        let dop = getDivergingOption(pageState.xmax, pageState.divergingannotations, target)
         setGenOptions(op)
         setDivergingoptions(dop)
       }
@@ -125,8 +128,8 @@ export default function GraphTranscript(props: PageProps) {
   }
 
   const transcript_alter = (time: any) => {
-    let op = getOption(time)
-    let dop = getDivergingOption(pageState.divergingannotations, time)
+    let op = getOption(pageState.xmax, time)
+    let dop = getDivergingOption(pageState.xmax, pageState.divergingannotations, time)
     setGenOptions(op)
     setDivergingoptions(dop)
   }
@@ -135,9 +138,9 @@ export default function GraphTranscript(props: PageProps) {
     const { index, style } = props;
 
     return (
-      <ListItem button style={style} onClick={() => transcript_alter(currentSesh.transcript[index].timestamp)}>
-        <ListItemText className={classes.primaryListFontSize} primary={currentSesh.transcript[index].text}
-          secondary={currentSesh.transcript[index].timestamp}
+      <ListItem button style={style} onClick={() => transcript_alter(transcript[index].timestamp)}>
+        <ListItemText className={classes.primaryListFontSize} primary={transcript[index].text}
+          secondary={transcript[index].timestamp}
         />
       </ListItem>
     );
@@ -149,19 +152,9 @@ export default function GraphTranscript(props: PageProps) {
         {graph_selection_two == -1 &&
           <Grid item xs={12}>
             <SessionSummaryCharts
-              emotiondata={pageState.emotiondata}
-              aggremotiondata={pageState.aggremotiondata}
-              textdata={pageState.textdata}
-              smoothemotiondata={pageState.smoothemotiondata}
-              smoothtextdata={pageState.smoothtextdata}
-              audata={pageState.audata}
-              auanomdata={pageState.auanomdata}
+              pageState={pageState}
               genoptions={genoptions}
               divergingoptions={divergingoptions}
-              avgtextoptions={pageState.avgtextoptions}
-              textlabels={pageState.textlabels}
-              smoothtextlabels={pageState.smoothtextlabels}
-              auanompointscolors={pageState.auanompointscolors}
               selection={graph_selection}
               alter_transcript={alter_transcript}
             />
@@ -171,38 +164,18 @@ export default function GraphTranscript(props: PageProps) {
           <Grid container>
             <Grid item xs={6}>
               <SessionSummaryCharts
-                emotiondata={pageState.emotiondata}
-                aggremotiondata={pageState.aggremotiondata}
-                textdata={pageState.textdata}
-                smoothemotiondata={pageState.smoothemotiondata}
-                smoothtextdata={pageState.smoothtextdata}
-                audata={pageState.audata}
-                auanomdata={pageState.auanomdata}
+                pageState={pageState}
                 genoptions={genoptions}
                 divergingoptions={divergingoptions}
-                avgtextoptions={pageState.avgtextoptions}
-                textlabels={pageState.textlabels}
-                smoothtextlabels={pageState.smoothtextlabels}
-                auanompointscolors={pageState.auanompointscolors}
                 selection={graph_selection}
                 alter_transcript={alter_transcript}
               />
             </Grid>
             <Grid item xs={6}>
               <SessionSummaryCharts
-                emotiondata={pageState.emotiondata}
-                aggremotiondata={pageState.aggremotiondata}
-                textdata={pageState.textdata}
-                smoothemotiondata={pageState.smoothemotiondata}
-                smoothtextdata={pageState.smoothtextdata}
-                audata={pageState.audata}
-                auanomdata={pageState.auanomdata}
+                pageState={pageState}
                 genoptions={genoptions}
                 divergingoptions={divergingoptions}
-                avgtextoptions={pageState.avgtextoptions}
-                textlabels={pageState.textlabels}
-                smoothtextlabels={pageState.smoothtextlabels}
-                auanompointscolors={pageState.auanompointscolors}
                 selection={graph_selection_two}
                 alter_transcript={alter_transcript}
               />
