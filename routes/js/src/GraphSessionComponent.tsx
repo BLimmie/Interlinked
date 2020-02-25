@@ -2,8 +2,10 @@ import React from 'react';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { Grid, FormControl, InputLabel, Select, MenuItem, Typography } from '@material-ui/core'
-import { SessionData, Session } from './funcs'
+import { SessionData, PageState, getState, TranscriptLine } from './funcs'
 import GraphTranscript from './GraphTranscript';
+
+const clone = require('rfdc')()
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,8 +72,8 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
               onChange={selectSession}
             >
               {
-                SessionDataArr.map((session,index) => {
-                  return <MenuItem value={index}>{session.seshDate }</MenuItem>
+                SessionDataArr.map((session, index) => {
+                  return <MenuItem value={index}>{session.seshDate}</MenuItem>
                 })
               }
             </Select>
@@ -99,9 +101,10 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
         <Grid item xs={3} />
         <Grid item xs={12}>
           <GraphTranscript
-            currentSesh={currentSesh}
+            transcript={currentSesh.transcript}
+            pageState={clone(getState(currentSesh))}
             graph_selection={activeGraph}
-            graph_selection_two = {secondGraph}
+            graph_selection_two={secondGraph}
           />
         </Grid>
       </Grid>
@@ -135,8 +138,8 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
             onChange={selectSession}
           >
             {
-              SessionDataArr.map((session,index) => {
-                return <MenuItem value={index}>{session.seshDate }</MenuItem>
+              SessionDataArr.map((session, index) => {
+                return <MenuItem value={index}>{session.seshDate}</MenuItem>
               })
             }
           </Select>
@@ -145,9 +148,10 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
       <Grid item xs={3} />
       <Grid item xs={12}>
         <GraphTranscript
-          currentSesh={currentSesh}
+          transcript={currentSesh.transcript}
+          pageState={clone(getState(currentSesh))}
           graph_selection={activeGraph}
-          graph_selection_two = {-1}
+          graph_selection_two={-1}
         />
       </Grid>
     </Grid>

@@ -85,6 +85,8 @@ export class SessionData {
 }
 
 export interface PageState {
+  // set max x value for session timestamps
+  xmax: number;
   emotiondata: ChartData;
   smoothemotiondata: ChartData;
   // TODO: text needs labels as member because data is a function that returns labels if given a canvas, refactor to not need this
@@ -136,6 +138,8 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
     httpCall('POST', "http://localhost:8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let metrics = JSON.parse(result)
+        console.log(seshId)
+        console.log(metrics["Text Metrics"])
         let frameMetrics: Array<any> = metrics["Frame Metrics"]
         let emotionLabels: string[] = []
         let anger: any[] = []
@@ -385,8 +389,7 @@ export async function getAssociatedSessions(proid: string, patun: string): Promi
 }
 
 // x used for boundaries for zoom/pan
-var xmax: number = 0
-export function getOption(index: number) {
+export function getOption(xmax: number, index: number) {
   return {
     annotation: {
       drawTime: 'afterDatasetsDraw',
@@ -433,7 +436,7 @@ export function getOption(index: number) {
   }
 }
 
-export function getDivergingOption(da: any[], index: number) {
+export function getDivergingOption(xmax: number, da: any[], index: number) {
   return {
     annotation: {
       drawTime: 'afterDatasetsDraw',
@@ -507,9 +510,9 @@ export function getXValues(cd: any) {
   return (cd.datasets!![0].data!! as any[]).map(element => element.x) as number[]
 }
 
-export function getState(currentSesh: SessionData) : PageState {
+export function getState(currentSesh: SessionData): PageState {
   let divergingAnnotations: any[] = []
-  xmax = currentSesh.angerData[currentSesh.angerData.length - 1].x + 30
+  let xmax = currentSesh.angerData[currentSesh.angerData.length - 1].x + 20
   currentSesh.divergingRanges.map(element => {
     let obj = {
       type: 'box',
@@ -524,6 +527,7 @@ export function getState(currentSesh: SessionData) : PageState {
     divergingAnnotations.push(obj)
   })
   return {
+    xmax: xmax,
     auanomdata: currentSesh.auanomdata,
     auanompointscolors: currentSesh.auanompointscolors,
     emotiondata: {
