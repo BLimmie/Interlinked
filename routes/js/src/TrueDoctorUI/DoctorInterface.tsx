@@ -1,14 +1,14 @@
 import React from 'react'
 
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
-import Emotions, { zeroValueResponse, serverResponse, EmotionsInterface} from "../Emotions"
-import {Redirect, RouteComponentProps} from 'react-router-dom'
+import Emotions, { zeroValueResponse, serverResponse, EmotionsInterface } from "../Emotions"
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { getRoom, setRemoteVideo } from '../Video/Twilio'
 import { WebcamWithControls, setPatienSnapshotInterval } from '../Video/WebcamWithControls'
 import { Room } from 'twilio-video'
 import Transcription from '../Transcription'
-import {AUInterface} from '../AUs'
+import { AUInterface } from '../AUs'
 import Image from '../TrueImages/background_Interface_16-9.png'
 import TextboxImage from '../TrueImages/background_textbox_default.png'
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     their_video: {
       height: '100%',
-      '& video' : {
+      '& video': {
         width: '100%',
         height: '100%',
       }
@@ -51,8 +51,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type LinkParams = {link: string}
-export default function DoctorInterface({ match }: RouteComponentProps<LinkParams>)  {
+type LinkParams = { link: string }
+export default function DoctorInterface({ match }: RouteComponentProps<LinkParams>) {
   const classes = useStyles();
 
   const [avState, setAvState] = React.useState<avStateInterface>(defaultAVState)
@@ -64,16 +64,16 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
 
   const sessionId = match.params.link
-  
+
   const createRoom = () => {
     if (!videoRoom) {
-      if (localVidStream) { 
+      if (localVidStream) {
         getRoom(sessionId, localVidStream.getTracks(), "Doctor")
           .then((room: Room) => {
             setVideoRoom(room)
             setRemoteVideo(room, endSession)
           })
-          .catch(() => {console.log("Room name does not exist, exit please")})
+          .catch(() => { console.log("Room name does not exist, exit please") })
       }
     }
   }
@@ -81,41 +81,41 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   createRoom()
 
   const resultToResponseCB = (result: any) => {
-    if(result && result === "no faces found"){
+    if (result && (result.includes("no faces found") || result.includes("open of_out"))) {
       console.log(result)
     } else {
       const AUs: AUInterface = JSON.parse(result).au
       const Emotions: EmotionsInterface = JSON.parse(result).Emotion
-      setPatientResonse({aus: AUs, emotions: Emotions})
+      setPatientResonse({ aus: AUs, emotions: Emotions })
     }
   }
-   
+
   React.useEffect(() => {
-   const id = setPatienSnapshotInterval(resultToResponseCB, sessionId)
-   setIntervalId(id)
+    const id = setPatienSnapshotInterval(resultToResponseCB, sessionId)
+    setIntervalId(id)
   }, [])
 
   const endSession: Function = () => {
-    if(videoRoom)
+    if (videoRoom)
       videoRoom.disconnect()
     clearInterval((intervalId as NodeJS.Timeout))
-    if(localVidStream)
-      localVidStream.getTracks().forEach((track:MediaStreamTrack) => {
+    if (localVidStream)
+      localVidStream.getTracks().forEach((track: MediaStreamTrack) => {
         track.stop()
       })
     setEndChat(true)
   }
 
-  if(endChat)
+  if (endChat)
     return <Redirect to='/client/TrueDoctorMainPage' />
-  
+
   return (
     <Box
-         className={classes.background}
-         style={{backgroundImage: `url(${Image})` }}
-     >
-      <div style={{ padding: "1vw", paddingRight:"2vw", paddingLeft:"2vw" }} >
-        <Grid 
+      className={classes.background}
+      style={{ backgroundImage: `url(${Image})` }}
+    >
+      <div style={{ padding: "1vw", paddingRight: "2vw", paddingLeft: "2vw" }} >
+        <Grid
           container
           spacing={2}
           direction='row'
@@ -130,24 +130,24 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
               alignItems='flex-start'
               justify='flex-start'
             >
-                <Grid item>
-                  <Box className={classes.their_video_box}
-                        bgcolor="#5f587d"               
-                        border = {2}
-                        borderColor = "#5f587d">
-                    {
-                      // videoRoom &&
-                      <Grid container className={classes.their_video}  id="remote" alignItems="center" justify="center"/>
-                    }
-                  </Box>
-                </Grid>
-            
+              <Grid item>
+                <Box className={classes.their_video_box}
+                  bgcolor="#5f587d"
+                  border={2}
+                  borderColor="#5f587d">
+                  {
+                    // videoRoom &&
+                    <Grid container className={classes.their_video} id="remote" alignItems="center" justify="center" />
+                  }
+                </Box>
+              </Grid>
+
               <Grid item>
                 <Box justifyContent="center"
                   className={classes.textbox_box}
-                  style={{backgroundImage: `url(${TextboxImage})` }}
+                  style={{ backgroundImage: `url(${TextboxImage})` }}
                 >
-                  <div style={{ paddingLeft: "13vw", paddingTop: "1vh"}} >
+                  <div style={{ paddingLeft: "13vw", paddingTop: "1vh" }} >
                     <Box className={classes.textbox} >
                       <Transcription />
                     </Box>
@@ -165,15 +165,15 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
               alignItems='center'
               justify='flex-start'
             >
-                <Grid item>
-                    <Emotions response={patientFrameResponse}/>
-                </Grid>
+              <Grid item>
+                <Emotions response={patientFrameResponse} />
+              </Grid>
             </Grid>
           </Grid>
 
 
-          <div style={{ zIndex: 100, position:'absolute', top: "55vh", left:"1vw"}}>
-            
+          <div style={{ zIndex: 100, position: 'absolute', top: "55vh", left: "1vw" }}>
+
             <Grid item xs={4} >
               <WebcamWithControls
                 avState={avState}
@@ -184,13 +184,13 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
             </Grid>
           </div>
 
-          <div style={{ zIndex: 100, position:'absolute', top: "60vh", left:"54vw"}}>
-            <Grid item> 
-                <VideoControls
-                  endSession={() => endSession()}
-                  avState={avState}
-                  setAVState={setAvState}
-                />
+          <div style={{ zIndex: 100, position: 'absolute', top: "60vh", left: "54vw" }}>
+            <Grid item>
+              <VideoControls
+                endSession={() => endSession()}
+                avState={avState}
+                setAVState={setAvState}
+              />
             </Grid>
           </div>
 
