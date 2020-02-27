@@ -60,7 +60,7 @@ func (agg *Aggregator) init() {
 	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
 }
 
-func (agg *Aggregator) Run() (map[string]interface{}, error) {
+func (agg *Aggregator) Run(clear bool) (map[string]interface{}, error) {
 	agg.session.Summary = make(map[string]interface{})
 	for key, f := range agg.conclusions {
 		res, err := f(agg.session)
@@ -72,6 +72,14 @@ func (agg *Aggregator) Run() (map[string]interface{}, error) {
 	}
 	//update session in database
 	err := ic.UpdateSessionSummary(agg.session)
+	if clear {
+		if agg.session.TextMetrics[0].Time == agg.session.CreatedTime {
+			agg.session.TextMetrics = agg.session.TextMetrics[1:]
+		}
+		if agg.session.ImageMetrics[0].Time == agg.session.CreatedTime {
+			agg.session.ImageMetrics = agg.session.ImageMetrics[1:]
+		}
+	}
 	return agg.session.Summary, err
 }
 

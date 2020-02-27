@@ -40,7 +40,7 @@ func getSessionMetricsAggregate(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	result, err := aggregator.Run()
+	result, err := aggregator.Run(true)
 	if err != nil {
 		c.String(500, err.Error())
 		return
