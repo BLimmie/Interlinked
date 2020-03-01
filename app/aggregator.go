@@ -111,6 +111,10 @@ func timeSpentEmotion(session *Session) (interface{}, error) {
 				emotions[emotion] += dur
 			} else if level == "POSSIBLE" {
 				emotions[emotion] += dur / 2
+			} else if level == "LIKELY" {
+				emotions[emotion] += 3 * dur / 4
+			} else if level == "UNLIKELY" {
+				emotions[emotion] += dur / 4
 			}
 		}
 		lastTime = t
@@ -167,6 +171,10 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 				emotions[emotion] += dur
 			} else if level == "POSSIBLE" {
 				emotions[emotion] += dur / 2
+			} else if level == "LIKELY" {
+				emotions[emotion] += 3 * dur / 4
+			} else if level == "UNLIKELY" {
+				emotions[emotion] += dur / 4
 			}
 		}
 		for i := firstSegmentIdx; timeFromInt(session.ImageMetrics[i].Time).Before(currentTime); i++ {
@@ -181,6 +189,10 @@ func emotionOverTime_RunningAggregate(session *Session) (interface{}, error) {
 					emotions[emotion] += dur
 				} else if level == "POSSIBLE" {
 					emotions[emotion] += dur / 2
+				} else if level == "LIKELY" {
+					emotions[emotion] += 3 * dur / 4
+				} else if level == "UNLIKELY" {
+					emotions[emotion] += dur / 4
 				}
 			}
 		}
@@ -273,7 +285,7 @@ func divergentSentiment(session *Session) (interface{}, error) {
 	fullList := make(map[string]interface{})
 	tm := session.Summary["Text sentiment over last 10 seconds"].(map[string]float64)
 	im := session.getPercentagesRunningAverage()
-	allKeys := make(map[string]bool,0)
+	allKeys := make(map[string]bool, 0)
 	for s := range tm {
 		allKeys[s] = true
 	}

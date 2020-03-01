@@ -160,7 +160,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           this.setState({loginOnceFailed: true})
         }
       }
-      httpCall('POST', "http://localhost:8080/login?userType=" + (this.state.isPatient ? "patient" : "provider"), [['Authorization', 'Basic ' + btoa(this.state.username + ":" + this.state.password)]], null, cb)
+      httpCall('POST', backendServerName + ":8080/login?userType=" + (this.state.isPatient ? "patient" : "provider"), [['Authorization', 'Basic ' + btoa(this.state.username + ":" + this.state.password)]], null, cb)
 
     }
   }

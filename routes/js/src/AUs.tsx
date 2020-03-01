@@ -85,8 +85,8 @@ export default function AUs(props: AUsInterface) {
     React.useEffect(() => {
         setAus(AUs)
     }, [AUs])
-
-    return (
+    if(aus){
+      return (
         <Container maxWidth="lg">
           <DisplayAU AUNumber={aus.UpperLidRaiser} AUType={"Upper Lid Raiser"}/>
           <DisplayAU AUNumber={aus.LidTightener} AUType={"Lid Tightener"}/>
@@ -107,4 +107,26 @@ export default function AUs(props: AUsInterface) {
           <DisplayAU AUNumber={aus.JawDrop} AUType={"Jaw Drop"}/> 
         </Container>
       );
+    }
+    return (
+      <Container maxWidth="lg">
+        <DisplayAU AUNumber={0} AUType={"Upper Lid Raiser"}/>
+        <DisplayAU AUNumber={0} AUType={"Lid Tightener"}/>
+        <DisplayAU AUNumber={0}  AUType={"Inner Brow Raiser"}/>
+        <DisplayAU AUNumber={0}  AUType={"Outer Brow Raiser"}/>
+        <DisplayAU AUNumber={0}  AUType={"Brow Lowerer"}/>
+        <DisplayAU AUNumber={0}  AUType={"Blink"}/>
+        <DisplayAU AUNumber={0}  AUType={"Nose Wrinkler"}/>
+        <DisplayAU AUNumber={0}  AUType={"Cheek Raiser"}/>
+        <DisplayAU AUNumber={0}  AUType={"Dimpler"}/>
+        <DisplayAU AUNumber={0}  AUType={"Upper Lip Raiser"}/>
+        <DisplayAU AUNumber={0}  AUType={"Lip Corner Depressor"}/>
+        <DisplayAU AUNumber={0}  AUType={"Lip Corner Puller"}/>
+        <DisplayAU AUNumber={0}  AUType={"Lip Stretcher"}/>
+        <DisplayAU AUNumber={0}  AUType={"Lip Tightener"}/>    
+        <DisplayAU AUNumber={0} AUType={"Lips Part"}/>      
+        <DisplayAU AUNumber={0}  AUType={"Chin Raiser"}/>
+        <DisplayAU AUNumber={0}  AUType={"Jaw Drop"}/> 
+      </Container>
+      )
 }

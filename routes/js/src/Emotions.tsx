@@ -65,8 +65,9 @@ interface EmotionProps {
 const likelihoodToNumber = (emotions: EmotionsInterface): number[] => {
 	const emotionValues: number[] = []
 
-	for (let emotionValue of Object.values(emotions)) {
-		if (emotionValue === "VERY_UNLIKELY")
+	if(emotions)
+	  for (let emotionValue of Object.values(emotions)) {
+		if(emotionValue === "VERY_UNLIKELY")
 			emotionValues.push(0)
 		else if (emotionValue === "UNLIKELY")
 			emotionValues.push(25)

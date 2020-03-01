@@ -14,7 +14,7 @@ export default function PrivilegedRoute(props: PrivilegedRouteProps) {
     //   token = sessionStorage.getItem('token')
     //   console.log(token)
     // }
-    httpCall('POST', "http://localhost:8080/user/" + token, [], null, (result: any, rr: number) => {
+    httpCall('POST', backendServerName + ":8080/user/" + token, [], null, (result: any, rr: number) => {
       console.log(result)
       console.log(status)
       if (rr === 200) {

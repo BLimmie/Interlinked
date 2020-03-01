@@ -139,7 +139,7 @@ const auTypes = ["Blink", "BrowLowerer", "CheekRaiser", "ChinRaiser", "Dimpler",
 
 async function getSessionData(seshId: string, seshDate: string): Promise<SessionData | null> {
   return new Promise<SessionData | null>(async (resolve) => {
-    httpCall('POST', "http://localhost:8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
+    httpCall('POST', backendServerName + "8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let metrics = JSON.parse(result)
         let frameMetrics: Array<any> = metrics["Frame Metrics"]
@@ -236,7 +236,7 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
         let textLabels: number[] = []
         let transcript: TranscriptLine[] = []
         let textSentiment: any[] = []
-        textMetrics.forEach(element => {
+        textMetrics && textMetrics.forEach(element => {
           let time = element["Time"] as number - baseTime
           textLabels.push(time)
           transcript.push(new TranscriptLine(time, element["Text"]))
@@ -368,7 +368,7 @@ export async function getSessionsData(sessions: Session[]) {
 
 export async function getPatientSessions(id: string): Promise<Session[]> {
   return new Promise<Session[]>(async (resolve) => {
-    await httpCall('POST', "http://localhost:8080/sessions/" + id, [], null, (result: any, rr: number) => {
+    await httpCall('POST', backendServerName + ":8080/sessions/" + id, [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let arr = JSON.parse(result)
         if (arr !== null) {
@@ -391,7 +391,7 @@ export async function getPatientSessions(id: string): Promise<Session[]> {
 
 export async function getAssociatedSessions(proid: string, patun: string): Promise<Session[]> {
   return new Promise<Session[]>(async (resolve) => {
-    await httpCall('POST', "http://localhost:8080/associatedsessions/" + proid + "/" + patun, [], null, (result: any, rr: number) => {
+    await httpCall('POST', backendServerName + ":8080/associatedsessions/" + proid + "/" + patun, [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let arr = JSON.parse(result)
         if (arr !== null) {

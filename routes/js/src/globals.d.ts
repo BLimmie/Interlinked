@@ -10,3 +10,4 @@ var emotions_AUs;
 
 // This is a boolean array that indicates whether the AUs are present (> 0) or not, in the same order as the raw server output
 var AU_exists;
+var backendServerName;
