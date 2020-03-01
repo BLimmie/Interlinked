@@ -5,6 +5,8 @@ import { PageState, getXValues, getScales } from './funcs';
 import { AUChart } from './AUChart';
 import 'chartjs-plugin-annotation';
 
+const clone = require('rfdc')()
+
 Chart.defaults.global.defaultFontSize = 22
 interface SessionSummaryChartsProps {
     pageState: PageState
@@ -33,7 +35,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
                     data={(canvas: any) => {
                         const gradient = canvas.getContext("2d").createLinearGradient(0, 0, canvas.width, 0)
                         gradient.addColorStop(0, "#47CDD5");
-                        gradient.addColorStop(1, "#E6D725");
+                        gradient.addColorStop(1, "#d3d477");
                         return {
                             datasets: [{
                                 label: "Average Text Sentiment",

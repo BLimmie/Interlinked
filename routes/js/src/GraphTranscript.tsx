@@ -97,7 +97,7 @@ export default function GraphTranscript(props: PageProps) {
   useEffect(() => {
     setGenOptions(pageState.genoptions)
     setDivergingoptions(pageState.divergingoptions)
-  })
+  }, [pageState])
 
   const transcript_search = (ll: number, rr: number, ii: number): number => {
     if (rr >= ll) {
