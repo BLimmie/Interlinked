@@ -49,7 +49,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
                 />
                 <Bar
                     data={props.pageState.aggremotiondata}
-                    options={{ scales: { yAxes: [{ scaleLabel: { display: true, labelString: "Percent (%)" } }] } }}
+                    options={{ scales: { yAxes: [{ scaleLabel: { display: true, labelString: "Percent (%)" }, ticks: { max: 100 } }] } }}
                     width={900}
                     height={350} />
             </div>

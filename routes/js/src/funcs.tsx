@@ -139,7 +139,7 @@ const auTypes = ["Blink", "BrowLowerer", "CheekRaiser", "ChinRaiser", "Dimpler",
 
 async function getSessionData(seshId: string, seshDate: string): Promise<SessionData | null> {
   return new Promise<SessionData | null>(async (resolve) => {
-    httpCall('POST', backendServerName + "8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
+    httpCall('POST', backendServerName + ":8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let metrics = JSON.parse(result)
         let frameMetrics: Array<any> = metrics["Frame Metrics"]
@@ -360,7 +360,7 @@ export async function getSessionsData(sessions: Session[]) {
           resolve(seshdata)
         }
       })
-      sleep(1000)
+      sleep(1500)
     })
 
   })
