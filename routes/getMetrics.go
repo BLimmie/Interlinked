@@ -8,7 +8,7 @@ import (
 
 func getSessionMetricsAggregate(c *gin.Context) {
 	id := c.Param("id")
-	recalculate := c.Query("recalculate") == "true"
+	recalculate := c.Query("recalculate") != "false"
 	resultChan := app.NewResultChannel()
 	err := DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
 		objID, err := primitive.ObjectIDFromHex(id)
@@ -40,7 +40,7 @@ func getSessionMetricsAggregate(c *gin.Context) {
 		c.String(500, err.Error())
 		return
 	}
-	result, err := aggregator.Run()
+	result, err := aggregator.Run(true)
 	if err != nil {
 		c.String(500, err.Error())
 		return
