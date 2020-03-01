@@ -1,15 +1,13 @@
 import React from "react";
 import SpeechRecognition from "react-speech-recognition";
 import Speech from './Speech';
+import { sleep } from './funcs';
 
 let sentiment_num: number = 0;
 let tones: boolean[] = [];
 let tones2: boolean[] = [];
 let calledyet: boolean[] = [];
 
-function sleep(ms: any) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function interpret_sentiment(sentiment: string, i: number) {
   var temp_s = sentiment.substring(13, sentiment.length - 2)
@@ -19,13 +17,13 @@ async function interpret_sentiment(sentiment: string, i: number) {
   return null;
 }
 
-function httpCall(method: string, url:string, data:any, callback:(result:any, r:any)=>any, i: number) {
+function httpCall(method: string, url: string, data: any, callback: (result: any, r: any) => any, i: number) {
   var xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
-  if (callback) xhr.onload = function() { callback(this['responseText'], i); };
+  if (callback) xhr.onload = function () { callback(this['responseText'], i); };
   if (data != null) {
-      xhr.setRequestHeader('Content-Type', 'text/plain');
-      xhr.send(data);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.send(data);
   }
   else xhr.send();
 }
@@ -42,16 +40,16 @@ interface SpeechProps {
 // and their associated sentiment for storage purposes. Just put that in the database.
 // It might be more complicated than that. I wouldn't know.
 class Transcription extends React.Component<SpeechProps> {
-    private i = 0;
-    private sessionId = window.location.pathname.split("/").pop()
+  private i = 0;
+  private sessionId = window.location.pathname.split("/").pop()
 
-    render() {
-      let globalThis = window
-      let the_props: SpeechProps  = this.props
-  
-      if (!the_props.browserSupportsSpeechRecognition) {
-        return null
-      }
+  render() {
+    let globalThis = window
+    let the_props: SpeechProps = this.props
+
+    if (!the_props.browserSupportsSpeechRecognition) {
+      return null
+    }
 
     // Dynamically updating transcript
     const transcript_split = the_props.transcript.split(' ');
@@ -67,7 +65,7 @@ class Transcription extends React.Component<SpeechProps> {
         sentences.push(transcript_split.slice(j, i).join(" "));
       }
     }
-    let temp = Array.from( globalThis.words.values() );
+    let temp = Array.from(globalThis.words.values());
 
     globalThis.words = new Map();
 
@@ -123,8 +121,8 @@ class Transcription extends React.Component<SpeechProps> {
     }
 
     // All this global array/variable code is so that Speech can function properly
-    globalThis.display_words = Array.from( globalThis.words.keys() );
-    globalThis.sentiment = Array.from( globalThis.words.values() );
+    globalThis.display_words = Array.from(globalThis.words.keys());
+    globalThis.sentiment = Array.from(globalThis.words.values());
 
     if (globalThis.display_words.length !== globalThis.phrase_count) {
       globalThis.phrase_count = globalThis.display_words.length;
@@ -137,8 +135,8 @@ class Transcription extends React.Component<SpeechProps> {
       }
     }
 
-    return(<Speech />);
-    }
+    return (<Speech />);
   }
+}
 
 export default SpeechRecognition(Transcription);

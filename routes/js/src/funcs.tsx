@@ -1,5 +1,9 @@
 import { ChartData } from 'chart.js'
 
+export function sleep(ms: any) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function httpCall(method: string, url: string, header: Array<[string, string]>, data: any, callback: (result: any, r: number) => any) {
   var xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
@@ -356,6 +360,7 @@ export async function getSessionsData(sessions: Session[]) {
           resolve(seshdata)
         }
       })
+      sleep(1000)
     })
 
   })
