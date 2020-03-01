@@ -6,7 +6,7 @@ export async function getToken(identityType: string, roomName: string) {
         "roomName": roomName
     })
         return new Promise<any>(resolve => {
-            httpCall('POST', "http://localhost:8080/twilio/getToken", jsonObject, (result: any) => {
+            httpCall('POST', backendServerName + ":8080/twilio/getToken", jsonObject, (result: any) => {
                 resolve(JSON.parse(result).token)
             })
         })

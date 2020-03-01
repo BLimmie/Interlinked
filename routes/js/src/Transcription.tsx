@@ -87,7 +87,7 @@ class Transcription extends React.Component<SpeechProps> {
       }
       else if (i === limit - 2 && calledyet[i] !== true) {
         let recent_phrase: string = sentences[i];
-        httpCall('POST', "http://localhost:8080/sentiment/text/" + (this.sessionId as string), recent_phrase, interpret_sentiment, i);
+        httpCall('POST', backendServerName + ":8080/sentiment/text/" + (this.sessionId as string), recent_phrase, interpret_sentiment, i);
         calledyet[i] = true;
       }
       else if (i === limit - 2 && tones[i] === true && tones2[i] !== true) {

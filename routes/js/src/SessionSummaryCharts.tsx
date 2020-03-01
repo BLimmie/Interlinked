@@ -18,14 +18,14 @@ interface SessionSummaryChartsProps {
 
 export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
 
-    return (<div style={{ overflow: 'auto', height: 400, maxWidth: 900, margin: 'auto' }}>
+    return (<div style={{ overflow: 'auto', height: 350, maxWidth: 900, margin: 'auto' }}>
         {
             props.selection == 0 &&
             <Scatter
                 data={props.pageState.emotiondata}
                 options={Object.assign({}, props.divergingoptions, { scales: getScales("Probability (%)", 0, 100) })}
                 width={900}
-                height={400}
+                height={350}
                 getElementAtEvent={props.alter_transcript(getXValues(props.pageState.emotiondata))} />
         }
         {
@@ -51,7 +51,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
                     data={props.pageState.aggremotiondata}
                     options={{ scales: { yAxes: [{ scaleLabel: { display: true, labelString: "Percent (%)" } }] } }}
                     width={900}
-                    height={400} />
+                    height={350} />
             </div>
         }
         {
@@ -60,7 +60,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
                 data={props.pageState.textdata}
                 options={Object.assign({}, props.divergingoptions, { scales: getScales("Negative to Positive Text Sentiment", -1, 1) })}
                 width={900}
-                height={400}
+                height={350}
                 getElementAtEvent={props.alter_transcript(props.pageState.textlabels)} />
         }
         {
@@ -69,7 +69,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
                 data={props.pageState.smoothemotiondata}
                 options={Object.assign({}, props.divergingoptions, { scales: getScales("Probability (%)", 0, 100) })}
                 width={900}
-                height={400}
+                height={350}
                 getElementAtEvent={props.alter_transcript(getXValues(props.pageState.smoothemotiondata))} />
         }
         {
@@ -78,7 +78,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
                 data={props.pageState.smoothtextdata}
                 options={Object.assign({}, props.divergingoptions, { scales: getScales("Negative to Positive Text Sentiment", -1, 1) })}
                 width={900}
-                height={400}
+                height={350}
                 getElementAtEvent={props.alter_transcript(props.pageState.smoothtextlabels)} />
         }
         {
@@ -87,7 +87,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
                 data={props.pageState.audata}
                 options={Object.assign({}, props.genoptions, { scales: getScales("Intensity", 0, 5) })}
                 width={900}
-                height={400}
+                height={350}
                 getElementAtEvent={props.alter_transcript(getXValues(props.pageState.audata))} />
         }
         {
