@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     transcript_list: {
       width: '100%',
-      height: 220,
+      height: 250,
       maxWidth: "100vw",
       backgroundColor: "#b5b3bc",
     },
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: "8px"
     },
     primaryListFontSize: {
-      '& span': { fontSize: "38px" }
+      '& span': { fontSize: "30px" }
     },
   })
 )
@@ -97,7 +97,7 @@ export default function GraphTranscript(props: PageProps) {
   useEffect(() => {
     setGenOptions(pageState.genoptions)
     setDivergingoptions(pageState.divergingoptions)
-  })
+  }, [pageState])
 
   const transcript_search = (ll: number, rr: number, ii: number): number => {
     if (rr >= ll) {
@@ -184,7 +184,7 @@ export default function GraphTranscript(props: PageProps) {
         }
         <Grid item xs={12}>
           <div className={classes.transcript_list}>
-            <FixedSizeList ref={listRef} height={220} width={"100vw"} itemSize={80} itemCount={transcript.length}>
+            <FixedSizeList ref={listRef} height={250} width="inherit" itemSize={80} itemCount={transcript.length}>
               {transcript_render}
             </FixedSizeList>
           </div>

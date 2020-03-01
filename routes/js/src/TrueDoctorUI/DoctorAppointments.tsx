@@ -81,6 +81,9 @@ const styles = (_: Theme) => createStyles({
         width: "60vw",
         min_height: "5vh",
         height: "5vh"
+    },
+    pushDown: {
+        marginTop: "32px"
     }
 })
 
@@ -164,7 +167,7 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
     createSession() {
         if (this.state.people.length > 0) {
             let pat = this.state.people[this.state.current_selection].username
-            httpCall('POST', "http://localhost:8080/session", [['Provusername', this.username!],
+            httpCall('POST', backendServerName + ":8080/session", [['Provusername', this.username!],
             ['Patusername', pat]], null, (result: any, rr: number) => {
                 if (rr === 200) {
                     console.log(result)
@@ -194,7 +197,7 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
 
     associateUser() {
         if (this.patToAdd !== "") {
-            httpCall('POST', "http://localhost:8080/associateUser", [['Provid', this.id!],
+            httpCall('POST', backendServerName + ":8080/associateUser", [['Provid', this.id!],
             ['Patusername', this.patToAdd]], null, (result: any, rr: number) => {
                 if (rr === 200) {
                     this.setState({ resMsg: 'success: added user' })
@@ -209,7 +212,7 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
     }
 
     getAssociatedUsers() {
-        httpCall('POST', "http://localhost:8080/provider/" + this.username, [], null, (result: any, rr: number) => {
+        httpCall('POST', backendServerName + ":8080/provider/" + this.username, [], null, (result: any, rr: number) => {
             if (rr === 200) {
                 let arr = JSON.parse(result).Patients
                 if (arr !== null) {
@@ -245,6 +248,7 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
                         container
                         spacing={7}
                         direction='column'
+                        className={this.props.classes.pushDown}
                     >
                         <Grid item></Grid>
                         <Grid item></Grid>

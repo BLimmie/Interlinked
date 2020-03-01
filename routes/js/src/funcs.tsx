@@ -135,11 +135,9 @@ const auTypes = ["Blink", "BrowLowerer", "CheekRaiser", "ChinRaiser", "Dimpler",
 
 async function getSessionData(seshId: string, seshDate: string): Promise<SessionData | null> {
   return new Promise<SessionData | null>(async (resolve) => {
-    httpCall('POST', "http://localhost:8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
+    httpCall('POST', backendServerName + "8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let metrics = JSON.parse(result)
-        console.log(seshId)
-        console.log(metrics["Text Metrics"])
         let frameMetrics: Array<any> = metrics["Frame Metrics"]
         let emotionLabels: string[] = []
         let anger: any[] = []
@@ -225,11 +223,16 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
         })
 
         // text sentiment metrics
+        let ly = "#b9bb3b"
+        let lb = "rgba(33, 161, 255, 1)"
+        let by = "rgba(211, 212, 119, 0.3)"
+        let bb = "rgba(33, 161, 255, 0.3)"
+
         let textMetrics: [] = metrics["Text Metrics"]
         let textLabels: number[] = []
         let transcript: TranscriptLine[] = []
         let textSentiment: any[] = []
-        textMetrics.forEach(element => {
+        textMetrics && textMetrics.forEach(element => {
           let time = element["Time"] as number - baseTime
           textLabels.push(time)
           transcript.push(new TranscriptLine(time, element["Text"]))
@@ -238,8 +241,15 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
         let textChartData = (canvas: any) => {
           const ctx = canvas.getContext("2d")
           const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-          gradient.addColorStop(0, "#E6D725");
-          gradient.addColorStop(1, "#47CDD5");
+          gradient.addColorStop(0, ly);
+          gradient.addColorStop(0.45, ly);
+          gradient.addColorStop(0.45, lb);
+          gradient.addColorStop(1, lb);
+          const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+          bgradient.addColorStop(0, by)
+          bgradient.addColorStop(0.45, by)
+          bgradient.addColorStop(0.45, bb)
+          bgradient.addColorStop(1, bb)
           return {
             datasets: [
               {
@@ -247,6 +257,7 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
                 data: textSentiment,
                 borderColor: gradient,
                 pointBorderColor: gradient,
+                backgroundColor: bgradient,
                 showLine: true,
                 lineTension: 0.22
               }
@@ -265,8 +276,15 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
         let smoothtextChartData = (canvas: any) => {
           const ctx = canvas.getContext("2d")
           const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-          gradient.addColorStop(0, "#E6D725");
-          gradient.addColorStop(1, "#47CDD5");
+          gradient.addColorStop(0, ly);
+          gradient.addColorStop(0.45, ly);
+          gradient.addColorStop(0.45, lb);
+          gradient.addColorStop(1, lb);
+          const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+          bgradient.addColorStop(0, by)
+          bgradient.addColorStop(0.45, by)
+          bgradient.addColorStop(0.45, bb)
+          bgradient.addColorStop(1, bb)
           return {
             datasets: [
               {
@@ -274,6 +292,7 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
                 data: smoothtext,
                 borderColor: gradient,
                 pointBorderColor: gradient,
+                backgroundColor: bgradient,
                 showLine: true,
                 lineTension: 0.22
               }
@@ -344,7 +363,7 @@ export async function getSessionsData(sessions: Session[]) {
 
 export async function getPatientSessions(id: string): Promise<Session[]> {
   return new Promise<Session[]>(async (resolve) => {
-    await httpCall('POST', "http://localhost:8080/sessions/" + id, [], null, (result: any, rr: number) => {
+    await httpCall('POST', backendServerName + ":8080/sessions/" + id, [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let arr = JSON.parse(result)
         if (arr !== null) {
@@ -367,7 +386,7 @@ export async function getPatientSessions(id: string): Promise<Session[]> {
 
 export async function getAssociatedSessions(proid: string, patun: string): Promise<Session[]> {
   return new Promise<Session[]>(async (resolve) => {
-    await httpCall('POST', "http://localhost:8080/associatedsessions/" + proid + "/" + patun, [], null, (result: any, rr: number) => {
+    await httpCall('POST', backendServerName + ":8080/associatedsessions/" + proid + "/" + patun, [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let arr = JSON.parse(result)
         if (arr !== null) {
@@ -392,7 +411,7 @@ export async function getAssociatedSessions(proid: string, patun: string): Promi
 export function getOption(xmax: number, index: number) {
   return {
     annotation: {
-      drawTime: 'afterDatasetsDraw',
+      drawTime: 'beforeDatasetsDraw',
       annotations: [{
         type: 'line',
         mode: 'vertical',
@@ -439,7 +458,7 @@ export function getOption(xmax: number, index: number) {
 export function getDivergingOption(xmax: number, da: any[], index: number) {
   return {
     annotation: {
-      drawTime: 'afterDatasetsDraw',
+      drawTime: 'beforeDatasetsDraw',
       annotations: [{
         type: 'line',
         mode: 'vertical',
@@ -536,13 +555,15 @@ export function getState(currentSesh: SessionData): PageState {
           label: "Anger",
           data: currentSesh.angerData,
           borderColor: "red",
+          backgroundColor: "rgba(255, 80, 80, 0.3)",
           showLine: true,
           lineTension: 0.22
         },
         {
           label: "Joy",
           data: currentSesh.joyData,
-          borderColor: "yellow",
+          borderColor: "#b9bb3b",
+          backgroundColor: "rgba(211, 212, 119, 0.3)",
           showLine: true,
           lineTension: 0.22
         },
@@ -550,13 +571,15 @@ export function getState(currentSesh: SessionData): PageState {
           label: "Sorrow",
           data: currentSesh.sorrowData,
           borderColor: "blue",
+          backgroundColor: "rgba(102, 140, 255, 0.3)",
           showLine: true,
           lineTension: 0.22
         },
         {
           label: "Surprise",
           data: currentSesh.supriseData,
-          borderColor: "green",
+          borderColor: '#d29e63',
+          backgroundColor: "rgba(210, 158, 99, 0.3)",
           showLine: true,
           lineTension: 0.22
         },
@@ -568,32 +591,32 @@ export function getState(currentSesh: SessionData): PageState {
           label: "Anger",
           data: currentSesh.smoothangerData,
           borderColor: "red",
+          backgroundColor: "rgba(255, 80, 80, 0.3)",
           showLine: true,
-          fill: false,
           lineTension: 0.22
         },
         {
           label: "Joy",
           data: currentSesh.smoothjoyData,
-          borderColor: "yellow",
+          borderColor: "#b9bb3b",
+          backgroundColor: "rgba(211, 212, 119, 0.3)",
           showLine: true,
-          fill: false,
           lineTension: 0.22
         },
         {
           label: "Sorrow",
           data: currentSesh.smoothsorrowData,
           borderColor: "blue",
+          backgroundColor: "rgba(102, 140, 255, 0.3)",
           showLine: true,
-          fill: false,
           lineTension: 0.22
         },
         {
           label: "Surprise",
           data: currentSesh.smoothsupriseData,
-          borderColor: "green",
+          borderColor: '#d29e63',
+          backgroundColor: "rgba(210, 158, 99, 0.3)",
           showLine: true,
-          fill: false,
           lineTension: 0.22
         },
       ]
@@ -609,14 +632,14 @@ export function getState(currentSesh: SessionData): PageState {
       labels: ["Anger", "Joy", "Sorrow", "Surprise"],
       datasets: [{
         label: "Percent of Each Emotion over Session",
-        backgroundColor: ["red", "yellow", "blue", "green"],
+        backgroundColor: ["red", "#d3d477", "blue", '#d29e63'],
         data: currentSesh.aggrSentiment
       }]
     },
     divergingannotations: divergingAnnotations,
     divergingoptions: {
       annotation: {
-        drawTime: 'afterDatasetsDraw',
+        drawTime: 'beforeDatasetsDraw',
         annotations: divergingAnnotations
       },
       scales: {
@@ -685,7 +708,7 @@ export function getState(currentSesh: SessionData): PageState {
     avgtextoptions: {
       annotation:
       {
-        drawTime: 'afterDatasetsDraw',
+        drawTime: 'beforeDatasetsDraw',
         annotations: [{
           type: 'line',
           mode: 'vertical',

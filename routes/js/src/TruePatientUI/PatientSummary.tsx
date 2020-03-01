@@ -54,7 +54,7 @@ const PatientSummary = (props: PatientSummaryProps) => {
     >
       <UserAppBar in={ UserInterfaceRole.Summary } for={ UserType.Patient } />
 
-      <div style={{ padding: 16, marginTop: "88px" }}>
+      <div style={{ padding: 16, marginTop: "32px" }}>
         {
           AllSessionData.length == 0 &&
           <CircularProgress />
@@ -64,21 +64,22 @@ const PatientSummary = (props: PatientSummaryProps) => {
             {
               !CompareSessions &&
               <Grid container>
-                <Grid xs={8} />
+                <Grid xs={7} />
                 <Grid xs={2} >
                   <FormControlLabel
                     control={
                       <Switch checked={CompareGraphs} onChange={changeCompareGraphs} value="CompareGraphs" />
                     }
-                    label="Compare Graphs"
+
+                    label={<span style={{fontSize:"42px"}}> Compare Graphs </span>}
                   />
                 </Grid>
-                <Grid xs={2} >
+                <Grid xs={3} >
                   <FormControlLabel
                     control={
                       <Switch checked={CompareSessions} onChange={changeCompareSessions} value="CompareSessions" />
                     }
-                    label="Compare Sessions"
+                    label={<span style={{fontSize:"42px"}}> Compare Sessions </span>}
                   />
                 </Grid>
               </Grid>
@@ -86,13 +87,13 @@ const PatientSummary = (props: PatientSummaryProps) => {
             {
               CompareSessions &&
               <Grid container>
-                <Grid xs={9} />
-                <Grid xs={3} >
+                <Grid xs={10} />
+                <Grid xs={2} >
                   <FormControlLabel
                     control={
                       <Switch checked={CompareSessions} onChange={changeCompareSessions} value="CompareSessions" />
                     }
-                    label="Compare Sessions"
+                    label={<span style={{fontSize:"42px"}}> Compare Sessions </span>}
                   />
                 </Grid>
               </Grid>

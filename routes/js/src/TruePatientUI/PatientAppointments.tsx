@@ -76,6 +76,9 @@ const styles = (_: Theme) => createStyles({
         width: "60vw",
         min_height: "5vh",
         height: "5vh"
+    },
+    pushDown:{
+        marginTop: "32px"
     }
 })
 
@@ -155,7 +158,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
     joinSession() {
         if (this.state.people.length > 0) {
             let pro = this.state.people[this.state.current_selection].username
-            httpCall('POST', "http://localhost:8080/latestsession", [['Provusername', pro],
+            httpCall('POST', backendServerName + ":8080/latestsession", [['Provusername', pro],
             ['Patusername', this.username]], null, (result: any, rr: number) => {
                 if (rr === 200) {
                     console.log(result)
@@ -172,7 +175,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
     }
 
     getAssociatedUsers() {
-        httpCall('POST', "http://localhost:8080/patient/" + this.username, [], null, (result: any, rr: number) => {
+        httpCall('POST', backendServerName + ":8080/patient/" + this.username, [], null, (result: any, rr: number) => {
             if (rr === 200) {
                 let arr = JSON.parse(result).Providers
                 if (arr !== null) {
@@ -215,6 +218,7 @@ class PatientAppointments extends React.Component<PageProps, PageState> {
                     <Grid
                         container
                         spacing={5}
+                        className={this.props.classes.pushDown}
                         direction='row'
                         alignItems='flex-start'
                         justify='space-between'

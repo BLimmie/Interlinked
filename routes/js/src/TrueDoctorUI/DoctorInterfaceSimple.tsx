@@ -72,6 +72,8 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
           .then((room: Room) => {
             setVideoRoom(room)
             setRemoteVideo(room, endSession)
+            const id = setPatienSnapshotInterval(resultToResponse, match.params.link)
+           setIntervalId(id)
           })
           .catch(() => {console.log("Room name does not exist, exit please")})
       }
@@ -90,11 +92,6 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
     }
   }
    
-  React.useEffect(() => {
-   const id = setPatienSnapshotInterval(resultToResponse, match.params.link)
-   setIntervalId(id)
-  }, [])
-
   const endSession: Function = () => {
     if(videoRoom)
       videoRoom.disconnect()

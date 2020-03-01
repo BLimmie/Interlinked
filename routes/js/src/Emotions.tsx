@@ -65,8 +65,9 @@ interface EmotionProps {
 const likelihoodToNumber = (emotions: EmotionsInterface): number[] => {
 	const emotionValues: number[] = []
 
-	for (let emotionValue of Object.values(emotions)) {
-		if (emotionValue === "VERY_UNLIKELY")
+	if(emotions)
+	  for (let emotionValue of Object.values(emotions)) {
+		if(emotionValue === "VERY_UNLIKELY")
 			emotionValues.push(0)
 		else if (emotionValue === "UNLIKELY")
 			emotionValues.push(25)
@@ -97,10 +98,15 @@ export default function Emotions(props: EmotionProps) {
 		const emotionValues = likelihoodToNumber(response.emotions)
 
 		anger_history.unshift(emotionValues[0])
+		anger_history.pop()
 		joy_history.unshift(emotionValues[1])
+		joy_history.pop()
 		sorrow_history.unshift(emotionValues[2])
+		sorrow_history.pop()
 		surprise_history.unshift(emotionValues[3])
+		surprise_history.pop()
 		labels.unshift(labels.length.toString())
+		labels.pop()
 		lineRef.current?.chartInstance.update()
 
 	}, [response.emotions])

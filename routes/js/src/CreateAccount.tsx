@@ -144,7 +144,7 @@ class CreateAccount extends React.Component<CreateAccountProps, CreateAccountSta
       userType = "provider"
     }
 
-    httpCall('POST', "http://localhost:8080/" + userType, [['Name', this.state.name], 
+    httpCall('POST', backendServerName + ":8080/" + userType, [['Name', this.state.name], 
       ['Username', this.state.username], 
       ['Password', this.state.password]], null, (result:any, rr:number) => {
         if (rr === 200) {

@@ -10,7 +10,15 @@ const clone = require('rfdc')()
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     width: {
-      width: '100%'
+      width: '100%',
+      '& label': { 
+        fontSize: '42px'
+      }
+
+    },
+    select: {
+      marginTop:'32px !important',
+      fontSize:'32px'
     }
   })
 )
@@ -48,10 +56,12 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
       <Grid container style={{ height: '100%', width: '100%' }}>
         <Grid item xs={3} style={{ marginRight: '16px' }}>
           <FormControl className={classes.width}>
-            <InputLabel> Select Graph Type </InputLabel>
+            <InputLabel> Select Graph </InputLabel>
             <Select
               value={activeGraph}
               onChange={selectGraph}
+              className={classes.select}
+
             >
               <MenuItem value={0}>Emotion Graph</MenuItem>
               <MenuItem value={1}>Aggregate Emotion/Text Sentiment</MenuItem>
@@ -66,10 +76,12 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
         <Grid item xs={1} />
         <Grid item xs={3}>
           <FormControl className={classes.width}>
-            <InputLabel> Select Session </InputLabel>
+            <InputLabel > Select Session </InputLabel>
             <Select
               value={activeSession}
               onChange={selectSession}
+              className={classes.select}
+
             >
               {
                 SessionDataArr.map((session, index) => {
@@ -82,10 +94,11 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
         <Grid item xs={1} />
         <Grid item xs={3} style={{ marginRight: '16px' }}>
           <FormControl className={classes.width}>
-            <InputLabel> Select Graph Type </InputLabel>
+            <InputLabel> Select Graph </InputLabel>
             <Select
               value={secondGraph}
               onChange={selectSecondGraph}
+              className={classes.select}
             >
               <MenuItem value={0}>Emotion Graph</MenuItem>
               <MenuItem value={1}>Aggregate Emotion/Text Sentiment</MenuItem>
@@ -115,10 +128,11 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
       <Grid item xs={3} />
       <Grid item xs={3} style={{ marginRight: '16px' }}>
         <FormControl className={classes.width}>
-          <InputLabel> Select Graph Type </InputLabel>
+          <InputLabel style={{width:"200%"}}> Select Graph </InputLabel>
           <Select
             value={activeGraph}
             onChange={selectGraph}
+            className={classes.select}
           >
             <MenuItem value={0}>Emotion Graph</MenuItem>
             <MenuItem value={1}>Aggregate Emotion/Text Sentiment</MenuItem>
@@ -132,10 +146,11 @@ export default function GraphSessionComponent(props: GraphSessionProps) {
       </Grid>
       <Grid item xs={3}>
         <FormControl className={classes.width}>
-          <InputLabel> Select Session </InputLabel>
+          <InputLabel style={{width:"200%"}}> Select Session </InputLabel>
           <Select
             value={activeSession}
             onChange={selectSession}
+            className={classes.select}
           >
             {
               SessionDataArr.map((session, index) => {
