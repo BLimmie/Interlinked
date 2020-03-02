@@ -139,7 +139,7 @@ const auTypes = ["Blink", "BrowLowerer", "CheekRaiser", "ChinRaiser", "Dimpler",
 
 async function getSessionData(seshId: string, seshDate: string): Promise<SessionData | null> {
   return new Promise<SessionData | null>(async (resolve) => {
-    httpCall('POST', backendServerName + ":8080/metrics/" + seshId + "/aggregate", [], null, (result: any, rr: number) => {
+    httpCall('POST', backendServerName + ":8080/metrics/" + seshId + "/aggregate?recalculate=false", [], null, (result: any, rr: number) => {
       if (rr === 200) {
         let metrics = JSON.parse(result)
         let frameMetrics: Array<any> = metrics["Frame Metrics"]
@@ -231,6 +231,7 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
         let lb = "rgba(33, 161, 255, 1)"
         let by = "rgba(211, 212, 119, 0.3)"
         let bb = "rgba(33, 161, 255, 0.3)"
+        let ratio = 0.44
 
         let textMetrics: [] = metrics["Text Metrics"]
         let textLabels: number[] = []
@@ -246,13 +247,13 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
           const ctx = canvas.getContext("2d")
           const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
           gradient.addColorStop(0, ly);
-          gradient.addColorStop(0.45, ly);
-          gradient.addColorStop(0.45, lb);
+          gradient.addColorStop(ratio, ly);
+          gradient.addColorStop(ratio, lb);
           gradient.addColorStop(1, lb);
           const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
           bgradient.addColorStop(0, by)
-          bgradient.addColorStop(0.45, by)
-          bgradient.addColorStop(0.45, bb)
+          bgradient.addColorStop(ratio, by)
+          bgradient.addColorStop(ratio, bb)
           bgradient.addColorStop(1, bb)
           return {
             datasets: [
@@ -275,19 +276,20 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
         (Object.keys(metrics["Text sentiment over last 10 seconds"])).forEach(element => {
           smoothtextLabels.push(+element)
           let obj = metrics["Text sentiment over last 10 seconds"][element]
+          if (obj > 1) { obj = 1 } else if (obj < -1) { obj = -1 }
           smoothtext.push({ x: +element, y: obj })
         })
         let smoothtextChartData = (canvas: any) => {
           const ctx = canvas.getContext("2d")
           const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
           gradient.addColorStop(0, ly);
-          gradient.addColorStop(0.45, ly);
-          gradient.addColorStop(0.45, lb);
+          gradient.addColorStop(ratio, ly);
+          gradient.addColorStop(ratio, lb);
           gradient.addColorStop(1, lb);
           const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
           bgradient.addColorStop(0, by)
-          bgradient.addColorStop(0.45, by)
-          bgradient.addColorStop(0.45, bb)
+          bgradient.addColorStop(ratio, by)
+          bgradient.addColorStop(ratio, bb)
           bgradient.addColorStop(1, bb)
           return {
             datasets: [
@@ -347,10 +349,10 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
 }
 
 export async function getSessionsData(sessions: Session[]) {
-  return new Promise<SessionData[]>((resolve) => {
+  return new Promise<SessionData[]>(async (resolve) => {
     const seshdata: SessionData[] = []
     let sessionsLeft = sessions.length
-    sessions.forEach((sesh) => {
+    for (const sesh of sessions) {
       getSessionData(sesh.sesId, sesh.createdTime).then((value) => {
         if (value != null && value.transcript.length > 1) {
           seshdata.push(value)
@@ -360,8 +362,8 @@ export async function getSessionsData(sessions: Session[]) {
           resolve(seshdata)
         }
       })
-      sleep(1500)
-    })
+      await sleep(500)
+    }
 
   })
 }

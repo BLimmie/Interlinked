@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       height: 250,
       maxWidth: "100vw",
-      backgroundColor: "#b5b3bc",
+      backgroundColor: "#cac7d6",
     },
     pic: {
       width: "15vw",
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: "8px"
     },
     primaryListFontSize: {
-      '& span': { fontSize: "30px" }
+      '& span': { fontSize: "30px" },
     },
   })
 )
