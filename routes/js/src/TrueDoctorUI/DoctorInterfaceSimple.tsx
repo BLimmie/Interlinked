@@ -1,14 +1,14 @@
 import React from 'react'
 
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
-import Emotions, { zeroValueResponse, serverResponse, EmotionsInterface} from "../EmotionsSimple"
-import {Redirect, RouteComponentProps} from 'react-router-dom'
+import Emotions, { zeroValueResponse, serverResponse, EmotionsInterface } from "../EmotionsSimple"
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { getRoom, setRemoteVideo } from '../Video/Twilio'
 import { WebcamWithControls, setPatienSnapshotInterval } from '../Video/WebcamWithControls'
 import { Room } from 'twilio-video'
 import Transcription from '../Transcription'
-import {AUInterface} from '../AUs'
+import { AUInterface } from '../AUs'
 import Image from '../TrueImages/background_Interface_16-9.png'
 import TextboxImage from '../TrueImages/background_textbox_simple.png'
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "55vh"
     },
     their_video: {
-      '& video' : {
+      '& video': {
         width: '100%',
         height: '90%',
       }
@@ -52,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type LinkParams = {link: string}
-export default function DoctorInterface({ match }: RouteComponentProps<LinkParams>)  {
+type LinkParams = { link: string }
+export default function DoctorInterface({ match }: RouteComponentProps<LinkParams>) {
   const classes = useStyles();
 
   const [avState, setAvState] = React.useState<avStateInterface>(defaultAVState)
@@ -63,19 +63,20 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   const [intervalId, setIntervalId] = React.useState<NodeJS.Timeout>()
   const [patientFrameResponse, setPatientResonse] = React.useState<serverResponse>(zeroValueResponse)
   const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
+  const [transcript, setTranscript] = React.useState<string>("")
 
-  
+
   const createRoom = () => {
     if (!videoRoom) {
-      if (localVidStream) { 
+      if (localVidStream) {
         getRoom(match.params.link, localVidStream.getTracks(), "Doctor")
           .then((room: Room) => {
             setVideoRoom(room)
-            setRemoteVideo(room, endSession)
+            setRemoteVideo(room, endSession, setTranscript)
             const id = setPatienSnapshotInterval(resultToResponse, match.params.link)
-           setIntervalId(id)
+            setIntervalId(id)
           })
-          .catch(() => {console.log("Room name does not exist, exit please")})
+          .catch(() => { console.log("Room name does not exist, exit please") })
       }
     }
   }
@@ -83,94 +84,94 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   createRoom()
 
   const resultToResponse = (result: any) => {
-    if(result && result === "no faces found"){
+    if (result && result === "no faces found") {
       console.log(result)
     } else {
       const AUs: AUInterface = JSON.parse(result).AU
       const Emotions: EmotionsInterface = JSON.parse(result).Emotion
-      setPatientResonse({aus: AUs, emotions: Emotions})
+      setPatientResonse({ aus: AUs, emotions: Emotions })
     }
   }
-   
+
   const endSession: Function = () => {
-    if(videoRoom)
+    if (videoRoom)
       videoRoom.disconnect()
     clearInterval((intervalId as NodeJS.Timeout))
-    if(localVidStream)
-      localVidStream.getTracks().forEach((track:MediaStreamTrack) => {
+    if (localVidStream)
+      localVidStream.getTracks().forEach((track: MediaStreamTrack) => {
         track.stop()
       })
     setEndChat(true)
   }
 
-  if(endChat)
+  if (endChat)
     return <Redirect to='/client/TrueDoctorMainPage' />
 
-    return (
-        <Box
-             className={classes.background}
-             style={{backgroundImage: `url(${Image})` }}>
-    
-                      <Box className={classes.their_video_box}
-                            bgcolor="#5f587d"               
-                            border = {2}
-                            borderColor = "#5f587d">
-                        {
-                          // videoRoom &&
-                          <Grid item className={classes.their_video}  id="remote" xs = {5} />
-                        }
-                      </Box>
-          <div style={{ zIndex: 50, position:'absolute', top: "74vh", left:"0vw"}}>
-    
-                    <Box justifyContent="center"
-                      className={classes.textbox_box}
-                      style={{backgroundImage: `url(${TextboxImage})` }}
-                    >
+  return (
+    <Box
+      className={classes.background}
+      style={{ backgroundImage: `url(${Image})` }}>
 
-                    </Box>
-                  </div>
-    
-                  <div style={{ zIndex: 100, position:'absolute', top: "74vh", left:"0vw"}}>
-    
-                    <div style={{ paddingLeft: "13vw", paddingTop: "1vh"}} >
-                      <Box className={classes.textbox} >
-                        <Transcription />
-                      </Box>
-                    </div>
-    
-                  </div>
-    
-                  <div style={{ zIndex: 100, position:'absolute', top: "74vh", left:"0vw"}}>
-    
-                    <div style={{ paddingLeft: "67vw", paddingTop: "1vh"}} >
-                        <Emotions response={patientFrameResponse}/>
-                    </div>
-    
-                    </div>
-    
-                    <div style={{ zIndex: 100, position:'absolute', top: "0vh", left:"-1vw"}}>
-                
-            <Grid item xs={4} >
-              <WebcamWithControls
-                avState={avState}
-                room={videoRoom}
-                localVidStream={localVidStream}
-                setLocalVidStream={setLocalVidStream}
-              />
-            </Grid>
-              </div>
-    
-              <div style={{ zIndex: 100, position:'absolute', top: "66vh", left:"81vw"}}>
-                <Grid item> 
-                    <VideoControls
-                      endSession={() => endSession()}
-                      avState={avState}
-                      setAVState={setAvState}
-                    />
-                </Grid>
-              </div>
-    
-    
+      <Box className={classes.their_video_box}
+        bgcolor="#5f587d"
+        border={2}
+        borderColor="#5f587d">
+        {
+          // videoRoom &&
+          <Grid item className={classes.their_video} id="remote" xs={5} />
+        }
+      </Box>
+      <div style={{ zIndex: 50, position: 'absolute', top: "74vh", left: "0vw" }}>
+
+        <Box justifyContent="center"
+          className={classes.textbox_box}
+          style={{ backgroundImage: `url(${TextboxImage})` }}
+        >
+
         </Box>
-      ); //Replace "<Transcription />" with "<Transcript_Tests i={0} />" to run the transcription and emotion display tests
+      </div>
+
+      <div style={{ zIndex: 100, position: 'absolute', top: "74vh", left: "0vw" }}>
+
+        <div style={{ paddingLeft: "13vw", paddingTop: "1vh" }} >
+          <Box className={classes.textbox} >
+            <Transcription transcript={transcript} browserSupportsSpeechRecognition={true} />
+          </Box>
+        </div>
+
+      </div>
+
+      <div style={{ zIndex: 100, position: 'absolute', top: "74vh", left: "0vw" }}>
+
+        <div style={{ paddingLeft: "67vw", paddingTop: "1vh" }} >
+          <Emotions response={patientFrameResponse} />
+        </div>
+
+      </div>
+
+      <div style={{ zIndex: 100, position: 'absolute', top: "0vh", left: "-1vw" }}>
+
+        <Grid item xs={4} >
+          <WebcamWithControls
+            avState={avState}
+            room={videoRoom}
+            localVidStream={localVidStream}
+            setLocalVidStream={setLocalVidStream}
+          />
+        </Grid>
+      </div>
+
+      <div style={{ zIndex: 100, position: 'absolute', top: "66vh", left: "81vw" }}>
+        <Grid item>
+          <VideoControls
+            endSession={() => endSession()}
+            avState={avState}
+            setAVState={setAvState}
+          />
+        </Grid>
+      </div>
+
+
+    </Box>
+  ); //Replace "<Transcription />" with "<Transcript_Tests i={0} />" to run the transcription and emotion display tests
 }
