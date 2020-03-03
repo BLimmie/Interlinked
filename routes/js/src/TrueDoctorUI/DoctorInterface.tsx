@@ -4,13 +4,14 @@ import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core'
 import Emotions, { zeroValueResponse, serverResponse, EmotionsInterface } from "../Emotions"
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
-import { getRoom, setRemoteVideo } from '../Video/Twilio'
+import { getRoom, setRemoteVideo, httpCall } from '../Video/Twilio'
 import { WebcamWithControls, setPatienSnapshotInterval } from '../Video/WebcamWithControls'
 import { Room } from 'twilio-video'
 import Transcription from '../Transcription'
 import { AUInterface } from '../AUs'
 import Image from '../TrueImages/background_Interface_16-9.png'
 import TextboxImage from '../TrueImages/background_textbox_default.png'
+import {DoctorTranscript} from '../DoctorTranscript'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,6 +63,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   const [intervalId, setIntervalId] = React.useState<NodeJS.Timeout>()
   const [patientFrameResponse, setPatientResonse] = React.useState<serverResponse>(zeroValueResponse)
   const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
+  const [TimeTranscriptHashTable, setTimeTranscriptHashTable] = React.useState<Record<number,string>>({})
 
   const sessionId = match.params.link
 
@@ -72,12 +74,48 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
           .then((room: Room) => {
             setVideoRoom(room)
             setRemoteVideo(room, endSession)
+            getTranscript()
           })
           .catch(() => { console.log("Room name does not exist, exit please") })
       }
     }
   }
-
+  const getTranscript = () => {
+    const id = setInterval(() => {
+      const numOfKeys = Object.keys(TimeTranscriptHashTable).length
+      if(numOfKeys == 0) {
+        httpCall('POST', backendServerName + ":8080/session/"+ sessionId +"/updatetext", sessionId , 
+          ((result: string) => {
+            if(result != 'Could not find text metric with body as text') {
+                const json = JSON.parse(result);
+                console.log(json)
+                const temp = TimeTranscriptHashTable
+                for(var i = 0; i < json.length; i++){
+                  temp[json[i].Time] = json[i].Text
+                }
+                setTimeTranscriptHashTable(temp)
+            }
+          }) 
+        )
+      } else {
+        const keys = Object.keys(TimeTranscriptHashTable)
+        const last = TimeTranscriptHashTable[parseInt(keys.slice(-1)[0],10)]
+        httpCall('POST', backendServerName + ":8080/session/"+ sessionId +"/updatetext", last , 
+          ((result: string) => {
+            if(result != 'Could not find text metric with body as text') {
+                const json = JSON.parse(result);
+                console.log(json)
+                const temp = TimeTranscriptHashTable
+                for(var i = 0; i < json.length; i++){
+                  temp[json[i].Time] = json[i].Text
+                }
+                setTimeTranscriptHashTable(temp)
+            }
+          })
+        )
+      }
+    }, 10000)
+  }
   createRoom()
 
   const resultToResponseCB = (result: any) => {
@@ -149,7 +187,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
                 >
                   <div style={{ paddingLeft: "13vw", paddingTop: "1vh" }} >
                     <Box className={classes.textbox} >
-                      <Transcription />
+                      <DoctorTranscript transcriptList={Object.values(TimeTranscriptHashTable)} />
                     </Box>
                   </div>
                 </Box>
