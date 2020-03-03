@@ -258,6 +258,9 @@ func getLatestTextMetrics(c *gin.Context) {
 	}
 	searchParam := string(searchParam_tmp)
 	var createdTime int64 = 0
+	if searchParam == c.Param("id") {
+		goto noError
+	}
 	for _, tm := range textMetrics {
 		if strings.TrimSpace(tm.Text) == strings.TrimSpace(searchParam) {
 			createdTime = tm.Time
