@@ -167,13 +167,13 @@ class DoctorAppointments extends React.Component<PageProps, PageState> {
     createSession() {
         if (this.state.people.length > 0) {
             let pat = this.state.people[this.state.current_selection].username
-            httpCall('POST', backendServerName + ":8080/session", [['Provusername', this.username!],
+            httpCall('POST', backendServerName + ":8080/latestsession", [['Provusername', this.username!],
             ['Patusername', pat]], null, (result: any, rr: number) => {
                 if (rr === 200) {
                     console.log(result)
                     let ret = JSON.parse(result)
                     this.setState({
-                        link: "DoctorInterface/" + ret.id,
+                        link: "DoctorInterface/" + ret.ID,
                         redirectLink: true
                     })
                 } else {

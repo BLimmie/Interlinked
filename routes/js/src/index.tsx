@@ -41,7 +41,6 @@ globalThis.point_in_transcript = 0;
 globalThis.phrase_count = 0;
 globalThis.AU_exists = [true, true, true];
 globalThis.backendServerName = "http://localhost"
-//http://ec2-3-133-93-220.us-east-2.compute.amazonaws.com
 
 class Server extends React.Component {
   MainPageRoute: FunctionComponent<{}> = (props: {}) => {

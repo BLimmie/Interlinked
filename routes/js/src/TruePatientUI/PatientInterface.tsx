@@ -6,6 +6,7 @@ import { Room } from 'twilio-video'
 import { getRoom, setRemoteVideo } from '../Video/Twilio'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { WebcamWithControls } from '../Video/WebcamWithControls'
+import Transcription from '../Transcription'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,13 +93,7 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
         />
       </Grid>
       <Grid item xs={5}>
-        <Box
-          className={classes.lowerHalf}
-          border = {8}
-          borderColor = "white"
-          borderRadius = "0%"
-        >
-        </Box>
+        <Transcription />
       </Grid>
     </Grid>
   </div>
