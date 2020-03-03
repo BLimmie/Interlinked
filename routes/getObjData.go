@@ -5,6 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"io/ioutil"
+	"sort"
+	"strings"
 )
 
 func getPatient(c *gin.Context) {
@@ -222,4 +225,57 @@ func getUserFromToken(c *gin.Context) {
 	} else {
 		c.String(404, "Token not found")
 	}
+}
+
+func getLatestTextMetrics(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	sessionID, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		c.String(400, "Bad format")
+		return
+	}
+	resultChan := app.NewResultChannel()
+	err = DBWorkers.SubmitJob(resultChan, func(idx int) (interface{}, error) {
+		session, err := ic.FindSessionByID(sessionID)
+		return session, err
+	})
+	if err != nil {
+		c.String(500, "All workers busy")
+		return
+	}
+	result := <-resultChan
+	session, err := result.Result.(*app.Session), result.Err
+
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	textMetrics := session.TextMetrics
+	searchParam_tmp, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	searchParam := string(searchParam_tmp)
+	var createdTime int64 = 0
+	for _, tm := range textMetrics {
+		if strings.TrimSpace(tm.Text) == strings.TrimSpace(searchParam) {
+			createdTime = tm.Time
+			goto noError
+		}
+	}
+	//couldn't find searchParam
+	c.String(400, "Could not find text metric with body as text")
+	return
+noError:
+	resultSet := make([]app.TextMetrics, 0)
+	for _, tm := range textMetrics {
+		if tm.Time > createdTime {
+			resultSet = append(resultSet, tm)
+		}
+	}
+	sort.SliceStable(resultSet, func(i, j int) bool {
+		return resultSet[i].Time < resultSet[j].Time
+	})
+	c.JSON(200, resultSet)
 }

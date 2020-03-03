@@ -33,6 +33,7 @@ func Routes() {
 	router.POST("/patient/:user", getPatient)
 	router.POST("/provider/:user", getProvider)
 	router.POST("/session/:id", getSession)
+	router.POST("/session/:id/updatetext", getLatestTextMetrics)
 	router.POST("/sessions/:userid", getSessions)
 	router.POST("/associatedsessions/:proid/:patun", getAssociatedSessions)
 	router.POST("/latestsession", getLatestSession)
