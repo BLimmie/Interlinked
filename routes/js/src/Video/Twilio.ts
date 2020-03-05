@@ -65,7 +65,7 @@ function handleNewParticipant(participant: any, onData: any = null) {
   participant.on('trackSubscribed', (track: any) => {
     if (track.kind === 'data') {
       track.on('message', (data: any) => {
-        onData(data)
+        onData(data + " ")
       });
     } else {
       const remoteMediaContainer: (HTMLElement | null)
