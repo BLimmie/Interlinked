@@ -354,7 +354,7 @@ export async function getSessionsData(sessions: Session[]) {
     let sessionsLeft = sessions.length
     for (const sesh of sessions) {
       getSessionData(sesh.sesId, sesh.createdTime).then((value) => {
-        if (value != null && value.transcript.length > 1) {
+        if (value != null) {
           seshdata.push(value)
         }
         sessionsLeft = sessionsLeft - 1
