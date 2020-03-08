@@ -88,7 +88,7 @@ func GetAuthToken(identityType string, roomName string) (map[string]string, erro
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 
-	if identityType == "Doctor" {
+	if identityType == "Patient" {
 		if roomExists(roomName) {
 			return map[string]string{
 				"token":    "",
@@ -99,7 +99,7 @@ func GetAuthToken(identityType string, roomName string) (map[string]string, erro
 		roomNames = append(roomNames, roomName)
 	}
 
-	if identityType == "Patient" {
+	if identityType == "Doctor" {
 		if !roomExists(roomName) {
 			return map[string]string{
 				"token":    "",

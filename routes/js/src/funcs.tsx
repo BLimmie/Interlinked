@@ -227,11 +227,11 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
         })
 
         // text sentiment metrics
-        let ly = "#b9bb3b"
-        let lb = "rgba(33, 161, 255, 1)"
-        let by = "rgba(211, 212, 119, 0.3)"
-        let bb = "rgba(33, 161, 255, 0.3)"
-        let ratio = 0.44
+        // let ly = "#b9bb3b"
+        // let lb = "rgba(33, 161, 255, 1)"
+        // let by = "rgba(211, 212, 119, 0.3)"
+        // let bb = "rgba(33, 161, 255, 0.3)"
+        // let ratio = 0.44
 
         let textMetrics: [] = metrics["Text Metrics"]
         let textLabels: number[] = []

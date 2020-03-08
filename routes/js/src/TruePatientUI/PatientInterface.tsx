@@ -29,11 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type LinkParams = { link: string }
-interface SpeechRegProps {
-  transcript: string,
-  resetTranscript: any,
-  browserSupportsSpeechRecognition: boolean
-}
 
 export const localdt = new LocalDataTrack()
 export default function PatientInterface({ match }: RouteComponentProps<LinkParams>) {
@@ -74,7 +69,6 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
 
   return (
     <div className={classes.root} >
-      <SpeechRec />
       <Grid container className={classes.upperHalf} >
         <Grid item xs={1} />
         {
@@ -101,13 +95,14 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
           />
         </Grid>
         <Grid item xs={5}>
-          <Box
+          {/* <Box
             className={classes.lowerHalf}
             border={8}
             borderColor="white"
             borderRadius="0%"
           >
-          </Box>
+          </Box> */}
+          <SpeechRec />
         </Grid>
       </Grid>
     </div>
