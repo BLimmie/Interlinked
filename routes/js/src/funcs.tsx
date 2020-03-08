@@ -27,12 +27,12 @@ export class SessionData {
   supriseData: any[] = []
   sorrowData: any[] = []
   textLabels: number[] = []
-  textData: any
+  textSentiment: any[]
   smoothangerData: any[] = []
   smoothjoyData: any[] = []
   smoothsupriseData: any[] = []
   smoothsorrowData: any[] = []
-  smoothtextData: any
+  smoothtext: any[]
   smoothtextLabels: number[]
   auDataSets: any = [{}]
   divergingRanges: [number, number][] = []
@@ -50,12 +50,12 @@ export class SessionData {
     supriseData: any[],
     sorrowData: any[],
     textLabels: number[],
-    textData: any,
+    textSentiment: any[],
     smoothangerData: any[] = [],
     smoothjoyData: any[] = [],
     smoothsupriseData: any[] = [],
     smoothsorrowData: any[] = [],
-    smoothtextData: any,
+    smoothtext: any[],
     smoothtextLabels: number[],
     auDataSets: any,
     divergingRanges: [number, number][] = [],
@@ -72,12 +72,12 @@ export class SessionData {
     this.supriseData = supriseData
     this.sorrowData = sorrowData
     this.textLabels = textLabels
-    this.textData = textData
+    this.textSentiment = textSentiment
     this.smoothangerData = smoothangerData
     this.smoothjoyData = smoothjoyData
     this.smoothsupriseData = smoothsupriseData
     this.smoothsorrowData = smoothsorrowData
-    this.smoothtextData = smoothtextData
+    this.smoothtext = smoothtext
     this.smoothtextLabels = smoothtextLabels
     this.auDataSets = auDataSets
     this.divergingRanges = divergingRanges
@@ -94,9 +94,9 @@ export interface PageState {
   emotiondata: ChartData;
   smoothemotiondata: ChartData;
   // TODO: text needs labels as member because data is a function that returns labels if given a canvas, refactor to not need this
-  textdata: any;
+  textsentiment: any[];
   textlabels: number[];
-  smoothtextdata: any;
+  smoothtext: any[];
   smoothtextlabels: number[];
   audata: ChartData;
   // auanom uses these as props for the component au anom chart
@@ -243,32 +243,32 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
           transcript.push(new TranscriptLine(time, element["Text"]))
           textSentiment.push({ x: time, y: element["Sentiment"] })
         })
-        let textChartData = (canvas: any) => {
-          const ctx = canvas.getContext("2d")
-          const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-          gradient.addColorStop(0, ly);
-          gradient.addColorStop(ratio, ly);
-          gradient.addColorStop(ratio, lb);
-          gradient.addColorStop(1, lb);
-          const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-          bgradient.addColorStop(0, by)
-          bgradient.addColorStop(ratio, by)
-          bgradient.addColorStop(ratio, bb)
-          bgradient.addColorStop(1, bb)
-          return {
-            datasets: [
-              {
-                label: "Text Sentiment",
-                data: textSentiment,
-                borderColor: gradient,
-                pointBorderColor: gradient,
-                backgroundColor: bgradient,
-                showLine: true,
-                lineTension: 0.22
-              }
-            ]
-          }
-        }
+        // let textChartData = (canvas: any) => {
+        //   const ctx = canvas.getContext("2d")
+        //   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        //   gradient.addColorStop(0, ly);
+        //   gradient.addColorStop(ratio, ly);
+        //   gradient.addColorStop(ratio, lb);
+        //   gradient.addColorStop(1, lb);
+        //   const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        //   bgradient.addColorStop(0, by)
+        //   bgradient.addColorStop(ratio, by)
+        //   bgradient.addColorStop(ratio, bb)
+        //   bgradient.addColorStop(1, bb)
+        //   return {
+        //     datasets: [
+        //       {
+        //         label: "Text Sentiment",
+        //         data: textSentiment,
+        //         borderColor: gradient,
+        //         pointBorderColor: gradient,
+        //         backgroundColor: bgradient,
+        //         showLine: true,
+        //         lineTension: 0.22
+        //       }
+        //     ]
+        //   }
+        // }
 
         //smooth text sentiment metrics
         let smoothtextLabels: number[] = []
@@ -279,32 +279,32 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
           if (obj > 1) { obj = 1 } else if (obj < -1) { obj = -1 }
           smoothtext.push({ x: +element, y: obj })
         })
-        let smoothtextChartData = (canvas: any) => {
-          const ctx = canvas.getContext("2d")
-          const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-          gradient.addColorStop(0, ly);
-          gradient.addColorStop(ratio, ly);
-          gradient.addColorStop(ratio, lb);
-          gradient.addColorStop(1, lb);
-          const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-          bgradient.addColorStop(0, by)
-          bgradient.addColorStop(ratio, by)
-          bgradient.addColorStop(ratio, bb)
-          bgradient.addColorStop(1, bb)
-          return {
-            datasets: [
-              {
-                label: "Text Sentiment",
-                data: smoothtext,
-                borderColor: gradient,
-                pointBorderColor: gradient,
-                backgroundColor: bgradient,
-                showLine: true,
-                lineTension: 0.22
-              }
-            ]
-          }
-        }
+        // let smoothtextChartData = (canvas: any) => {
+        //   const ctx = canvas.getContext("2d")
+        //   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        //   gradient.addColorStop(0, ly);
+        //   gradient.addColorStop(ratio, ly);
+        //   gradient.addColorStop(ratio, lb);
+        //   gradient.addColorStop(1, lb);
+        //   const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        //   bgradient.addColorStop(0, by)
+        //   bgradient.addColorStop(ratio, by)
+        //   bgradient.addColorStop(ratio, bb)
+        //   bgradient.addColorStop(1, bb)
+        //   return {
+        //     datasets: [
+        //       {
+        //         label: "Text Sentiment",
+        //         data: smoothtext,
+        //         borderColor: gradient,
+        //         pointBorderColor: gradient,
+        //         backgroundColor: bgradient,
+        //         showLine: true,
+        //         lineTension: 0.22
+        //       }
+        //     ]
+        //   }
+        // }
 
         //diverging sentiment ranges
         let divergingRanges: [number, number][] = []
@@ -337,7 +337,7 @@ async function getSessionData(seshId: string, seshDate: string): Promise<Session
 
         const sessionData = new SessionData(
           transcript, auanomData, auanomPointColors, anger, joy, surprise, sorrow, textLabels,
-          textChartData, smoothanger, smoothjoy, smoothsurprise, smoothsorrow, smoothtextChartData, smoothtextLabels,
+          textSentiment, smoothanger, smoothjoy, smoothsurprise, smoothsorrow, smoothtext, smoothtextLabels,
           auData, divergingRanges, avgtext, aggrSentiment, seshId, seshDate
         )
         resolve(sessionData)
@@ -628,9 +628,9 @@ export function getState(currentSesh: SessionData): PageState {
         },
       ]
     },
-    textdata: currentSesh.textData,
+    textsentiment: currentSesh.textSentiment,
     textlabels: currentSesh.textLabels,
-    smoothtextdata: currentSesh.smoothtextData,
+    smoothtext: currentSesh.smoothtext,
     smoothtextlabels: currentSesh.smoothtextLabels,
     audata: {
       datasets: currentSesh.auDataSets
