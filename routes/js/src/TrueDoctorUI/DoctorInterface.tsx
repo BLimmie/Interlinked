@@ -79,42 +79,6 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
       }
     }
   }
-  const getTranscript = () => {
-    const id = setInterval(() => {
-      const numOfKeys = Object.keys(TimeTranscriptHashTable).length
-      if(numOfKeys == 0) {
-        httpCall('POST', backendServerName + ":8080/session/"+ sessionId +"/updatetext", sessionId , 
-          ((result: string) => {
-            if(result != 'Could not find text metric with body as text') {
-                const json = JSON.parse(result);
-                console.log(json)
-                const temp = TimeTranscriptHashTable
-                for(var i = 0; i < json.length; i++){
-                  temp[json[i].Time] = json[i].Text
-                }
-                setTimeTranscriptHashTable(temp)
-            }
-          }) 
-        )
-      } else {
-        const keys = Object.keys(TimeTranscriptHashTable)
-        const last = TimeTranscriptHashTable[parseInt(keys.slice(-1)[0],10)]
-        httpCall('POST', backendServerName + ":8080/session/"+ sessionId +"/updatetext", last , 
-          ((result: string) => {
-            if(result != 'Could not find text metric with body as text') {
-                const json = JSON.parse(result);
-                console.log(json)
-                const temp = TimeTranscriptHashTable
-                for(var i = 0; i < json.length; i++){
-                  temp[json[i].Time] = json[i].Text
-                }
-                setTimeTranscriptHashTable(temp)
-            }
-          })
-        )
-      }
-    }, 10000)
-  }
   createRoom()
 
   const resultToResponseCB = (result: any) => {
