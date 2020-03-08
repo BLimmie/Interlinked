@@ -7,6 +7,7 @@ import { getRoom, setRemoteVideo } from '../Video/Twilio'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { WebcamWithControls } from '../Video/WebcamWithControls'
 import SpeechRec from '../SpeechRec'
+import Transcription from "../Transcription"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     lowerHalf: {
       height: "45vh",
+    },
+    textbox: {
+      width: "45vw",
+      height: "25vh",
     }
   }),
 );
@@ -31,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 type LinkParams = { link: string }
 
 export const localdt = new LocalDataTrack()
+export var setTrans: any
 export default function PatientInterface({ match }: RouteComponentProps<LinkParams>) {
 
   const classes = useStyles();
@@ -39,6 +45,8 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
   const [videoRoom, setVideoRoom] = React.useState<Room>()
   const [endChat, setEndChat] = React.useState<boolean>(false)
   const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
+  const [transcript, setTranscript] = React.useState<string>("")
+  setTrans = setTranscript
 
   const joinRoom = () => {
     if (!videoRoom) {
@@ -69,6 +77,7 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
 
   return (
     <div className={classes.root} >
+      <SpeechRec />
       <Grid container className={classes.upperHalf} >
         <Grid item xs={1} />
         {
@@ -95,7 +104,9 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
           />
         </Grid>
         <Grid item xs={5}>
-          <SpeechRec />
+          <Box className={classes.textbox} >
+            <Transcription transcript={transcript} browserSupportsSpeechRecognition={true} />
+          </Box>
         </Grid>
       </Grid>
     </div>
