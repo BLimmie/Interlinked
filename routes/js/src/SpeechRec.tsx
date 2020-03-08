@@ -3,16 +3,8 @@ import SpeechRecognition from "react-speech-recognition";
 import { LocalDataTrack } from "twilio-video";
 import { localdt } from "./TruePatientUI/PatientInterface"
 import Transcription from "./Transcription"
-import { Box, makeStyles, createStyles, Theme } from '@material-ui/core'
+import { Box, makeStyles, createStyles, Theme, WithStyles } from '@material-ui/core'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    textbox: {
-      width: "45vw",
-      height: "25vh",
-    }
-  }),
-)
 
 interface SpeechRecProps {
   // Props injected by SpeechRecognition
@@ -22,25 +14,30 @@ interface SpeechRecProps {
 };
 
 
-function SpeechRec(props: SpeechRecProps) {
-  const classes = useStyles();
-  React.useEffect(() => {
-    if (props.transcript !== '') {
-      (localdt as LocalDataTrack).send(props.transcript)
+class SpeechRec extends React.Component<SpeechRecProps> {
+  private textbox = {
+    width: "45vw",
+    height: "25vh",
+  }
+  componentDidUpdate(prevProps: SpeechRecProps) {
+    if (this.props.transcript !== prevProps.transcript && this.props.transcript !== '') {
+      (localdt as LocalDataTrack).send(this.props.transcript)
     }
-  }, [props.transcript])
-
-
-  if (!props.browserSupportsSpeechRecognition) {
-    return null
   }
 
-  return (
-    <Box className={classes.textbox} >
-      <Transcription transcript={props.transcript} browserSupportsSpeechRecognition={true} />
-    </Box>
+  render() {
 
-  );
+    if (!this.props.browserSupportsSpeechRecognition) {
+      return null
+    }
+
+    return (
+      <Box style={this.textbox} >
+        <Transcription transcript={this.props.transcript} browserSupportsSpeechRecognition={true} />
+      </Box>
+
+    );
+  }
 }
 
 export default SpeechRecognition(SpeechRec);

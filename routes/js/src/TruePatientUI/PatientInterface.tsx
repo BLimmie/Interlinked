@@ -95,13 +95,6 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
           />
         </Grid>
         <Grid item xs={5}>
-          {/* <Box
-            className={classes.lowerHalf}
-            border={8}
-            borderColor="white"
-            borderRadius="0%"
-          >
-          </Box> */}
           <SpeechRec />
         </Grid>
       </Grid>
