@@ -17,6 +17,64 @@ interface SessionSummaryChartsProps {
 }
 
 export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
+    const ly = "#b9bb3b"
+    const lb = "rgba(33, 161, 255, 1)"
+    const by = "rgba(211, 212, 119, 0.3)"
+    const bb = "rgba(33, 161, 255, 0.3)"
+    const ratio = 0.44
+    const textChartData = (canvas: any) => {
+        const ctx = canvas.getContext("2d")
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        gradient.addColorStop(0, ly);
+        gradient.addColorStop(ratio, ly);
+        gradient.addColorStop(ratio, lb);
+        gradient.addColorStop(1, lb);
+        const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        bgradient.addColorStop(0, by)
+        bgradient.addColorStop(ratio, by)
+        bgradient.addColorStop(ratio, bb)
+        bgradient.addColorStop(1, bb)
+        return {
+            datasets: [
+                {
+                    label: "Text Sentiment",
+                    data: props.pageState.textsentiment,
+                    borderColor: gradient,
+                    pointBorderColor: gradient,
+                    backgroundColor: bgradient,
+                    showLine: true,
+                    lineTension: 0.22
+                }
+            ]
+        }
+    }
+
+    const smoothtextChartData = (canvas: any) => {
+        const ctx = canvas.getContext("2d")
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        gradient.addColorStop(0, ly);
+        gradient.addColorStop(ratio, ly);
+        gradient.addColorStop(ratio, lb);
+        gradient.addColorStop(1, lb);
+        const bgradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        bgradient.addColorStop(0, by)
+        bgradient.addColorStop(ratio, by)
+        bgradient.addColorStop(ratio, bb)
+        bgradient.addColorStop(1, bb)
+        return {
+            datasets: [
+                {
+                    label: "Text Sentiment",
+                    data: props.pageState.smoothtext,
+                    borderColor: gradient,
+                    pointBorderColor: gradient,
+                    backgroundColor: bgradient,
+                    showLine: true,
+                    lineTension: 0.22
+                }
+            ]
+        }
+    }
 
     return (<div style={{ overflow: 'auto', height: 350, maxWidth: 900, margin: 'auto' }}>
         {
@@ -57,7 +115,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
         {
             props.selection == 2 &&
             <Scatter
-                data={props.pageState.textdata}
+                data={textChartData}
                 options={Object.assign({}, props.divergingoptions, { scales: getScales("Negative to Positive Text Sentiment", -1, 1) })}
                 width={900}
                 height={350}
@@ -75,7 +133,7 @@ export default function SessionSummaryCharts(props: SessionSummaryChartsProps) {
         {
             props.selection == 4 &&
             <Scatter
-                data={props.pageState.smoothtextdata}
+                data={smoothtextChartData}
                 options={Object.assign({}, props.divergingoptions, { scales: getScales("Negative to Positive Text Sentiment", -1, 1) })}
                 width={900}
                 height={350}

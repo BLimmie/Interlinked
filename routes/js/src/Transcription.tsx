@@ -31,7 +31,7 @@ function httpCall(method: string, url: string, data: any, callback: (result: any
 interface SpeechProps {
   // Props injected by SpeechRecognition
   transcript: string,
-  resetTranscript: any,
+  // resetTranscript: any,
   browserSupportsSpeechRecognition: boolean
 };
 
@@ -39,7 +39,7 @@ interface SpeechProps {
 // In the future, at the end of the session, the "words" Map will have every phrase
 // and their associated sentiment for storage purposes. Just put that in the database.
 // It might be more complicated than that. I wouldn't know.
-class Transcription extends React.Component<SpeechProps> {
+export default class Transcription extends React.Component<SpeechProps> {
   private i = 0;
   private sessionId = window.location.pathname.split("/").pop()
 
@@ -139,4 +139,4 @@ class Transcription extends React.Component<SpeechProps> {
   }
 }
 
-export default SpeechRecognition(Transcription);
+// export default SpeechRecognition(Transcription);

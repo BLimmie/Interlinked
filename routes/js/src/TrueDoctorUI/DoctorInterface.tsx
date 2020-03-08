@@ -6,7 +6,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { getRoom, setRemoteVideo, httpCall } from '../Video/Twilio'
 import { WebcamWithControls, setPatienSnapshotInterval } from '../Video/WebcamWithControls'
-import { Room } from 'twilio-video'
+import { Room, LocalVideoTrack, LocalAudioTrack } from 'twilio-video'
 import Transcription from '../Transcription'
 import { AUInterface } from '../AUs'
 import Image from '../TrueImages/background_Interface_16-9.png'
@@ -63,7 +63,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
   const [intervalId, setIntervalId] = React.useState<NodeJS.Timeout>()
   const [patientFrameResponse, setPatientResonse] = React.useState<serverResponse>(zeroValueResponse)
   const [localVidStream, setLocalVidStream] = React.useState<MediaStream>()
-  const [TimeTranscriptHashTable, setTimeTranscriptHashTable] = React.useState<Record<number,string>>({})
+  const [transcript, setTranscript] = React.useState<string>("")
 
   const sessionId = match.params.link
 
@@ -73,8 +73,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
         getRoom(sessionId, localVidStream.getTracks(), "Doctor")
           .then((room: Room) => {
             setVideoRoom(room)
-            setRemoteVideo(room, endSession)
-            getTranscript()
+            setRemoteVideo(room, endSession, setTranscript)
           })
           .catch(() => { console.log("Room name does not exist, exit please") })
       }
@@ -187,7 +186,7 @@ export default function DoctorInterface({ match }: RouteComponentProps<LinkParam
                 >
                   <div style={{ paddingLeft: "13vw", paddingTop: "1vh" }} >
                     <Box className={classes.textbox} >
-                      <DoctorTranscript transcriptList={Object.values(TimeTranscriptHashTable)} />
+                      <Transcription transcript={transcript} browserSupportsSpeechRecognition={true} />
                     </Box>
                   </div>
                 </Box>
