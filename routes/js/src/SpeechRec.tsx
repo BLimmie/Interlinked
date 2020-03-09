@@ -1,9 +1,9 @@
 import React from "react";
 import SpeechRecognition from "react-speech-recognition";
 import { LocalDataTrack } from "twilio-video";
-import { localdt, setTrans } from "./TruePatientUI/PatientInterface"
+import { localdt } from "./TruePatientUI/PatientInterface"
 import Transcription from "./Transcription"
-import { Box, makeStyles, createStyles, Theme, WithStyles } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 
 
 interface SpeechRecProps {
@@ -15,13 +15,12 @@ interface SpeechRecProps {
 
 
 class SpeechRec extends React.Component<SpeechRecProps> {
-  // private textbox = {
-  //   width: "45vw",
-  //   height: "25vh",
-  // }
+  private textbox = {
+    width: "45vw",
+    height: "25vh",
+  }
   componentDidUpdate(prevProps: SpeechRecProps) {
     if (this.props.transcript !== prevProps.transcript && this.props.transcript !== '') {
-      setTrans(this.props.transcript);
       (localdt as LocalDataTrack).send(this.props.transcript)
     }
   }
@@ -32,10 +31,10 @@ class SpeechRec extends React.Component<SpeechRecProps> {
       return null
     }
 
-    return (<div />
-      // <Box style={this.textbox} >
-      //   <Transcription transcript={this.props.transcript} browserSupportsSpeechRecognition={true} />
-      // </Box>
+    return (
+      <Box style={this.textbox} >
+        <Transcription transcript={this.props.transcript + " "} browserSupportsSpeechRecognition={true} />
+      </Box>
 
     );
   }
