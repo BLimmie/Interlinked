@@ -6,8 +6,7 @@ import { Room, LocalDataTrack, LocalAudioTrack, LocalVideoTrack } from 'twilio-v
 import { getRoom, setRemoteVideo } from '../Video/Twilio'
 import VideoControls, { avStateInterface, defaultAVState } from '../Video/VideoControls'
 import { WebcamWithControls } from '../Video/WebcamWithControls'
-import SpeechRec from '../SpeechRec'
-import Transcription from "../Transcription"
+import SpeechRec, { abortSpeechRec } from '../SpeechRec'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,6 +65,7 @@ export default function PatientInterface({ match }: RouteComponentProps<LinkPara
       localVidStream.getTracks().forEach((track: MediaStreamTrack) => {
         track.stop()
       })
+    abortSpeechRec()
     setEndChat(true)
   }
 

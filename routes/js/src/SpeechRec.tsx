@@ -10,10 +10,12 @@ interface SpeechRecProps {
   // Props injected by SpeechRecognition
   transcript: string,
   resetTranscript: any,
-  browserSupportsSpeechRecognition: boolean
+  browserSupportsSpeechRecognition: boolean,
+  abortListening: Function
 };
 
 
+export var abortSpeechRec: Function
 class SpeechRec extends React.Component<SpeechRecProps> {
   private textbox = {
     width: "45vw",
@@ -31,6 +33,7 @@ class SpeechRec extends React.Component<SpeechRecProps> {
       return null
     }
 
+    abortSpeechRec = this.props.abortListening
     return (
       <Box style={this.textbox} >
         <Transcription transcript={this.props.transcript + " "} browserSupportsSpeechRecognition={true} />
