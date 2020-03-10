@@ -166,6 +166,7 @@ type IntouchClient struct {
 }
 
 type Aggregator struct {
-	session     *Session
-	conclusions map[string]func(session *Session) (interface{}, error)
+	session      *Session
+	conclusions  map[string]func(session *Session) (interface{}, error)
+	_conclusions map[string]func(session *Session) (interface{}, error)
 }

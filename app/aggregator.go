@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"sort"
 	"strconv"
 	"time"
@@ -17,6 +18,7 @@ func AggregatorFromSession(session *Session) (*Aggregator, error) {
 	agg := &Aggregator{
 		session:     session,
 		conclusions: make(map[string]func(session *Session) (interface{}, error)),
+		_conclusions: make(map[string]func(session *Session) (interface{}, error)),
 	}
 	session.TextMetrics = append([]TextMetrics{
 		{
@@ -57,12 +59,22 @@ func (agg *Aggregator) init() {
 	agg.conclusions["Percent in Facial Emotion over last 10 seconds"] = emotionOverTime_RunningAggregate
 	agg.conclusions["Text sentiment over last 10 seconds"] = sentimentOverTime_RunningAggregate
 	agg.conclusions["AU Anomalies"] = condensedAU
-	agg.conclusions["_Diverging Sentiment"] = divergentSentiment
+	agg._conclusions["_Diverging Sentiment"] = divergentSentiment
 }
 
 func (agg *Aggregator) Run(clear bool) (map[string]interface{}, error) {
 	agg.session.Summary = make(map[string]interface{})
 	for key, f := range agg.conclusions {
+		fmt.Println(key)
+		res, err := f(agg.session)
+		if err != nil {
+			return nil, err
+		}
+		agg.session.Summary[key] = res
+		//update session
+	}
+	for key, f := range agg._conclusions {
+		fmt.Println(key)
 		res, err := f(agg.session)
 		if err != nil {
 			return nil, err
@@ -302,7 +314,7 @@ func divergentSentiment(session *Session) (interface{}, error) {
 			fullList[s] = false
 			continue
 		}
-		heuristic := tmet * (imet["joy"] + imet["surprise"] - imet["sadness"] - imet["anger"])
+		heuristic := tmet * (imet["joy"] + imet["surprise"] - imet["sorrow"] - imet["anger"])
 		fullList[s] = heuristic < 0
 	}
 	return fullList, nil
